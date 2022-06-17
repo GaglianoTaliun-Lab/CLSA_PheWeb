@@ -1,0 +1,714 @@
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">About CARTaGENE's PheWeb</span></p>
+
+ <ul class="list-group" style="max-width: 22rem;">
+    <a href="#Data Description" class="list-group-item">Data Description</a>
+    <a href="#Quality Checks" class="list-group-item">Quality Checks</a>
+    <a href="#LiftOver" class="list-group-item">LiftOver to build 38</a>
+    <a href="#Merging" class="list-group-item">Merging</a>
+    <a href="#PCA" class="list-group-item">PCA</a>
+    <a href="#Imputation" class="list-group-item">Imputation</a>
+    <a href="#Phenotype Association" class="list-group-item">Phenotype Association</a>
+    <a href="#PheWeb" class="list-group-item">PheWeb</a>
+    <a href="#Acknowledgement" class="list-group-item">Acknowledgement</a>
+  </ul>
+
+<p id = "Data Description" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Data Description</span></p>
+
+<div class=WordSection1>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+
+
+<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=1220
+ style='width:914.8pt;border-collapse:collapse;mso-yfti-tbllook:1056;
+ mso-padding-alt:0cm 0cm 0cm 0cm'>
+ <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:17.7pt'>
+  <td width=188 valign=top style='width:140.8pt;border:none;border-bottom:solid black 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:17.7pt'>
+  <p class=MsoNormal align=center style='text-align:center'>Array<o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:210.75pt;border:none;border-bottom:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:17.7pt'>
+  <p class=MsoNormal align=center style='text-align:center'>17k <br>
+  (GSAv2 + MD+ addon) <o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:141.8pt;border:none;border-bottom:solid black 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:17.7pt'>
+  <p class=MsoNormal align=center style='text-align:center'>5300 <br>
+  (GSAv1 + MD)<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:144.8pt;border:none;border-bottom:solid black 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:17.7pt'>
+  <p class=MsoNormal align=center style='text-align:center'>4224 <br>
+  (GSAv2 + MD)<o:p></o:p></p>
+  </td>
+  <td width=146 valign=top style='width:109.85pt;border:none;border-bottom:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:17.7pt'>
+  <p class=MsoNormal align=center style='text-align:center'>760 (GSAv1)<o:p></o:p></p>
+  </td>
+  <td width=222 valign=top style='width:166.8pt;border:none;border-bottom:solid black 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:17.7pt'>
+  <p class=MsoNormal align=center style='text-align:center'>Archi <o:p></o:p></p>
+  <p class=MsoNormal align=center style='text-align:center'>(GSAv3 + MD)<o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:1;height:12.6pt'>
+  <td width=188 valign=top style='width:140.8pt;border:none;mso-border-top-alt:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>Nb individuals<o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:210.75pt;border:none;mso-border-top-alt:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>17,286<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:141.8pt;border:none;mso-border-top-alt:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>5,237<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:144.8pt;border:none;mso-border-top-alt:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>4,179<o:p></o:p></p>
+  </td>
+  <td width=146 valign=top style='width:109.85pt;border:none;mso-border-top-alt:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>726<o:p></o:p></p>
+  </td>
+  <td width=222 valign=top style='width:166.8pt;border:none;mso-border-top-alt:
+  solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>1,909<o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:2;mso-yfti-lastrow:yes;height:12.6pt'>
+  <td width=188 valign=top style='width:140.8pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>Nb variants in file<o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:210.75pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>645,075<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:141.8pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>658,296<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:144.8pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>728,919<o:p></o:p></p>
+  </td>
+  <td width=146 valign=top style='width:109.85pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>626,377<o:p></o:p></p>
+  </td>
+  <td width=222 valign=top style='width:166.8pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:12.6pt'>
+  <p class=MsoNormal align=center style='text-align:center'>688,795<o:p></o:p></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal align=center style='text-align:center'><span
+style='font-size:26.0pt;mso-bidi-font-family:"Al Bayan Plain"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal align=center style='text-align:center'><span
+style='font-size:26.0pt;mso-bidi-font-family:"Al Bayan Plain"'><o:p>&nbsp;</o:p></span></p>
+
+<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=1221
+ style='width:916.0pt;border-collapse:collapse;mso-yfti-tbllook:1056;
+ mso-padding-alt:0cm 0cm 0cm 0cm'>
+ <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:22.85pt'>
+  <td width=188 valign=top style='width:141.0pt;border:solid white 1.0pt;
+  border-bottom:solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;height:
+  22.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>Array</span><o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:211.0pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:22.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>17<span
+  class=GramE>k<span style='mso-spacerun:yes'>  </span>(</span>%)<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:142.0pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:22.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span class=GramE>4224<span
+  style='mso-spacerun:yes'>  </span>(</span>%)<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:145.0pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:22.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span class=GramE>5300<span
+  style='mso-spacerun:yes'>  </span>(</span>%)<o:p></o:p></p>
+  </td>
+  <td width=147 valign=top style='width:110.0pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:22.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>760 (%)<o:p></o:p></p>
+  </td>
+  <td width=223 valign=top style='width:167.0pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:22.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>Archi (%)<o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:1;height:24.1pt'>
+  <td width=188 valign=top style='width:141.0pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid black 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:24.1pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>Gatineau</span><o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:211.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:24.1pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>757 (4.4)</span><o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:142.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:24.1pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>None</span><o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:145.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:24.1pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>326 (6.2)</span><o:p></o:p></p>
+  </td>
+  <td width=147 valign=top style='width:110.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:24.1pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>1 (0.1)</span><o:p></o:p></p>
+  </td>
+  <td width=223 valign=top style='width:167.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:24.1pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>None</span><o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:2;height:23.75pt'>
+  <td width=188 valign=top style='width:141.0pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:23.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>Montreal</span><o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:211.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:23.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>12,354 (71.5)<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:142.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:23.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>2,921 (69.9)<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:145.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:23.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>3,423 (65.4)<o:p></o:p></p>
+  </td>
+  <td width=147 valign=top style='width:110.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:23.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>522 (71.9)<o:p></o:p></p>
+  </td>
+  <td width=223 valign=top style='width:167.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:23.75pt'>
+  <p class=MsoNormal align=center style='text-align:center'>1,302 (68.2)<o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:3;height:32.2pt'>
+  <td width=188 valign=top style='width:141.0pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:32.2pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>Quebec</span><o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:211.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:32.2pt'>
+  <p class=MsoNormal align=center style='text-align:center'>2,428 (14.0)<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:142.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:32.2pt'>
+  <p class=MsoNormal align=center style='text-align:center'>877 (21.0)<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:145.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:32.2pt'>
+  <p class=MsoNormal align=center style='text-align:center'>715 (13.7)<o:p></o:p></p>
+  </td>
+  <td width=147 valign=top style='width:110.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:32.2pt'>
+  <p class=MsoNormal align=center style='text-align:center'>61 (8.4)<o:p></o:p></p>
+  </td>
+  <td width=223 valign=top style='width:167.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:32.2pt'>
+  <p class=MsoNormal align=center style='text-align:center'>410 (21.5)<o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:4;height:31.85pt'>
+  <td width=188 valign=top style='width:141.0pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:31.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>Saguenay</span><o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:211.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>556 (3.2)<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:142.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>151 (3.6)<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:145.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>228 (4.4)<o:p></o:p></p>
+  </td>
+  <td width=147 valign=top style='width:110.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>94 (12.9)<o:p></o:p></p>
+  </td>
+  <td width=223 valign=top style='width:167.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.85pt'>
+  <p class=MsoNormal align=center style='text-align:center'>196 (10.3)<o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:5;height:31.5pt'>
+  <td width=188 valign=top style='width:141.0pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:31.5pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>Sherbrooke</span><o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:211.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.5pt'>
+  <p class=MsoNormal align=center style='text-align:center'>698 (4.0)<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:142.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.5pt'>
+  <p class=MsoNormal align=center style='text-align:center'>229 (5.5)<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:145.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.5pt'>
+  <p class=MsoNormal align=center style='text-align:center'>359 (6.9)<o:p></o:p></p>
+  </td>
+  <td width=147 valign=top style='width:110.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.5pt'>
+  <p class=MsoNormal align=center style='text-align:center'>48 (6.6)<o:p></o:p></p>
+  </td>
+  <td width=223 valign=top style='width:167.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.5pt'>
+  <p class=MsoNormal align=center style='text-align:center'>None<o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:6;mso-yfti-lastrow:yes;height:31.15pt'>
+  <td width=188 valign=top style='width:141.0pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid white 1.0pt;padding:4.25pt 8.5pt 4.25pt 8.5pt;
+  height:31.15pt'>
+  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US
+  style='mso-ansi-language:EN-US'>Trois-Rivieres</span><o:p></o:p></p>
+  </td>
+  <td width=281 valign=top style='width:211.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.15pt'>
+  <p class=MsoNormal align=center style='text-align:center'>493 (2.9)<o:p></o:p></p>
+  </td>
+  <td width=189 valign=top style='width:142.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.15pt'>
+  <p class=MsoNormal align=center style='text-align:center'>None<o:p></o:p></p>
+  </td>
+  <td width=193 valign=top style='width:145.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.15pt'>
+  <p class=MsoNormal align=center style='text-align:center'>186 (3.6)<o:p></o:p></p>
+  </td>
+  <td width=147 valign=top style='width:110.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.15pt'>
+  <p class=MsoNormal align=center style='text-align:center'>None<o:p></o:p></p>
+  </td>
+  <td width=223 valign=top style='width:167.0pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:4.25pt 8.5pt 4.25pt 8.5pt;height:31.15pt'>
+  <p class=MsoNormal align=center style='text-align:center'>None<o:p></o:p></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
+
+<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 align=left
+ width=1220 style='width:914.7pt;border-collapse:collapse;mso-yfti-tbllook:
+ 1056;mso-table-lspace:9.0pt;margin-left:6.75pt;mso-table-rspace:9.0pt;
+ margin-right:6.75pt;mso-table-anchor-vertical:paragraph;mso-table-anchor-horizontal:
+ margin;mso-table-left:left;mso-table-top:191.1pt;mso-padding-alt:0cm 0cm 0cm 0cm'>
+ <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:23.8pt'>
+  <td width=203 valign=top style='width:152.45pt;border:solid white 1.0pt;
+  border-bottom:solid black 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>PHASE</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>17k
+  (%)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>4224
+  (%)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>5300
+  (%)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>760
+  (%)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:solid white 1.0pt;
+  border-left:none;border-bottom:solid black 1.0pt;border-right:solid white 1.0pt;
+  mso-border-left-alt:solid white 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>Archi
+  N (%)</span><o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:1;height:23.8pt'>
+  <td width=203 valign=top style='width:152.45pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid black 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>1</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>9,828
+  (56.9)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>4,177
+  (100.0)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>2,503
+  (47.8)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>715
+  (98.5)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid black 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>1,908
+  (100.0)</span><o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:2;height:23.8pt'>
+  <td width=203 valign=top style='width:152.45pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid white 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>2</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>7,456
+  (43.1)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>1
+  (0.0)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>2,734
+  (52.2)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>11
+  (1.5)</span><o:p></o:p></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'>None</span><o:p></o:p></p>
+  </td>
+ </tr>
+ <tr style='mso-yfti-irow:3;mso-yfti-lastrow:yes;height:23.8pt'>
+  <td width=203 valign=top style='width:152.45pt;border:solid white 1.0pt;
+  border-top:none;mso-border-top-alt:solid white 1.0pt;padding:3.6pt 7.2pt 3.6pt 7.2pt;
+  height:23.8pt'>
+  <p class=MsoNormal style='mso-element:frame;mso-element-frame-hspace:9.0pt;
+  mso-element-wrap:around;mso-element-anchor-vertical:paragraph;mso-element-anchor-horizontal:
+  margin;mso-element-top:191.1pt;mso-height-rule:exactly'><span lang=EN-US
+  style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+  </td>
+  <td width=203 valign=top style='width:152.45pt;border-top:none;border-left:
+  none;border-bottom:solid white 1.0pt;border-right:solid white 1.0pt;
+  mso-border-top-alt:solid white 1.0pt;mso-border-left-alt:solid white 1.0pt;
+  padding:3.6pt 7.2pt 3.6pt 7.2pt;height:23.8pt'>
+  <p class=MsoNormal align=center style='text-align:center;mso-element:frame;
+  mso-element-frame-hspace:9.0pt;mso-element-wrap:around;mso-element-anchor-vertical:
+  paragraph;mso-element-anchor-horizontal:margin;mso-element-top:191.1pt;
+  mso-height-rule:exactly'><span lang=EN-US style='mso-ansi-language:EN-US'><o:p>&nbsp;</o:p></span></p>
+  </td>
+ </tr>
+</table>
+</div>
+<p id="Quality Checks" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Quality Checks</span></p>
+<ol style="list-style-type: circle;margin-left:80px;">
+    <li><span style="font-size:15.0pt;">HWE (p&lt;10e-6)</span></li>
+    <li><span style="font-size:15.0pt;">Reported sexes were confirmed</span></li>
+    <li><span style="font-size:15.0pt;">Sample and variant call rate (&gt;95%)</span></li>
+    <li><span style="font-size:15.0pt;">Encoding of the pseudo-autosomal region within the X chromosome ( i.e. X merging)</span></li>
+</ol>
+<p id="LiftOver" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">LiftOver to build 38</span></p>
+<ol style="list-style-type: decimal;">
+    <li><span style="font-size:15.0pt;">Position of the original files were changed to reflect the position within build 38 (i.e. lifted over) using <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver"><span style="color:windowtext;">UCSC LiftOver</span></a> and their chain files. Unmapped variant, variant mapped to alternate contig, and mitochondrial variants were excluded.</span></li>
+    <li><span style="font-size:15.0pt;">&nbsp;Furthering the process, variants were aligned to the reference using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">Github</a>) during this process A/T G/C palindromic variants were removed along with insertion and deletion.&nbsp;</span></li>
+    <li><span style="font-size:15.0pt;">Variants were also deduplicated using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">Github</a>) &nbsp;prioritizing well sequenced variants and renamed to Chr:Pos:Ref:Alt convention.</span></li>
+</ol>
+<p id="Merging"  style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><span style="font-size:20px;">&nbsp;</span></p>
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Merging</span></p>
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:20px;">&nbsp;</span></p>
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><span style="font-size:20px;">&nbsp;</span></p>
+<ol style="list-style-type: undefined;">
+    <li><span style="font-size:15.0pt;">variants with extreme differences in allele frequency established in a geographically aware test (script : <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_strat_concordance.py">Github</a>) were removed.</span></li>
+    <li><span style="font-size:15.0pt;">Samples were deduplicated (based on Kinship and sample ID) the most well sequenced was kept.</span></li>
+</ol>
+<p id="PCA" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin-top:0cm;margin-bottom:0cm;text-align:center;'><span style="font-size:27px;">PCA</span></p>
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin-top:0cm;margin-bottom:0cm;text-align:center;'><span style="font-size:20px;">&nbsp;</span></p>
+<ol style="list-style-type: undefined;">
+    <li><span style="font-size:15.0pt;">Ancestry was established based on proximity of 1000 genomes samples within a PCA projection, samples with clear european ancestry were identified (K-NN, 10/10 within 6 dimension) any remaining outliers were removed.</span></li>
+    <li><span style="font-size:15.0pt;">Ancestry was also established based on questionnaire answers.</span></li>
+    <li><span style="font-size:15.0pt;">Individual with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</span></li>
+</ol>
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+<p id="Imputation" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Imputation</span></p>
+<ol style="list-style-type: undefined;">
+    <li><span style="font-size:15.0pt;">Before imputation, all variant exhibiting strong allele frequency difference (&gt;0.2) were identified using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">Github</a>)</span></li>
+    <li><span style="font-size:15.0pt;">All samples were separated randomly into two batches of 25000 (maximum number of samples in TOPMed at the time) with overlap. And imputed as batches.</span></li>
+    <li><span style="font-size:15.0pt;">Batches were remerged and variants were filtered for Rsq &gt; 0.3</span></li>
+</ol>
+<p id="Phenotype Association" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Phenotype Association</span></p>
+<ol style="list-style-type: undefined;">
+    <li><span style="font-size:15.0pt;"><a href="https://rgcgithub.github.io/regenie/">Regenie</a> was distributed across a cluster per 50 phenotypes (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>)</span></li>
+    <li><span style="font-size:15.0pt;">Covariants were the arrays (as categorical), the individual&rsquo;s sex (as categorical), age, square(age) &nbsp;and the 10 first PC.</span></li>
+    <li><span style="font-size:15.0pt;">File preparation for Regenie were performed using the script provided in the github repository (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>).&nbsp;</span>
+                <ol class="decimal_type" style="list-style-type: circle;">
+    <li><span style="font-size:15.0pt;">Step 1 files were filtered using&nbsp;</span>
+        <ul class="decimal_type" style="list-style-type: square;">
+            <li><span style="font-size:15.0pt;">maf=0.01 (i.e. Minimum allele frequency)</span></li>
+            <li><span style="font-size:15.0pt;">geno=0.99 (i.e. Maximum Missing genotype frequency per-variant)</span></li>
+            <li><span style="font-size:15.0pt;">mind=0.99 (i.e. Maximum Missing genotype frequency per-sample)</span></li>
+            <li><span style="font-size:15.0pt;">HWE=1e-15 (i.e. threshold for Hardy-Weindberg Equilibrium)</span></li>
+        </ul>
+    </li>
+    <li><span style="font-size:15.0pt;">Step 2 files were unfiltered.&nbsp;</span>
+        <ul style="list-style-type: square;">
+            <li><span style="font-size:15.0pt;">Dosage (DS) was integrated into the analysis.</span></li>
+        </ul>
+    </li>
+    <li><span style="font-size:15.0pt;">Regenie Options</span>
+        <ul style="list-style-type: square;">
+            <li><span style="font-size:15.0pt;">Binairy traits Options : --bt --firth --approx --pThresh 0.05</span></li>
+            <li><span style="font-size:15.0pt;">continuous traits option : --apply-rint</span></li>
+        </ul>
+    </li>
+</ol>
+<h3 id="PheWeb" style='margin-right:0cm;margin-left:0cm;font-size:18px;font-family:"Times New Roman",serif;font-weight:bold;text-align:center;'><span style='font-size:27px;font-family:"Calibri",sans-serif;font-weight:normal;'>PheWeb</span></h3>
+<div style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'>
+    <ol style="margin-bottom:0cm;list-style-type: circle;margin-left:80px;">
+        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:15.0pt;">Variants with minimal allele count of 20 were loaded into <a href="https://github.com/statgen/pheweb">PheWeb</a>.</span></li>
+    </ol>
+</div>
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><br></p>
+<h3 id="Acknowledgement" style='margin-right:0cm;margin-left:0cm;font-size:18px;font-family:"Times New Roman",serif;font-weight:bold;text-align:center;'><span style='font-size:27px;font-family:"Calibri",sans-serif;font-weight:normal;'>Acknowledgement</span></h3>
+<ul style="margin-bottom:0cm;" type="disc">
+    <ul style="margin-bottom:0cm;" type="circle">
+        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Authors : Vincent Chapdelaine, Claude Bh&eacute;rer, Vincent Mooser, Sarah Gagliano-Taliun, Daniel Taliun</span></li>
+        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Data was provided by the CARTaGENE consortium</span></li>
+        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Analysis were performed on Compute Canada and this site is hosted on Compute Canada.</span></li>
+    </ul>
+</ul>

@@ -1,21 +1,31 @@
+<div class="container">
+	<div class="row">
+		<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" role='complementary'>
+	     <ul id="navigator" class="nav nav-tabs nav-stacked text-center" aria-orientation="vertical"  role="tablist">
+		     <li class="active"><a data-toggle="tab" href="#Overview">Overview</a></li>
+		     <li><a data-toggle="tab" href="#DataDescription">Data Description</a></li>
+        	    <li><a data-toggle="tab" href="#QualityChecks">Quality Checks</a></li>
+		    <li><a data-toggle="tab" href="#LiftOver">LiftOver</a></li>
+		    <li><a data-toggle="tab" href="#Merging">Merging</a></li>
+		   <li><a data-toggle="tab" href="#PCA">PCA</a></li>
+		   <li><a data-toggle="tab" href="#Imputation">Imputation</a></li>
+<li><a data-toggle="tab" href="#PhenotypeAssociation">Phenotype Association</a></li>
+<li><a data-toggle="tab" href="#PheWeb">PheWeb</a></li>
+<li><a data-toggle="tab" href="#Acknowledgement">Acknowledgement</a></li>
+        </ul>
 </div>
-<div class="col-xs-12 col-sm-offset-2 col-sm-10 col-md-8 col-lg-8">
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">About CARTaGENE's PheWeb</span></p>
 
- <ul class="list-group" style="max-width: 22rem;">
-    <a href="#Data Description" class="list-group-item">Data Description</a>
-    <a href="#Quality Checks" class="list-group-item">Quality Checks</a>
-    <a href="#LiftOver" class="list-group-item">LiftOver to build 38</a>
-    <a href="#Merging" class="list-group-item">Merging</a>
-    <a href="#PCA" class="list-group-item">PCA</a>
-    <a href="#Imputation" class="list-group-item">Imputation</a>
-    <a href="#Phenotype Association" class="list-group-item">Phenotype Association</a>
-    <a href="#PheWeb" class="list-group-item">PheWeb</a>
-    <a href="#Acknowledgement" class="list-group-item">Acknowledgement</a>
-  </ul>
-
-<p id = "Data Description" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Data Description</span></p>
-
+<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+<div class="tab-content">
+	<div id="Overview" class="tab-pane fade in active">
+	<p style='font-size:32px;font-family:"Calibri",sans-serif;text-align:center;'> About CARTaGENE's PheWeb</p>
+	<hr></hr>
+	<p style="font-size:15.0pt;"> This platform presents multiple analysis of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the canada-wide "Canadian Partnership for Tomorrow's Health" </p>
+	<p style="font-size:15.0pt;"> This platform presents a PheWas analysis of the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort.)  </p>
+	</div>
+	<div id="DataDescription" class="tab-pane fade">
+	<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Data Description</span></p>
+<hr></hr>
 <table style="border: none;width:666.3pt;border-collapse:collapse;margin-left:auto;margin-right:auto;" position="relative" min-width="1220">
     <tbody>
         <tr>
@@ -294,7 +304,10 @@
 </table>
 
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><span style="font-size:20px;">&nbsp;</span></p><p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><span style="font-size:20px;">&nbsp;</span></p>
-<p id="Quality Checks" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Quality Checks</span></p>
+	</div>
+	<div id="QualityChecks" class="tab-pane fade">
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Quality Checks</span></p>
+<hr></hr>
 <ol style="list-style-type: circle;margin-left:80px;">
     <li><span style="font-size:15.0pt;">HWE (p&lt;10e-6)</span></li>
     <li><span style="font-size:15.0pt;">Reported sexes were confirmed</span></li>
@@ -302,21 +315,30 @@
     <li><span style="font-size:15.0pt;">Encoding of the pseudo-autosomal region within the X chromosome ( i.e. X merging)</span></li>
 </ol>
 <span style="font-size:20px;">&nbsp;</span></p>
-<p id="LiftOver" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">LiftOver to build 38</span></p>
+</div>
+<div id="LiftOver" class="tab-pane fade">
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">LiftOver to build 38</span></p>
+<hr></hr>
 <span style="font-size:20px;">&nbsp;</span></p>
 <ol style="list-style-type: decimal;">
     <li><span style="font-size:15.0pt;">Position of the original files were changed to reflect the position within build 38 (i.e. lifted over) using <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver"><span style="color:windowtext;">UCSC LiftOver</span></a> and their chain files. Unmapped variant, variant mapped to alternate contig, and mitochondrial variants were excluded.</span></li>
     <li><span style="font-size:15.0pt;">&nbsp;Furthering the process, variants were aligned to the reference using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">Github</a>) during this process A/T G/C palindromic variants were removed along with insertion and deletion.&nbsp;</span></li>
     <li><span style="font-size:15.0pt;">Variants were also deduplicated using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">Github</a>) &nbsp;prioritizing well sequenced variants and renamed to Chr:Pos:Ref:Alt convention.</span></li>
 </ol>
-<p id="Merging"  style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><span style="font-size:20px;">&nbsp;</span></p>
+</div>
+<div id="Merging" class="tab-pane fade">
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Merging</span></p>
+<hr></hr>
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:20px;">&nbsp;</span></p>
 <ol style="list-style-type: undefined;">
     <li><span style="font-size:15.0pt;">variants with extreme differences in allele frequency established in a geographically aware test (script : <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_strat_concordance.py">Github</a>) were removed.</span></li>
     <li><span style="font-size:15.0pt;">Samples were deduplicated (based on Kinship and sample ID) the most well sequenced was kept.</span></li>
 </ol>
-<p id="PCA" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin-top:0cm;margin-bottom:0cm;text-align:center;'><span style="font-size:27px;">PCA</span></p>
+<span style="font-size:20px;">&nbsp;</span></p>
+</div>
+<div id="PCA" class="tab-pane fade">
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin-top:0cm;margin-bottom:0cm;text-align:center;'><span style="font-size:27px;">PCA</span></p>
+<hr></hr>
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin-top:0cm;margin-bottom:0cm;text-align:center;'><span style="font-size:20px;">&nbsp;</span></p>
 <ol style="list-style-type: undefined;">
     <li><span style="font-size:15.0pt;">Ancestry was established based on proximity of 1000 genomes samples within a PCA projection, samples with clear european ancestry were identified (K-NN, 10/10 within 6 dimension) any remaining outliers were removed.</span></li>
@@ -324,14 +346,27 @@
     <li><span style="font-size:15.0pt;">Individual with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</span></li>
 </ol>
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+<img src="static/PCA.png" width="100%" height="100%">
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+</div>
+<div id="Imputation" class="tab-pane fade">
 <p id="Imputation" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Imputation</span></p>
+<hr></hr>
+<span style="font-size:20px;">&nbsp;</span></p>
 <ol style="list-style-type: undefined;">
     <li><span style="font-size:15.0pt;">Before imputation, all variant exhibiting strong allele frequency difference (&gt;0.2) were identified using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">Github</a>)</span></li>
     <li><span style="font-size:15.0pt;">All samples were separated randomly into two batches of 25000 (maximum number of samples in TOPMed at the time) with overlap. And imputed as batches.</span></li>
     <li><span style="font-size:15.0pt;">Batches were remerged and variants were filtered for Rsq &gt; 0.3</span></li>
 </ol>
-<p id="Phenotype Association" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Phenotype Association</span></p>
+<span style="font-size:20px;">&nbsp;</span></p>
+</div>
+<div id="PhenotypeAssociation" class="tab-pane fade">
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Phenotype Association</span></p>
+<hr></hr>
 <ol style="list-style-type: undefined;">
+<span style="font-size:20px;">&nbsp;</span></p>
     <li><span style="font-size:15.0pt;"><a href="https://rgcgithub.github.io/regenie/">Regenie</a> was distributed across a cluster per 50 phenotypes (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>)</span></li>
     <li><span style="font-size:15.0pt;">Covariants were the arrays (as categorical), the individual&rsquo;s sex (as categorical), age, square(age) &nbsp;and the 10 first PC.</span></li>
     <li><span style="font-size:15.0pt;">File preparation for Regenie were performed using the script provided in the github repository (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>).&nbsp;</span>
@@ -356,18 +391,32 @@
         </ul>
     </li>
 </ol>
+<span style="font-size:20px;">&nbsp;</span></p>
+</div>
+<div id="PheWeb" class="tab-pane fade">
 <h3 id="PheWeb" style='margin-right:0cm;margin-left:0cm;font-size:18px;font-family:"Times New Roman",serif;font-weight:bold;text-align:center;'><span style='font-size:27px;font-family:"Calibri",sans-serif;font-weight:normal;'>PheWeb</span></h3>
+<hr></hr>
+<span style="font-size:20px;">&nbsp;</span></p>
 <div style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'>
     <ol style="margin-bottom:0cm;list-style-type: circle;margin-left:80px;">
         <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:15.0pt;">Variants with minimal allele count of 20 were loaded into <a href="https://github.com/statgen/pheweb">PheWeb</a>.</span></li>
     </ol>
 </div>
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><br></p>
-<h3 id="Acknowledgement" style='margin-right:0cm;margin-left:0cm;font-size:18px;font-family:"Times New Roman",serif;font-weight:bold;text-align:center;'><span style='font-size:27px;font-family:"Calibri",sans-serif;font-weight:normal;'>Acknowledgement</span></h3>
+</div>
+<div id="Acknowledgement" class="tab-pane fade">
+<h3 style='margin-right:0cm;margin-left:0cm;font-size:18px;font-family:"Times New Roman",serif;font-weight:bold;text-align:center;'><span style='font-size:27px;font-family:"Calibri",sans-serif;font-weight:normal;'>Acknowledgement</span></h3>
+<hr></hr>
+<span style="font-size:20px;">&nbsp;</span></p>
 <ul style="margin-bottom:0cm;" type="disc">
     <ul style="margin-bottom:0cm;" type="circle">
         <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Authors : Vincent Chapdelaine, Claude Bh&eacute;rer, Vincent Mooser, Sarah Gagliano-Taliun, Daniel Taliun</span></li>
         <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Data was provided by the CARTaGENE consortium</span></li>
         <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Analysis were performed on Compute Canada and this site is hosted on Compute Canada.</span></li>
+  <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">We would like to thank all participant to the CARTaGENE who volonteered their time and informations for this research.</span></li>
     </ul>
 </ul>
+  </div>
+    </div>
+    </div>
+</div>

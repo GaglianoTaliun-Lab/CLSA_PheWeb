@@ -1,184 +1,185 @@
 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" role='complementary'>
-	<ul id="navigator" class="nav nav-tabs nav-stacked text-left" aria-orientation="vertical"  role="tablist">
-		<li class="active"><a data-toggle="tab" href="#Overview">Overview</a></li>
-		<li><a data-toggle="tab" href="#GenotypeData">1. Genotype Data</a></li>
-        	<li><a data-toggle="tab" href="#PreImputation">2. Pre-imputation</a></li>
-		<li><a data-toggle="tab" href="#LiftOver">2.1. Lifting to GRCh38</a></li>
-		<li><a data-toggle="tab" href="#Merging">Merging</a></li>
-		<li><a data-toggle="tab" href="#PCA">PCA</a></li>
-		<li><a data-toggle="tab" href="#Imputation">Imputation</a></li>
-		<li><a data-toggle="tab" href="#PhenotypeAssociation">Phenotype Association</a></li>
-		<li><a data-toggle="tab" href="#PheWeb">PheWeb</a></li>
-		<li><a data-toggle="tab" href="#Acknowledgement">Acknowledgement</a></li>
+    <ul id="navigator" class="nav nav-tabs nav-stacked text-left" aria-orientation="vertical"  role="tablist">
+        <li class="active"><a data-toggle="tab" href="#Overview">Overview</a></li>
+        <li><a data-toggle="tab" href="#GenotypeData">1. Genotype Data</a></li>
+            <li><a data-toggle="tab" href="#PreImputation">2. Pre-imputation</a></li>
+        <li><a data-toggle="tab" href="#LiftOver">2.1. Lifting to GRCh38</a></li>
+        <li><a data-toggle="tab" href="#Merging">2.2 Merging</a></li>
+        <li><a data-toggle="tab" href="#PCA">2.3 PCA</a></li>
+        <li><a data-toggle="tab" href="#Imputation">3. Imputation</a></li>
+        <li><a data-toggle="tab" href="#PhenotypeAssociation">4. Phenotype Association</a></li>
+        <li><a data-toggle="tab" href="#PheWeb">5. PheWeb</a></li>
+        <li><a data-toggle="tab" href="#Acknowledgement">Acknowledgement</a></li>
         </ul>
 </div>
-
-		<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-			<div class="tab-content">
+<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+    <div class="tab-content">
 <!-- OVERVIEW SECTION-->
-<div id="Overview" class="tab-pane fade in active">
+        <div id="Overview" class="tab-pane fade in active">
+            <p style='font-size:32px;font-family:"Calibri",sans-serif;text-align:center;'> About CARTaGENE's PheWeb</p>
+            <hr></hr>
+            <p style="font-size:15.0pt;"> This platform presents multiple analysis of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the canada-wide "Canadian Partnership for Tomorrow's Health" </p>
+            <p style="font-size:15.0pt;"> This platform presents a PheWas analysis of the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort.)  </p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <img src="static/CARTAGENE_logo.png" width="30%" height="30%" class="center-block">
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+        </div>
 
-<p style='font-size:32px;font-family:"Calibri",sans-serif;text-align:center;'> About CARTaGENE's PheWeb</p>
-<hr></hr>
-<p style="font-size:15.0pt;"> This platform presents multiple analysis of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the canada-wide "Canadian Partnership for Tomorrow's Health" </p>
-	<p style="font-size:15.0pt;"> This platform presents a PheWas analysis of the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort.)  </p>
-	</div>
-	
 
 <!-- DATA DESCRIPTION -->
-<div id="GenotypeData" class="tab-pane fade">
-<h2 class="text-center">Genotype Data</h2>
-<hr></hr>
-<p>We built this version of PheWeb using N=29,337 CARTaGENE participants genotyped on five different arrays.</p>
-<table class="table table-bordered table-condensed">
-	<tr>
-		<th>Short name</th>
-		<th>Desription</th>
-		<th class="text-right">N Individuals</th>
-		<th class="text-right">N Variants</th>
-	</tr>
-	<tr>
-		<td>Archi</td>
-		<td>GSA v3 + Multi disease panel (MHI_GSAMD-24v3-0-EA_20034606_C1)</td>
-		<td class="text-right">1,909</td>
-		<td class="text-right">688,795</td>
-	</tr>
-	<tr>
-		<td>17K</td>
-		<td>GSA v2 + Multi disease panel + addon (CaG_addon_v1_20037253_A2)</td>
-		<td class="text-right">17,286</td>
-		<td class="text-right">645,075</td>
-	</tr>
-	<tr>
-		<td>4K</td>
-		<td>GSA v2 + Multi disease panel (GSAMD-24v2-0_20024620_A)</td>
-		<td class="text-right">4,179</td>
-		<td class="text-right">728,919</td>
-	</tr>
-	<tr>
-		<td>5K</td>
-		<td>GSA v1 + Multi disease panel (GSAMD-24v1- 0_20011747_A1)</td>
-		<td class="text-right">5,237</td>
-		<td class="text-right">658,296</td>
-	</tr>
-	<tr>
-		<td>760</td>
-		<td>GSA v1 (GSA-24v1-0_A1)</td>
-		<td class="text-right">726</td>
-		<td class="text-right">626,377</td>
-	</tr>
-</table>
-<p>The genotyped CARTaGENE participants are from six Quebec regions: Gatineau, Montreal, Quebec, Saguenay, Sherbrooke, Trois-Rivieres. Only the 17K and 5K arrays included participants from all six regions.</p>
-<table class="table table-bordered table-condensed">
-    <tbody>
-        <tr>
-            <th>Region</th>
-            <th class="text-right">N Individuals in 17K (%)</th>
-            <th class="text-right">N Individuals in 4K (%)</th>
-            <th class="text-right">N Individuals in 5K (%)</th>
-            <th class="text-right">N Individuals in 760 (%)</th> 
-	    <th class="text-right">N Individuals in Archi (%)</th>
-        </tr>
-        <tr>
-            <td>Gatineau</td>
-            <td class="text-right">757 (4.4)</td>
-            <td class="text-right">None</td>
-            <td class="text-right">326 (6.2)</td>
-            <td class="text-right">1 (0.1)</td>
-            <td class="text-right">None</td>
-        </tr>
-        <tr>
-            <td>Montreal</td>
-            <td class="text-right">12,354 (71.5)</td>
-            <td class="text-right">2,921 (69.9)</td>
-            <td class="text-right">3,423 (65.4)</td>
-            <td class="text-right">522 (71.9)</td>
-            <td class="text-right">1,302 (68.2)</td>
-        </tr>
-        <tr>
-            <td>Quebec</td>
-            <td class="text-right">2,428 (14.0)</td>
-            <td class="text-right">877 (21.0)</td>
-            <td class="text-right">715 (13.7)</td>
-            <td class="text-right">61 (8.4)</td>
-            <td class="text-right">410 (21.5)</td>
-        </tr>
-        <tr>
-            <td>Saguenay</td>
-            <td class="text-right">556 (3.2)</td>
-            <td class="text-right">151 (3.6)</td>
-            <td class="text-right">228 (4.4)</td>
-            <td class="text-right">94 (12.9)</td>
-            <td class="text-right">196 (10.3)</td>
-        </tr>
-        <tr>
-            <td>Sherbrooke</td>
-            <td class="text-right">698 (4.0)</td>
-            <td class="text-right">229 (5.5)</td>
-            <td class="text-right">359 (6.9)</td>
-            <td class="text-right">48 (6.6)</td>
-            <td class="text-right">None</td>
-        </tr>
-        <tr>
-            <td>Trois-Rivieres</td>
-            <td class="text-right">493 (2.9)</td>
-            <td class="text-right">None</td>
-            <td class="text-right">186 (3.6)</td>
-            <td class="text-right">None</td>
-            <td class="text-right">None</td>
-        </tr>
-    </tbody>
-</table>
-<p>Only the 17K and 5K arrays included many participants recruited in both phase 1 and phase 2 of the study.</p>
-<table class="table table-bordered table-condensed">
-    <tbody>
-        <tr>
-            <th>Phase</th>
-            <th class="text-right">N Individuals in 17K (%)</th>
-            <th class="text-right">N Individuals in 4K (%)</th>
-            <th class="text-right">N Individuals in 5K (%)</th>
-            <th class="text-right">N Individuals in 760 (%)</th>
-            <th class="text-right">N Individuals in Archi (%)</th>
-        </tr>
-        <tr>
-            <td class="text-right">1</td>
-            <td class="text-right">9,828 (56.9)</td>
-            <td class="text-right">4,177 (100.0)</td>
-            <td class="text-right">2,503 (47.8)</td>
-            <td class="text-right">715 (98.5)</td>
-            <td class="text-right">1,908 (100.0)</td>
-        </tr>
-        <tr>
-            <td class="text-right">2</td>
-            <td class="text-right">7,456 (43.1)</td>
-            <td class="text-right">1 (0.0)</td>
-            <td class="text-right">2,734 (52.2)</td>
-            <td class="text-right">11 (1.5)</td>
-            <td class="text-right">None</td>
-        </tr>
-    </tbody>
-</table>
-</div>
+        <div id="GenotypeData" class="tab-pane fade">
+            <h2 class="text-center">Genotype Data</h2>
+            <hr></hr>
+            <p>We built this version of PheWeb using N=29,337 CARTaGENE participants genotyped on five different arrays.</p>
+            <table class="table table-bordered table-condensed">
+                <tr>
+                    <th>Short name</th>
+                    <th>Desription</th>
+                    <th class="text-right">N Individuals</th>
+                    <th class="text-right">N Variants</th>
+                </tr>
+                <tr>
+                    <td>Archi</td>
+                    <td>GSA v3 + Multi disease panel (MHI_GSAMD-24v3-0-EA_20034606_C1)</td>
+                    <td class="text-right">1,909</td>
+                    <td class="text-right">688,795</td>
+                </tr>
+                <tr>
+                    <td>17K</td>
+                    <td>GSA v2 + Multi disease panel + addon (CaG_addon_v1_20037253_A2)</td>
+                    <td class="text-right">17,286</td>
+                    <td class="text-right">645,075</td>
+                </tr>
+                <tr>
+                    <td>4K</td>
+                    <td>GSA v2 + Multi disease panel (GSAMD-24v2-0_20024620_A)</td>
+                    <td class="text-right">4,179</td>
+                    <td class="text-right">728,919</td>
+                </tr>
+                <tr>
+                    <td>5K</td>
+                    <td>GSA v1 + Multi disease panel (GSAMD-24v1- 0_20011747_A1)</td>
+                    <td class="text-right">5,237</td>
+                    <td class="text-right">658,296</td>
+                </tr>
+                <tr>
+                    <td>760</td>
+                    <td>GSA v1 (GSA-24v1-0_A1)</td>
+                    <td class="text-right">726</td>
+                    <td class="text-right">626,377</td>
+                </tr>
+            </table>
+            <p>The genotyped CARTaGENE participants are from six Quebec regions: Gatineau, Montreal, Quebec, Saguenay, Sherbrooke, Trois-Rivieres. Only the 17K and 5K arrays included participants from all six regions.</p>
+            <table class="table table-bordered table-condensed">
+                <tbody>
+                    <tr>
+                        <th>Region</th>
+                        <th class="text-right">N Individuals in 17K (%)</th>
+                        <th class="text-right">N Individuals in 4K (%)</th>
+                        <th class="text-right">N Individuals in 5K (%)</th>
+                        <th class="text-right">N Individuals in 760 (%)</th> 
+                    <th class="text-right">N Individuals in Archi (%)</th>
+                    </tr>
+                    <tr>
+                        <td>Gatineau</td>
+                        <td class="text-right">757 (4.4)</td>
+                        <td class="text-right">None</td>
+                        <td class="text-right">326 (6.2)</td>
+                        <td class="text-right">1 (0.1)</td>
+                        <td class="text-right">None</td>
+                    </tr>
+                    <tr>
+                        <td>Montreal</td>
+                        <td class="text-right">12,354 (71.5)</td>
+                        <td class="text-right">2,921 (69.9)</td>
+                        <td class="text-right">3,423 (65.4)</td>
+                        <td class="text-right">522 (71.9)</td>
+                        <td class="text-right">1,302 (68.2)</td>
+                    </tr>
+                    <tr>
+                        <td>Quebec</td>
+                        <td class="text-right">2,428 (14.0)</td>
+                        <td class="text-right">877 (21.0)</td>
+                        <td class="text-right">715 (13.7)</td>
+                        <td class="text-right">61 (8.4)</td>
+                        <td class="text-right">410 (21.5)</td>
+                    </tr>
+                    <tr>
+                        <td>Saguenay</td>
+                        <td class="text-right">556 (3.2)</td>
+                        <td class="text-right">151 (3.6)</td>
+                        <td class="text-right">228 (4.4)</td>
+                        <td class="text-right">94 (12.9)</td>
+                        <td class="text-right">196 (10.3)</td>
+                    </tr>
+                    <tr>
+                        <td>Sherbrooke</td>
+                        <td class="text-right">698 (4.0)</td>
+                        <td class="text-right">229 (5.5)</td>
+                        <td class="text-right">359 (6.9)</td>
+                        <td class="text-right">48 (6.6)</td>
+                        <td class="text-right">None</td>
+                    </tr>
+                    <tr>
+                        <td>Trois-Rivieres</td>
+                        <td class="text-right">493 (2.9)</td>
+                        <td class="text-right">None</td>
+                        <td class="text-right">186 (3.6)</td>
+                        <td class="text-right">None</td>
+                        <td class="text-right">None</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Only the 17K and 5K arrays included many participants recruited in both phase 1 and phase 2 of the study.</p>
+            <table class="table table-bordered table-condensed">
+                <tbody>
+                    <tr>
+                        <th>Phase</th>
+                        <th class="text-right">N Individuals in 17K (%)</th>
+                        <th class="text-right">N Individuals in 4K (%)</th>
+                        <th class="text-right">N Individuals in 5K (%)</th>
+                        <th class="text-right">N Individuals in 760 (%)</th>
+                        <th class="text-right">N Individuals in Archi (%)</th>
+                    </tr>
+                    <tr>
+                        <td class="text-right">1</td>
+                        <td class="text-right">9,828 (56.9)</td>
+                        <td class="text-right">4,177 (100.0)</td>
+                        <td class="text-right">2,503 (47.8)</td>
+                        <td class="text-right">715 (98.5)</td>
+                        <td class="text-right">1,908 (100.0)</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">2</td>
+                        <td class="text-right">7,456 (43.1)</td>
+                        <td class="text-right">1 (0.0)</td>
+                        <td class="text-right">2,734 (52.2)</td>
+                        <td class="text-right">11 (1.5)</td>
+                        <td class="text-right">None</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
 <!-- PRE-IMPUTATION -->
-<div id="PreImputation" class="tab-pane fade">
-<h2 class="text-center">Pre-imputation</h2>
-<hr></hr>
-<p>We started with the genotype data on the human genome build GRCh37/hg19 saved in five different files (i.e. one per array in PLINK format). We confirmed that each array's genotype data had undergone the initial QC at CARTaGENE.</p>
-<ol>
-	<li>Variants showing departures from the Hardy-Weinberg Equilibrium (P-value &lt; 10e-6) were removed.</li>
-	<li>Variants with call rate &lt;95% were removed.</li>
-	<li>Samples with call rate &lt;95% were removed.</li>
-	<li>Samples with discordance between reported and inferred sex were removed.</li>
-</ol>
-<p>Our steps for CARTaGENE genotype data imputation to the TOPMed reference panel included:</p>
-<ol>
-	<li>Lift each array's genotype data to the human genome build GRCh38.</li>
-	<li>Combine genotype data from five arrays and keep only shared variants.</li>
-	<li>Impute combined genotype data.</li>
-</ol>
-<p>The following sections describe each of these steps in detail.</p>
-</div>
+        <div id="PreImputation" class="tab-pane fade">
+            <h2 class="text-center">Pre-imputation</h2>
+            <hr></hr>
+            <p>We started with the genotype data on the human genome build GRCh37/hg19 saved in five different files (i.e. one per array in PLINK format). We confirmed that each array's genotype data had undergone the initial QC at CARTaGENE.</p>
+            <ol>
+                <li>Variants showing departures from the Hardy-Weinberg Equilibrium (P-value &lt; 10e-6) were removed.</li>
+                <li>Variants with call rate &lt;95% were removed.</li>
+                <li>Samples with call rate &lt;95% were removed.</li>
+                <li>Samples with discordance between reported and inferred sex were removed.</li>
+            </ol>
+            <p>Our steps for CARTaGENE genotype data imputation to the TOPMed reference panel included:</p>
+            <ol>
+                <li>Lift each array's genotype data to the human genome build GRCh38.</li>
+                <li>Combine genotype data from five arrays and keep only shared variants.</li>
+                <li>Impute combined genotype data.</li>
+            </ol>
+            <p>The following sections describe each of these steps in detail.</p>
+        </div>
 
 <!-- LIFTOVER -->
 <div id="LiftOver" class="tab-pane fade">
@@ -227,98 +228,135 @@
 	</tr>
 </table>
 </div>
+<!-- Merging -->
+        <div id="Merging" class="tab-pane fade">
+            <h2 class="text-center">Lifting to GRCh38</h2>
+	    <hr></hr>
+            <ol style="list-style-type: undefined;">
+		    <li> variants with extreme differences in allele frequency established in a geographically aware test (script : <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_strat_concordance.py">Github</a>) were removed.</li>
+                <li>Samples were deduplicated (based on Kinship and sample ID) the most well sequenced was kept.</li>
+            </ol>
+        </div>
+        <!-- PCA -->
+        <div id="PCA" class="tab-pane fade">
+            <h2 class="text-center">PCA</h2>
+            <hr></hr>
+            <ol style="list-style-type: undefined;">
+            	<li>Ancestry was established based on proximity of 1000 genomes samples within a PCA projection (performed with the <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> software, samples with clear european ancestry were identified (K-NN, 10/10 within 6 dimension) any remaining outliers were removed.</li>
+                <li>Ancestry was also established based on questionnaire answers.</li>
+                <li>Individual with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</li>
+            </ol>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
 
-<div id="Merging" class="tab-pane fade">
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Merging</span></p>
-<hr></hr>
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:20px;">&nbsp;</span></p>
-<ol style="list-style-type: undefined;">
-    <li><span style="font-size:15.0pt;">variants with extreme differences in allele frequency established in a geographically aware test (script : <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_strat_concordance.py">Github</a>) were removed.</span></li>
-    <li><span style="font-size:15.0pt;">Samples were deduplicated (based on Kinship and sample ID) the most well sequenced was kept.</span></li>
-</ol>
-<span style="font-size:20px;">&nbsp;</span></p>
-</div>
-<div id="PCA" class="tab-pane fade">
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin-top:0cm;margin-bottom:0cm;text-align:center;'><span style="font-size:27px;">PCA</span></p>
-<hr></hr>
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin-top:0cm;margin-bottom:0cm;text-align:center;'><span style="font-size:20px;">&nbsp;</span></p>
-<ol style="list-style-type: undefined;">
-    <li><span style="font-size:15.0pt;">Ancestry was established based on proximity of 1000 genomes samples within a PCA projection, samples with clear european ancestry were identified (K-NN, 10/10 within 6 dimension) any remaining outliers were removed.</span></li>
-    <li><span style="font-size:15.0pt;">Ancestry was also established based on questionnaire answers.</span></li>
-    <li><span style="font-size:15.0pt;">Individual with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</span></li>
-</ol>
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <img src="static/PCA.png" width="100%" height="100%">
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+        </div>
+        <div id="Imputation" class="tab-pane fade">
+            <h2 class="text-center">Imputation</h2>
+		<hr></hr>
+            <span style="font-size:20px;">&nbsp;</span></p>
+            <ol style="list-style-type: undefined;">
+                <li>Before imputation, all variant exhibiting strong allele frequency difference (&gt;0.2) were identified using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">Github</a>)</li>
+		<li> All samples were separated randomly into two batches of 25000 (maximum number of samples in TOPMed at the time) with overlap. And imputed as batches.</li>
+		<li>Batches were remerged and variants were filtered for Rsq &gt; 0.3</li>
+            </ol>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <!-- Carousel container -->
+            <div id="ImputationFigures" class="carousel slide" data-ride="carousel" style="width:50%;margin:auto;">
 
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-<img src="static/PCA.png" width="100%" height="100%">
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-</div>
-<div id="Imputation" class="tab-pane fade">
-<p id="Imputation" style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Imputation</span></p>
-<hr></hr>
-<span style="font-size:20px;">&nbsp;</span></p>
-<ol style="list-style-type: undefined;">
-    <li><span style="font-size:15.0pt;">Before imputation, all variant exhibiting strong allele frequency difference (&gt;0.2) were identified using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">Github</a>)</span></li>
-    <li><span style="font-size:15.0pt;">All samples were separated randomly into two batches of 25000 (maximum number of samples in TOPMed at the time) with overlap. And imputed as batches.</span></li>
-    <li><span style="font-size:15.0pt;">Batches were remerged and variants were filtered for Rsq &gt; 0.3</span></li>
-</ol>
-<span style="font-size:20px;">&nbsp;</span></p>
-</div>
-<div id="PhenotypeAssociation" class="tab-pane fade">
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Phenotype Association</span></p>
-<hr></hr>
-<ol style="list-style-type: undefined;">
-<span style="font-size:20px;">&nbsp;</span></p>
-    <li><span style="font-size:15.0pt;"><a href="https://rgcgithub.github.io/regenie/">Regenie</a> was distributed across a cluster per 50 phenotypes (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>)</span></li>
-    <li><span style="font-size:15.0pt;">Covariants were the arrays (as categorical), the individual&rsquo;s sex (as categorical), age, square(age) &nbsp;and the 10 first PC.</span></li>
-    <li><span style="font-size:15.0pt;">File preparation for Regenie were performed using the script provided in the github repository (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>).&nbsp;</span>
-                <ol class="decimal_type" style="list-style-type: circle;">
-    <li><span style="font-size:15.0pt;">Step 1 files were filtered using&nbsp;</span>
-        <ul class="decimal_type" style="list-style-type: square;">
-            <li><span style="font-size:15.0pt;">maf=0.01 (i.e. Minimum allele frequency)</span></li>
-            <li><span style="font-size:15.0pt;">geno=0.99 (i.e. Maximum Missing genotype frequency per-variant)</span></li>
-            <li><span style="font-size:15.0pt;">mind=0.99 (i.e. Maximum Missing genotype frequency per-sample)</span></li>
-            <li><span style="font-size:15.0pt;">HWE=1e-15 (i.e. threshold for Hardy-Weindberg Equilibrium)</span></li>
-        </ul>
-    </li>
-    <li><span style="font-size:15.0pt;">Step 2 files were unfiltered.&nbsp;</span>
-        <ul style="list-style-type: square;">
-            <li><span style="font-size:15.0pt;">Dosage (DS) was integrated into the analysis.</span></li>
-        </ul>
-    </li>
-    <li><span style="font-size:15.0pt;">Regenie Options</span>
-        <ul style="list-style-type: square;">
-            <li><span style="font-size:15.0pt;">Binairy traits Options : --bt --firth --approx --pThresh 0.05</span></li>
-            <li><span style="font-size:15.0pt;">continuous traits option : --apply-rint</span></li>
-        </ul>
-    </li>
-</ol>
-<span style="font-size:20px;">&nbsp;</span></p>
-</div>
-<div id="PheWeb" class="tab-pane fade">
-<h3 id="PheWeb" style='margin-right:0cm;margin-left:0cm;font-size:18px;font-family:"Times New Roman",serif;font-weight:bold;text-align:center;'><span style='font-size:27px;font-family:"Calibri",sans-serif;font-weight:normal;'>PheWeb</span></h3>
-<hr></hr>
-<span style="font-size:20px;">&nbsp;</span></p>
-<div style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'>
-    <ol style="margin-bottom:0cm;list-style-type: circle;margin-left:80px;">
-        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:15.0pt;">Variants with minimal allele count of 20 were loaded into <a href="https://github.com/statgen/pheweb">PheWeb</a>.</span></li>
-    </ol>
-</div>
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><br></p>
-</div>
-<div id="Acknowledgement" class="tab-pane fade">
-<h3 style='margin-right:0cm;margin-left:0cm;font-size:18px;font-family:"Times New Roman",serif;font-weight:bold;text-align:center;'><span style='font-size:27px;font-family:"Calibri",sans-serif;font-weight:normal;'>Acknowledgement</span></h3>
-<hr></hr>
-<span style="font-size:20px;">&nbsp;</span></p>
-<ul style="margin-bottom:0cm;" type="disc">
-    <ul style="margin-bottom:0cm;" type="circle">
-        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Authors : Vincent Chapdelaine, Claude Bh&eacute;rer, Vincent Mooser, Sarah Gagliano-Taliun, Daniel Taliun</span></li>
-        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Data was provided by the CARTaGENE consortium</span></li>
-        <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">Analysis were performed on Compute Canada and this site is hosted on Compute Canada.</span></li>
-  <li style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:20px;">We would like to thank all participant to the CARTaGENE who volonteered their time and informations for this research.</span></li>
-    </ul>
-</ul>
-  </div>
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#Difference-TOPMed-MAF" data-slide-to="0" class="active"></li>
+                    <li data-target="#SCHEME" data-slide-to="1"></li>
+                    <li data-target="#rsq" data-slide-to="2"></li>
+                </ol>
+
+                <!-- Content -->
+                <div class="carousel-inner" role="listbox">
+
+                <!-- Slide 1 -->
+                <div class="item active">
+                <img src="static/Difference.png" alt="Sunset over beach">
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="item">
+                <img src="static/schema_imputation.png" alt="Rob Roy Glacier">
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="item">
+                <img src="static/rsq.png" alt="Longtail boats at Phi Phi">
+                </div>
+
+                </div>
+
+                <!-- Previous/Next controls -->
+                <a class="left carousel-control" href="#ImputationFigures" role="button" data-slide="prev">
+                <span class="icon-prev" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#ImputationFigures" role="button" data-slide="next">
+                <span class="icon-next" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+                </a>
+
+            </div>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <span style="font-size:20px;">&nbsp;</span></p>
+        </div>
+        <div id="PhenotypeAssociation" class="tab-pane fade">
+    <h2 class="text-center">Phenotype Association</h2>
+    <hr></hr>
+            <ol style="list-style-type: undefined;">
+            <span style="font-size:20px;">&nbsp;</span></p>
+            <li><a href="https://rgcgithub.github.io/regenie/">Regenie</a> was distributed across a cluster per 50 phenotypes (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>)</li>
+	    <li>Covariants were the arrays (as categorical), the individual&rsquo;s sex (as categorical), age, square(age) &nbsp;and the 10 first PC.</li>
+	    <li>File preparation for Regenie were performed using the script provided in the github repository (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>).&nbsp;
+            <ol class="decimal_type" style="list-style-type: circle;">
+                <li>Step 1 files were filtered using&nbsp;
+                    <ul class="decimal_type" style="list-style-type: square;">
+                        <li>maf=0.01 (i.e. Minimum allele frequency)</li>
+                        <li>geno=0.99 (i.e. Maximum Missing genotype frequency per-variant)</li>
+                        <li>mind=0.99 (i.e. Maximum Missing genotype frequency per-sample)</li>
+                        <li>HWE=1e-15 (i.e. threshold for Hardy-Weindberg Equilibrium)</li>
+                    </ul>
+                </li>
+                <li>Step 2 files were unfiltered.&nbsp;
+                    </ul>
+                        <li>Dosage (DS) was integrated into the analysis.</li>
+                    </ul>
+                </li>
+                <li>Regenie Options
+                    <ul style="list-style-type: square;">
+                        <li>Binairy traits Options : --bt --firth --approx --pThresh 0.05</li>
+                        <li>continuous traits option : --apply-rint</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        <div id="PheWeb" class="tab-pane fade">
+            <h2 class="text-center">PheWeb</h2>
+	    <hr></hr>
+            <span style="font-size:20px;">&nbsp;</span></p>
+                <ol style="margin-bottom:0cm;list-style-type: circle;margin-left:80px;">
+                    <li>Variants with minimal allele count of 20 were loaded into <a href="https://github.com/statgen/pheweb">PheWeb</a>.</li>
+                </ol>
+            </div>
+        <div id="Acknowledgement" class="tab-pane fade">
+            <h2 class="text-center">Acknowledgement</h2>
+	    <hr></hr>
+            <span style="font-size:20px;">&nbsp;</span></p>
+            <ul  type="disc">
+                <ul  type="circle">
+                    <li>Authors : Vincent Chapdelaine, Claude Bh&eacute; rer, Vincent Mooser, Sarah Gagliano-Taliun, Daniel Taliun</li>
+                    <li>Data was provided by the CARTaGENE consortium</li>
+                    <li>Analysis were performed on Compute Canada and this site is hosted on Compute Canada.</span></li>
+                    <li>We would like to thank all participant to the CARTaGENE who volonteered their time and informations for this research.</span></li>
+                </ul>
+          </ul>
+        </div>
     </div>
     <!-- </div> -->
 <!--</div>-->

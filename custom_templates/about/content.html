@@ -182,15 +182,52 @@
 
 <!-- LIFTOVER -->
 <div id="LiftOver" class="tab-pane fade">
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">LiftOver to build 38</span></p>
+<h2 class="text-center">Lifting to GRCh38</h2>
 <hr></hr>
-<span style="font-size:20px;">&nbsp;</span></p>
-<ol style="list-style-type: decimal;">
-    <li><span style="font-size:15.0pt;">Position of the original files were changed to reflect the position within build 38 (i.e. lifted over) using <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver"><span style="color:windowtext;">UCSC LiftOver</span></a> and their chain files. Unmapped variant, variant mapped to alternate contig, and mitochondrial variants were excluded.</span></li>
-    <li><span style="font-size:15.0pt;">&nbsp;Furthering the process, variants were aligned to the reference using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">Github</a>) during this process A/T G/C palindromic variants were removed along with insertion and deletion.&nbsp;</span></li>
-    <li><span style="font-size:15.0pt;">Variants were also deduplicated using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">Github</a>) &nbsp;prioritizing well sequenced variants and renamed to Chr:Pos:Ref:Alt convention.</span></li>
+<p>We converted each array's genotype data to the genome build GRCh38 and aligned it to the "+" strand. Our conversion included the following steps:</p>
+<ol>
+	<li>We lifted genetic positions from GRCh37 to GRCh38 using  <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">UCSC LiftOver</a> tool and the corresponding chain files.</li>
+	<li>We excluded variants that did not map to GRCh38, mapped to alternate contigs in GRCh38, or located on the mitochondrial chromosome.</li>
+	<li>We aligned A1/A2 alleles in the original PLINK files to the REF/ALT alleles on the "+" strand using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">plink2reference.py</a> script.</li>
+	<li>We excluded palindromic variants (A/T and G/C), variants for which A1/A2 alleles didn't match REF/ALT, and for which A1/A2 alleles were not A, C, G, or T.</li>
+	<li>We renamed all variants to the CHR:POS:REF:ALT notation.</li>
+	<li>If multiple variants had the same name, we kept only one with the highest call rate using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">plink_dupvar_prioritize.py</a> script. We observed such duplicated variants only on customized genotyping arrays</li>
 </ol>
+<p>The final number of variants after these steps was:</p>
+<table class="table table-bordered table-condensed">
+	<tr>
+		<th>Array</th>
+		<th class="text-right">N Variants in GRCh37</th>
+		<th class="text-right">N Variants in GRCh38</th>
+	</tr>
+	<tr>
+		<td>Archi</td>
+		<td class="text-right">688,795</td>
+		<td class="text-right">620,623</td>
+	</tr>
+	<tr>
+		<td>17K</td>
+		<td class="text-right">645,075</td>
+		<td class="text-right">612,224</td>
+	</tr>
+	<tr>
+		<td>4K</td>
+		<td class="text-right">728,919</td>
+		<td class="text-right">648,511</td>
+	</tr>
+	<tr>
+		<td>5K</td>
+		<td class="text-right">658,296</td>
+		<td class="text-right">638,099</td>
+	</tr>
+	<tr>
+		<td>760</td>
+		<td class="text-right">626,377</td>
+		<td class="text-right">581,440</td>
+	</tr>
+</table>
 </div>
+
 <div id="Merging" class="tab-pane fade">
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Merging</span></p>
 <hr></hr>

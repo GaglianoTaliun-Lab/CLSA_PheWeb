@@ -1,321 +1,186 @@
-<div class="container">
-	<div class="row">
-		<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" role='complementary'>
-	     <ul id="navigator" class="nav nav-tabs nav-stacked text-center" aria-orientation="vertical"  role="tablist">
-		     <li class="active"><a data-toggle="tab" href="#Overview">Overview</a></li>
-		     <li><a data-toggle="tab" href="#DataDescription">Data Description</a></li>
-        	    <li><a data-toggle="tab" href="#QualityChecks">Quality Checks</a></li>
-		    <li><a data-toggle="tab" href="#LiftOver">LiftOver</a></li>
-		    <li><a data-toggle="tab" href="#Merging">Merging</a></li>
-		   <li><a data-toggle="tab" href="#PCA">PCA</a></li>
-		   <li><a data-toggle="tab" href="#Imputation">Imputation</a></li>
-<li><a data-toggle="tab" href="#PhenotypeAssociation">Phenotype Association</a></li>
-<li><a data-toggle="tab" href="#PheWeb">PheWeb</a></li>
-<li><a data-toggle="tab" href="#Acknowledgement">Acknowledgement</a></li>
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" role='complementary'>
+	<ul id="navigator" class="nav nav-tabs nav-stacked text-left" aria-orientation="vertical"  role="tablist">
+		<li class="active"><a data-toggle="tab" href="#Overview">Overview</a></li>
+		<li><a data-toggle="tab" href="#GenotypeData">1. Genotype Data</a></li>
+        	<li><a data-toggle="tab" href="#PreImputation">2. Pre-imputation</a></li>
+		<li><a data-toggle="tab" href="#LiftOver">2.1. Lifting to GRCh38</a></li>
+		<li><a data-toggle="tab" href="#Merging">Merging</a></li>
+		<li><a data-toggle="tab" href="#PCA">PCA</a></li>
+		<li><a data-toggle="tab" href="#Imputation">Imputation</a></li>
+		<li><a data-toggle="tab" href="#PhenotypeAssociation">Phenotype Association</a></li>
+		<li><a data-toggle="tab" href="#PheWeb">PheWeb</a></li>
+		<li><a data-toggle="tab" href="#Acknowledgement">Acknowledgement</a></li>
         </ul>
 </div>
 
-<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-<div class="tab-content">
-	<div id="Overview" class="tab-pane fade in active">
-	<p style='font-size:32px;font-family:"Calibri",sans-serif;text-align:center;'> About CARTaGENE's PheWeb</p>
-	<hr></hr>
-	<p style="font-size:15.0pt;"> This platform presents multiple analysis of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the canada-wide "Canadian Partnership for Tomorrow's Health" </p>
+		<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+			<div class="tab-content">
+<!-- OVERVIEW SECTION-->
+<div id="Overview" class="tab-pane fade in active">
+
+<p style='font-size:32px;font-family:"Calibri",sans-serif;text-align:center;'> About CARTaGENE's PheWeb</p>
+<hr></hr>
+<p style="font-size:15.0pt;"> This platform presents multiple analysis of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the canada-wide "Canadian Partnership for Tomorrow's Health" </p>
 	<p style="font-size:15.0pt;"> This platform presents a PheWas analysis of the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort.)  </p>
 	</div>
-	<div id="DataDescription" class="tab-pane fade">
-	<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Data Description</span></p>
-<hr></hr>
-<table style="border: none;width:666.3pt;border-collapse:collapse;margin-left:auto;margin-right:auto;" position="relative" min-width="1220">
-    <tbody>
-        <tr>
-            <td style="width: 102.55pt;border-color: currentcolor currentcolor black;border-style: none none solid;border-width: medium medium 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 19.95pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Array</p>
-            </td>
-            <td style="width: 153.5pt;border-color: currentcolor currentcolor black;border-style: none none solid;border-width: medium medium 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 19.95pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>17k<br>&nbsp;(GSAv2 + MD+ addon)</p>
-            </td>
-            <td style="width: 103.3pt;border-color: currentcolor currentcolor black;border-style: none none solid;border-width: medium medium 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 19.95pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>5300<br>&nbsp;(GSAv1 + MD)</p>
-            </td>
-            <td style="width: 105.45pt;border-color: currentcolor currentcolor black;border-style: none none solid;border-width: medium medium 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 19.95pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>4224<br>&nbsp;(GSAv2 + MD)</p>
-            </td>
-            <td style="width: 80pt;border-color: currentcolor currentcolor black;border-style: none none solid;border-width: medium medium 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 19.95pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>760 (GSAv1)</p>
-            </td>
-            <td style="width: 121.5pt;border-color: currentcolor currentcolor black;border-style: none none solid;border-width: medium medium 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 19.95pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Archi</p>
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>(GSAv3 + MD)</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 102.55pt;border: medium none;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Nb individuals</p>
-            </td>
-            <td style="width: 153.5pt;border: medium none;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>17,286</p>
-            </td>
-            <td style="width: 103.3pt;border: medium none;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>5,237</p>
-            </td>
-            <td style="width: 105.45pt;border: medium none;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>4,179</p>
-            </td>
-            <td style="width: 80pt;border: medium none;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>726</p>
-            </td>
-            <td style="width: 121.5pt;border: medium none;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>1,909</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 102.55pt;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Nb variants in file</p>
-            </td>
-            <td style="width: 153.5pt;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>645,075</p>
-            </td>
-            <td style="width: 103.3pt;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>658,296</p>
-            </td>
-            <td style="width: 105.45pt;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>728,919</p>
-            </td>
-            <td style="width: 80pt;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>626,377</p>
-            </td>
-            <td style="width: 121.5pt;padding: 4.25pt 8.5pt;height: 14.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>688,795</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'><span style="font-size:35px;">&nbsp;</span></p>
-<table style="border: none;width:666.3pt;border-collapse:collapse;margin-left:auto;margin-right:auto;" position="relative" min-width="1220">
-    <tbody>
-        <tr>
-            <td style="width: 103.25pt;border-color: white white black;border-style: solid;border-width: 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 12.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Array</p>
-            </td>
-            <td style="width: 154.5pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>17k &nbsp;(%)</p>
-            </td>
-            <td style="width: 103.95pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>4224 &nbsp;(%)</p>
-            </td>
-            <td style="width: 106.2pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>5300 &nbsp;(%)</p>
-            </td>
-            <td style="width: 80.55pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>760 (%)</p>
-            </td>
-            <td style="width: 122.3pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Archi (%)</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 103.25pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 12.85pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Gatineau</p>
-            </td>
-            <td style="width: 154.5pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.85pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>757 (4.4)</p>
-            </td>
-            <td style="width: 103.95pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.85pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>None</p>
-            </td>
-            <td style="width: 106.2pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.85pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>326 (6.2)</p>
-            </td>
-            <td style="width: 80.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.85pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>1 (0.1)</p>
-            </td>
-            <td style="width: 122.3pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.85pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>None</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 103.25pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 12.65pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Montreal</p>
-            </td>
-            <td style="width: 154.5pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.65pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>12,354 (71.5)</p>
-            </td>
-            <td style="width: 103.95pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.65pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>2,921 (69.9)</p>
-            </td>
-            <td style="width: 106.2pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.65pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>3,423 (65.4)</p>
-            </td>
-            <td style="width: 80.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.65pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>522 (71.9)</p>
-            </td>
-            <td style="width: 122.3pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 12.65pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>1,302 (68.2)</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 103.25pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 17.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Quebec</p>
-            </td>
-            <td style="width: 154.5pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>2,428 (14.0)</p>
-            </td>
-            <td style="width: 103.95pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>877 (21.0)</p>
-            </td>
-            <td style="width: 106.2pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>715 (13.7)</p>
-            </td>
-            <td style="width: 80.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>61 (8.4)</p>
-            </td>
-            <td style="width: 122.3pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17.2pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>410 (21.5)</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 103.25pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 17pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Saguenay</p>
-            </td>
-            <td style="width: 154.5pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>556 (3.2)</p>
-            </td>
-            <td style="width: 103.95pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>151 (3.6)</p>
-            </td>
-            <td style="width: 106.2pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>228 (4.4)</p>
-            </td>
-            <td style="width: 80.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>94 (12.9)</p>
-            </td>
-            <td style="width: 122.3pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 17pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>196 (10.3)</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 103.25pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 16.8pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Sherbrooke</p>
-            </td>
-            <td style="width: 154.5pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.8pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>698 (4.0)</p>
-            </td>
-            <td style="width: 103.95pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.8pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>229 (5.5)</p>
-            </td>
-            <td style="width: 106.2pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.8pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>359 (6.9)</p>
-            </td>
-            <td style="width: 80.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.8pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>48 (6.6)</p>
-            </td>
-            <td style="width: 122.3pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.8pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>None</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 103.25pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 4.25pt 8.5pt;height: 16.6pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Trois-Rivieres</p>
-            </td>
-            <td style="width: 154.5pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.6pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>493 (2.9)</p>
-            </td>
-            <td style="width: 103.95pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.6pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>None</p>
-            </td>
-            <td style="width: 106.2pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.6pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>186 (3.6)</p>
-            </td>
-            <td style="width: 80.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.6pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>None</p>
-            </td>
-            <td style="width: 122.3pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 4.25pt 8.5pt;height: 16.6pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>None</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'>&nbsp;</p>
-<p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;'>&nbsp;</p>
-<table style="border: none;width:666.3pt;border-collapse:collapse;margin-left:auto;margin-right:auto;" position="relative" min-width="1220">
-    <tbody>
-        <tr>
-            <td style="width: 111.55pt;border-color: white white black;border-style: solid;border-width: 1pt;border-image: none 100% / 1 / 0 stretch;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>PHASE</p>
-            </td>
-            <td style="width: 111.55pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>17k (%)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>4224 (%)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>5300 (%)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>760 (%)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: white white black currentcolor;border-style: solid solid solid none;border-width: 1pt 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>Archi N (%)</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 111.55pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>1</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>9,828 (56.9)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>4,177 (100.0)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>2,503 (47.8)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>715 (98.5)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>1,908 (100.0)</p>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 111.55pt;border-color: currentcolor white white;border-style: none solid solid;border-width: medium 1pt 1pt;border-image: none 100% / 1 / 0 stretch;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>2</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>7,456 (43.1)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>1 (0.0)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>2,734 (52.2)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>11 (1.5)</p>
-            </td>
-            <td style="width: 111.55pt;border-color: currentcolor white white currentcolor;border-style: none solid solid none;border-width: medium 1pt 1pt medium;padding: 3.6pt 7.2pt;height: 16.15pt;vertical-align: top;">
-                <p style='margin:0cm;font-size:16px;font-family:"Calibri",sans-serif;text-align:center;'>None</p>
-            </td>
-        </tr>
-    </tbody>
-</table>
+	
 
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><span style="font-size:20px;">&nbsp;</span></p><p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;'><span style="font-size:20px;">&nbsp;</span></p>
-	</div>
-	<div id="QualityChecks" class="tab-pane fade">
-<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">Quality Checks</span></p>
+<!-- DATA DESCRIPTION -->
+<div id="GenotypeData" class="tab-pane fade">
+<h2 class="text-center">Genotype Data</h2>
 <hr></hr>
-<ol style="list-style-type: circle;margin-left:80px;">
-    <li><span style="font-size:15.0pt;">HWE (p&lt;10e-6)</span></li>
-    <li><span style="font-size:15.0pt;">Reported sexes were confirmed</span></li>
-    <li><span style="font-size:15.0pt;">Sample and variant call rate (&gt;95%)</span></li>
-    <li><span style="font-size:15.0pt;">Encoding of the pseudo-autosomal region within the X chromosome ( i.e. X merging)</span></li>
-</ol>
-<span style="font-size:20px;">&nbsp;</span></p>
+<p>We built this version of PheWeb using N=29,337 CARTaGENE participants genotyped on five different arrays.</p>
+<table class="table table-bordered table-condensed">
+	<tr>
+		<th>Short name</th>
+		<th>Desription</th>
+		<th class="text-right">N Individuals</th>
+		<th class="text-right">N Variants</th>
+	</tr>
+	<tr>
+		<td>Archi</td>
+		<td>GSA v3 + Multi disease panel (MHI_GSAMD-24v3-0-EA_20034606_C1)</td>
+		<td class="text-right">1,909</td>
+		<td class="text-right">688,795</td>
+	</tr>
+	<tr>
+		<td>17K</td>
+		<td>GSA v2 + Multi disease panel + addon (CaG_addon_v1_20037253_A2)</td>
+		<td class="text-right">17,286</td>
+		<td class="text-right">645,075</td>
+	</tr>
+	<tr>
+		<td>4K</td>
+		<td>GSA v2 + Multi disease panel (GSAMD-24v2-0_20024620_A)</td>
+		<td class="text-right">4,179</td>
+		<td class="text-right">728,919</td>
+	</tr>
+	<tr>
+		<td>5K</td>
+		<td>GSA v1 + Multi disease panel (GSAMD-24v1- 0_20011747_A1)</td>
+		<td class="text-right">5,237</td>
+		<td class="text-right">658,296</td>
+	</tr>
+	<tr>
+		<td>760</td>
+		<td>GSA v1 (GSA-24v1-0_A1)</td>
+		<td class="text-right">726</td>
+		<td class="text-right">626,377</td>
+	</tr>
+</table>
+<p>The genotyped CARTaGENE participants are from six Quebec regions: Gatineau, Montreal, Quebec, Saguenay, Sherbrooke, Trois-Rivieres. Only the 17K and 5K arrays included participants from all six regions.</p>
+<table class="table table-bordered table-condensed">
+    <tbody>
+        <tr>
+            <th>Region</th>
+            <th class="text-right">N Individuals in 17K (%)</th>
+            <th class="text-right">N Individuals in 4K (%)</th>
+            <th class="text-right">N Individuals in 5K (%)</th>
+            <th class="text-right">N Individuals in 760 (%)</th> 
+	    <th class="text-right">N Individuals in Archi (%)</th>
+        </tr>
+        <tr>
+            <td>Gatineau</td>
+            <td class="text-right">757 (4.4)</td>
+            <td class="text-right">None</td>
+            <td class="text-right">326 (6.2)</td>
+            <td class="text-right">1 (0.1)</td>
+            <td class="text-right">None</td>
+        </tr>
+        <tr>
+            <td>Montreal</td>
+            <td class="text-right">12,354 (71.5)</td>
+            <td class="text-right">2,921 (69.9)</td>
+            <td class="text-right">3,423 (65.4)</td>
+            <td class="text-right">522 (71.9)</td>
+            <td class="text-right">1,302 (68.2)</td>
+        </tr>
+        <tr>
+            <td>Quebec</td>
+            <td class="text-right">2,428 (14.0)</td>
+            <td class="text-right">877 (21.0)</td>
+            <td class="text-right">715 (13.7)</td>
+            <td class="text-right">61 (8.4)</td>
+            <td class="text-right">410 (21.5)</td>
+        </tr>
+        <tr>
+            <td>Saguenay</td>
+            <td class="text-right">556 (3.2)</td>
+            <td class="text-right">151 (3.6)</td>
+            <td class="text-right">228 (4.4)</td>
+            <td class="text-right">94 (12.9)</td>
+            <td class="text-right">196 (10.3)</td>
+        </tr>
+        <tr>
+            <td>Sherbrooke</td>
+            <td class="text-right">698 (4.0)</td>
+            <td class="text-right">229 (5.5)</td>
+            <td class="text-right">359 (6.9)</td>
+            <td class="text-right">48 (6.6)</td>
+            <td class="text-right">None</td>
+        </tr>
+        <tr>
+            <td>Trois-Rivieres</td>
+            <td class="text-right">493 (2.9)</td>
+            <td class="text-right">None</td>
+            <td class="text-right">186 (3.6)</td>
+            <td class="text-right">None</td>
+            <td class="text-right">None</td>
+        </tr>
+    </tbody>
+</table>
+<p>Only the 17K and 5K arrays included many participants recruited in both phase 1 and phase 2 of the study.</p>
+<table class="table table-bordered table-condensed">
+    <tbody>
+        <tr>
+            <th>Phase</th>
+            <th class="text-right">N Individuals in 17K (%)</th>
+            <th class="text-right">N Individuals in 4K (%)</th>
+            <th class="text-right">N Individuals in 5K (%)</th>
+            <th class="text-right">N Individuals in 760 (%)</th>
+            <th class="text-right">N Individuals in Archi (%)</th>
+        </tr>
+        <tr>
+            <td class="text-right">1</td>
+            <td class="text-right">9,828 (56.9)</td>
+            <td class="text-right">4,177 (100.0)</td>
+            <td class="text-right">2,503 (47.8)</td>
+            <td class="text-right">715 (98.5)</td>
+            <td class="text-right">1,908 (100.0)</td>
+        </tr>
+        <tr>
+            <td class="text-right">2</td>
+            <td class="text-right">7,456 (43.1)</td>
+            <td class="text-right">1 (0.0)</td>
+            <td class="text-right">2,734 (52.2)</td>
+            <td class="text-right">11 (1.5)</td>
+            <td class="text-right">None</td>
+        </tr>
+    </tbody>
+</table>
 </div>
+
+<!-- PRE-IMPUTATION -->
+<div id="PreImputation" class="tab-pane fade">
+<h2 class="text-center">Pre-imputation</h2>
+<hr></hr>
+<p>We started with the genotype data on the human genome build GRCh37/hg19 saved in five different files (i.e. one per array in PLINK format). We confirmed that each array's genotype data had undergone the initial QC at CARTaGENE.</p>
+<ol>
+	<li>Variants showing departures from the Hardy-Weinberg Equilibrium (P-value &lt; 10e-6) were removed.</li>
+	<li>Variants with call rate &lt;95% were removed.</li>
+	<li>Samples with call rate &lt;95% were removed.</li>
+	<li>Samples with discordance between reported and inferred sex were removed.</li>
+</ol>
+<p>Our steps for CARTaGENE genotype data imputation to the TOPMed reference panel included:</p>
+<ol>
+	<li>Lift each array's genotype data to the human genome build GRCh38.</li>
+	<li>Combine genotype data from five arrays and keep only shared variants.</li>
+	<li>Impute combined genotype data.</li>
+</ol>
+<p>The following sections describe each of these steps in detail.</p>
+</div>
+
+<!-- LIFTOVER -->
 <div id="LiftOver" class="tab-pane fade">
 <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style="font-size:27px;">LiftOver to build 38</span></p>
 <hr></hr>
@@ -418,5 +283,5 @@
 </ul>
   </div>
     </div>
-    </div>
-</div>
+    <!-- </div> -->
+<!--</div>-->

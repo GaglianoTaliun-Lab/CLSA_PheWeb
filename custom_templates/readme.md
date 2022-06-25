@@ -12,4 +12,4 @@ These are bootstrap enabled and should be written in html. Only specific file na
   custom_templates/region/h1.html: the large text at the top of the region (LocusZoom Region Plot) page  
   custom_templates/title.html: the title of the window, usually shown in the tab bar  
   
-Images : to properly display images, the file requieres to be within the /static/ dossier within the main website's repository.
+Images : to properly display images, the file requieres to be within the /static/ dossier within the pheweb/serve repository.

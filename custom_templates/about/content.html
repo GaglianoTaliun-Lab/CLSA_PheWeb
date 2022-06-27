@@ -5,7 +5,7 @@
             <li><a data-toggle="tab" href="#PreImputation">2. Pre-imputation</a></li>
         <li><a data-toggle="tab" href="#LiftOver">2.1. Lifting to GRCh38</a></li>
         <li><a data-toggle="tab" href="#Merging">2.2 Merging</a></li>
-        <li><a data-toggle="tab" href="#PCA">2.3 PCA</a></li>
+        <li><a data-toggle="tab" href="#PCA">2.3 Population Structure</a></li>
         <li><a data-toggle="tab" href="#Imputation">3. Imputation</a></li>
         <li><a data-toggle="tab" href="#PhenotypeAssociation">4. Phenotype Association</a></li>
         <li><a data-toggle="tab" href="#PheWeb">5. PheWeb</a></li>
@@ -234,22 +234,43 @@
 	    <hr></hr>
             <ol style="list-style-type: undefined;">
 		    <li> variants with extreme differences in allele frequency established in a geographically aware test (script : <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_strat_concordance.py">Github</a>) were removed.</li>
-                <li>Samples were deduplicated (based on Kinship and sample ID) the most well sequenced was kept.</li>
+                <li>Samples were deduplicated (based on sample ID) the most well sequenced was kept.</li>
             </ol>
-        </div>
-        <!-- PCA -->
+	</div>
+		    <!-- PCA -->
         <div id="PCA" class="tab-pane fade">
-            <h2 class="text-center">PCA</h2>
+            <h2 class="text-center">Population Structure</h2>
             <hr></hr>
             <ol style="list-style-type: undefined;">
-            	<li>Ancestry was established based on proximity of 1000 genomes samples within a PCA projection (performed with the <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> software, samples with clear european ancestry were identified (K-NN, 10/10 within 6 dimension) any remaining outliers were removed.</li>
+            	<li>Ancestry was established based on proximity of 1000 genomes samples within a PCA projection (performed with the <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> software, samples with clear ancestry were identified (K-NN, 10/10 within 6 dimension)
+			<center><a href="static/PCA.png"><img class="img-responsive" src="static/PCA.png" width="60%" height="60%"></a></center>
                 <li>Ancestry was also established based on questionnaire answers.</li>
-                <li>Individual with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</li>
-            </ol>
+		<center><a href="static/CARTaGENE_Questionnaire_eth_ethnicity.png"><img class="img-responsive" src="static/CARTaGENE_Questionnaire_eth_ethnicity.png" width="60%" height="60%"></a></center>
+                <li>Individuals with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</li>
+		<li> Individuals the relationship between individuals was also estimated using plink2"s kinship function. Duplicate infered form questionnaire and this kinship were deduplicated for phenotype Association.</li>
+	    </ol>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <table class="table table-bordered table-condensed">
+        <tr>
+                <th>Relationship</th>
+                <th class="text-right">Non duplicate Monozygotic Twin</th>
+                <th class="text-right">Parents / Offsprings</th>
+                <th class="text-right">First Siblings</th>
+                <th class="text-right">Second Degree</th>
+                <th class="text-right">Third Degree</th>
+        </tr>
+                <tr>
+                <th>Number of pairings</th>
+                <th class="text-right">3</th>
+                <th class="text-right">61</th>
+                <th class="text-right">654</th>
+                <th class="text-right">535</th>
+                <th class="text-right">3290</th>
+        </tr>
+            </table>
 
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-            <img src="static/PCA.png" width="100%" height="100%">
+            
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
         </div>
         <div id="Imputation" class="tab-pane fade">
@@ -258,13 +279,13 @@
             <span style="font-size:20px;">&nbsp;</span></p>
             <ol style="list-style-type: undefined;">
                 <li>Before imputation, all variant exhibiting strong allele frequency difference (&gt;0.2) were identified using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">Github</a>)</li>
+		<center><a href="static/Difference.png"><img src="static/Difference.png"  width="50%" height="50%"></a></center>
 		<li> All samples were separated randomly into two batches of 25000 (maximum number of samples in TOPMed at the time) with overlap. And imputed as batches.</li>
+		<center><a href="static/schema_imputation.png"><img src="static/schema_imputation.png"  width="50%" height="50%"></a></center>
 		<li>Batches were remerged and variants were filtered for Rsq &gt; 0.3</li>
             </ol>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-             <img src="static/Difference.png"  width="50%" height="50%">    
-	    <img src="static/schema_imputation.png"  width="50%" height="50%">
-                <img src="static/rsq.png"  width="50%" height="50%">
+	    <center><a href="static/rsq.png"><img src="static/rsq.png"  width="50%" height="50%"></a></center>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <span style="font-size:20px;">&nbsp;</span></p>
         </div>

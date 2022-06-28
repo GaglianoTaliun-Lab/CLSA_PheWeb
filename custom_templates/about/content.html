@@ -3,7 +3,7 @@
         <li class="active"><a data-toggle="tab" href="#Overview">Overview</a></li>
         <li><a data-toggle="tab" href="#GenotypeData">1. Genotype Data</a></li>
             <li><a data-toggle="tab" href="#PreImputation">2. Pre-imputation</a></li>
-        <li><a data-toggle="tab" href="#LiftOver">2.1. Lifting to GRCh38</a></li>
+        <li><a data-toggle="tab" href="#LiftOver">2.1. Lift over to GRCh38</a></li>
         <li><a data-toggle="tab" href="#Merging">2.2 Merging</a></li>
         <li><a data-toggle="tab" href="#PCA">2.3 Population Structure</a></li>
         <li><a data-toggle="tab" href="#Imputation">3. Imputation</a></li>
@@ -16,10 +16,10 @@
     <div class="tab-content">
 <!-- OVERVIEW SECTION-->
         <div id="Overview" class="tab-pane fade in active">
-            <p style='font-size:32px;font-family:"Calibri",sans-serif;text-align:center;'> About CARTaGENE's PheWeb</p>
+            <h2 class="text-center"> About CARTaGENE PheWeb</h2>
             <hr></hr>
-            <p style="font-size:15.0pt;"> This platform presents multiple analysis of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the canada-wide "Canadian Partnership for Tomorrow's Health" </p>
-            <p style="font-size:15.0pt;"> This platform presents a PheWas analysis of the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort.)  </p>
+            <p> This platform presents multiple analyses of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the Canada-wide "Canadian Partnership for Tomorrow's Health" </p>
+   	    <p> This platform presents a Phenome-wide (PheWas) association results from the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort).  </p>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <img src="static/CARTAGENE_logo.png" width="30%" height="30%" class="center-block">
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
@@ -165,7 +165,7 @@
         <div id="PreImputation" class="tab-pane fade">
             <h2 class="text-center">Pre-imputation</h2>
             <hr></hr>
-            <p>We started with the genotype data on the human genome build GRCh37/hg19 saved in five different files (i.e. one per array in PLINK format). We confirmed that each array's genotype data had undergone the initial QC at CARTaGENE.</p>
+            <p>We started with the genotype data on genome build GRCh37/hg19 saved in five different files (i.e. one per array in PLINK format). We confirmed that each array's genotype data had undergone the initial QC at CARTaGENE.</p>
             <ol>
                 <li>Variants showing departures from the Hardy-Weinberg Equilibrium (P-value &lt; 10e-6) were removed.</li>
                 <li>Variants with call rate &lt;95% were removed.</li>
@@ -183,16 +183,16 @@
 
 <!-- LIFTOVER -->
 <div id="LiftOver" class="tab-pane fade">
-<h2 class="text-center">Lifting to GRCh38</h2>
+<h2 class="text-center">Lift over to GRCh38</h2>
 <hr></hr>
-<p>We converted each array's genotype data to the genome build GRCh38 and aligned it to the "+" strand. Our conversion included the following steps:</p>
+<p>We converted each array's genotype data to genome build GRCh38 and aligned it to the "+" strand. Our conversion included the following steps:</p>
 <ol>
 	<li>We lifted genetic positions from GRCh37 to GRCh38 using  <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">UCSC LiftOver</a> tool and the corresponding chain files.</li>
 	<li>We excluded variants that did not map to GRCh38, mapped to alternate contigs in GRCh38, or located on the mitochondrial chromosome.</li>
 	<li>We aligned A1/A2 alleles in the original PLINK files to the REF/ALT alleles on the "+" strand using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">plink2reference.py</a> script.</li>
 	<li>We excluded palindromic variants (A/T and G/C), variants for which A1/A2 alleles didn't match REF/ALT, and for which A1/A2 alleles were not A, C, G, or T.</li>
 	<li>We renamed all variants to the CHR:POS:REF:ALT notation.</li>
-	<li>If multiple variants had the same name, we kept only one with the highest call rate using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">plink_dupvar_prioritize.py</a> script. We observed such duplicated variants only on customized genotyping arrays</li>
+	<li>If multiple variants had the same name, we kept only one with the highest call rate using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">plink_dupvar_prioritize.py</a> script. We observed such duplicated variants only on customized genotyping arrays.</li>
 </ol>
 <p>The final number of variants after these steps was:</p>
 <table class="table table-bordered table-condensed">
@@ -228,17 +228,32 @@
 	</tr>
 </table>
 </div>
-<!-- Merging -->
-        <div id="Merging" class="tab-pane fade">
-            <h2 class="text-center">Lifting to GRCh38</h2>
-	    <hr></hr>
-            <ol style="list-style-type: undefined;">
-		    <li> variants with extreme differences in allele frequency established in a geographically aware test (script : <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_strat_concordance.py">Github</a>) were removed.</li>
-                <li>Samples were deduplicated (based on sample ID) the most well sequenced was kept.</li>
-            </ol>
-	</div>
-		    <!-- PCA -->
-        <div id="PCA" class="tab-pane fade">
+
+<!-- MERGING -->
+<div id="Merging" class="tab-pane fade">
+<h2 class="text-center">Merging array data</h2>
+<hr></hr>
+<p>We merged the genotypes from the five arrays in the following steps:</p>
+<ol>
+	<li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on X and Y arrays. We kept only genotypes from X array for these individuals due to higher array coverage.</li>
+	<li>We merged arrays' genotypes and kept X shared variants (i.e. genotyped in all five arrays).</li>
+	<li>We identified and removed X variants (Figure X) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
+		<ol type="i">
+			<li>We projected all individuals to the 1000 Genomes Project reference panel PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
+			<li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option).</li>
+			<li>We performed partial F-test for statistical significant difference between linear regression models G ~ PC_1 + ... + PC_5 + A_2 + ...  + A_5 and G ~ PC_2 + ... + PC_5, where G - individual genotypes, PC_k - K principal component, A_k - indicator variable for array K. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency (i.e. A_2 = ... = A_5 = 0).</li>
+			<li>We run Firth association test with genotyping array and phase as outcomes and X, PC_1-PC_K as covariates using unrelated individuals to confirm that our variant filtering removes potentially spurious associations (Figure X).</li>
+		</ol>
+	</li>
+</ol>
+
+The final merged dataset included X individuals and Y variants.
+</div>
+
+
+
+<!-- PCA -->
+<div id="PCA" class="tab-pane fade">
             <h2 class="text-center">Population Structure</h2>
             <hr></hr>
             <ol style="list-style-type: undefined;">

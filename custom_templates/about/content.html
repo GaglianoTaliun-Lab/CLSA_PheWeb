@@ -1,18 +1,21 @@
-<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" role='complementary'>
+<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" role='complementary'>
     <ul id="navigator" class="nav nav-tabs nav-stacked text-left" aria-orientation="vertical"  role="tablist">
-        <li class="active"><a data-toggle="tab" href="#Overview">Overview</a></li>
-        <li><a data-toggle="tab" href="#GenotypeData">1. Genotype Data</a></li>
-            <li><a data-toggle="tab" href="#PreImputation">2. Pre-imputation</a></li>
+        <li class="active"><a data-toggle="tab" href="#Overview"><b>Overview</b></a></li>
+        <li><a data-toggle="tab" href="#GenotypeData"><b>1. Genotype Data</b></a></li>
+            <li><a data-toggle="tab" href="#PreImputation"><b>2. Pre-imputation</b></a></li>
         <li><a data-toggle="tab" href="#LiftOver">2.1. Lift over to GRCh38</a></li>
-        <li><a data-toggle="tab" href="#Merging">2.2 Merging</a></li>
-        <li><a data-toggle="tab" href="#PCA">2.3 Population Structure</a></li>
-        <li><a data-toggle="tab" href="#Imputation">3. Imputation</a></li>
-        <li><a data-toggle="tab" href="#PhenotypeAssociation">4. Phenotype Association</a></li>
-        <li><a data-toggle="tab" href="#PheWeb">5. PheWeb</a></li>
+        <li><a data-toggle="tab" href="#Merging">2.2. Merging array data</a></li>
+        <li><a data-toggle="tab" href="#CheckAgainstReference">2.3. Check against the reference panel</a></li>
+        <li><a data-toggle="tab" href="#Imputation"><b>3. Imputation</b></a></li>
+        <li><a data-toggle="tab" href="#ImputationSplit">3.1. Splitting array data</a></li>
+	<li><a data-toggle="tab" href="#ImputationMerge">3.2. Merging imputation results</a></li>
+	<li><a data-toggle="tab" href="#PhenotypeAssociation"><b>4. Phenotype Association</b></a></li>
+	<li><a data-toggle="tab" href="#PCA">4.1 Population Structure</a></li>
+                        <li><a data-toggle="tab" href="#PheWeb">5. PheWeb</a></li>
         <li><a data-toggle="tab" href="#Acknowledgement">Acknowledgement</a></li>
         </ul>
 </div>
-<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
     <div class="tab-content">
 <!-- OVERVIEW SECTION-->
         <div id="Overview" class="tab-pane fade in active">
@@ -239,10 +242,10 @@
 	<li>We merged arrays' genotypes and kept X shared variants (i.e. genotyped in all five arrays).</li>
 	<li>We identified and removed X variants (Figure X) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
 		<ol type="i">
-			<li>We projected all individuals to the 1000 Genomes Project reference panel PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
+			<li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
 			<li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option).</li>
-			<li>We performed partial F-test for statistical significant difference between linear regression models G ~ PC_1 + ... + PC_5 + A_2 + ...  + A_5 and G ~ PC_2 + ... + PC_5, where G - individual genotypes, PC_k - K principal component, A_k - indicator variable for array K. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency (i.e. A_2 = ... = A_5 = 0).</li>
-			<li>We run Firth association test with genotyping array and phase as outcomes and X, PC_1-PC_K as covariates using unrelated individuals to confirm that our variant filtering removes potentially spurious associations (Figure X).</li>
+			<li>We performed likelihood ratio test comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script.</li>
+			<li>We run Firth association test using unrelated individuals and genotyping array and phase as outcomes, and sex and first four PCs as covariates. We confirmed that our variant filtering removes potentially spurious associations (Figure X).</li>
 		</ol>
 	</li>
 </ol>
@@ -250,6 +253,62 @@
 The final merged dataset included X individuals and Y variants.
 </div>
 
+
+<!-- CHECK AGAINST THE REFERENCE PANEL -->
+<div id="CheckAgainstReference" class="tab-pane fade">
+<h2 class="text-center">Check against the TOPMed reference panel</h2>
+<hr></hr>
+<p>We removed 158 variants which showed substantial differences in alternate allele frequencies when compared to the TOPMed reference panel.</p>
+<ol>
+	<li>We downloaded TOPMed Freeze 8 allele frequencies from the <a href="https://bravo.sph.umich.edu/freeze8/hg38/">BRAVO</a> variant browser.</li>
+	<li>We identified and removed variants from CARTaGENE's merged array data with AF difference &gt;0.2 compared to TOPMed Freeze 8 (Figure 1). See <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">plink_freq_vs_topmed.py</a> script for more details.</li>
+</ol>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<a href="static/Difference.png"><img src="static/Difference.png"  width="50%" height="50%"></a>
+  	</div>
+	<div class="panel-footer"><b>Figure 1.</b> Alternate allele frequencies in TOPMed Freeze 8 and CARTaGENE.</div>
+</div>
+</div>
+
+<!-- IMPUTATION -->
+<div id="Imputation" class="tab-pane fade">
+<h2 class="text-center">Imputation to the TOPMed reference panel</h2>
+<hr></hr>
+<p>We performed the CARTaGENE imputation to the TOPMed reference panel using the <a href="https://imputation.biodatacatalyst.nhlbi.nih.gov/#!">TOPMed Imputation Server</a> at the NHLBI BioData Catalyst platform. At the moment of our analyses, the TOPMed Imputation Server was limiting the imputation jobs to 25,000 individuals. To overcome this limitation, we split the CARTaGENE imputation into two batches. The following sections describe our approach.</p>
+</div>
+
+<!-- IMPUTATION: SPLIT -->
+<div id="ImputationSplit" class="tab-pane fade">
+<h2 class="text-center">Splitting array data for imputation</h2>
+<hr></hr>
+<p>For imputation purposes, we split CARTaGENE's merged array data into two overlapping batches (Figure 1).</p>
+<ol>
+	<li>We randomly permuted the list of XYZ individual IDs.</li>
+	<li>We generated two separate lists. The 1st included the top 25,000 IDs, and the 2nd included the bottom 25,000 IDs from the permuted list. Thus, the overlap between the two lists was XYZ individuals.</li>
+	<li>We generated two sets of VCFs for imputation - each included only the individuals from the corresponding lists.</li>
+</ol>
+<p>By generating the overlap between two batches, we wanted to end up with comparable population allele frequencies between sets, which helps compare the imputation results.</p>
+<div class="panel panel-default">
+        <div class="panel-body">
+                <a href="static/schema_imputation.png"><img src="static/schema_imputation.png"  width="50%" height="50%"></a>
+        </div>
+        <div class="panel-footer"><b>Figure 1.</b> Splitting array data for imputation.</div>
+</div>
+</div>
+
+<!-- IMPUTATION: MERGE -->
+<div id="ImputationMerge" class="tab-pane fade">
+<h2 class="text-center">Merging imputation results</h2>
+<hr></hr>
+            <ol style="list-style-type: undefined;">
+		<li>Batches were remerged and variants were filtered for Rsq &gt; 0.3</li>
+            </ol>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+	    <center><a href="static/rsq.png"><img src="static/rsq.png"  width="50%" height="50%"></a></center>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <span style="font-size:20px;">&nbsp;</span></p>
+</div>
 
 
 <!-- PCA -->
@@ -287,22 +346,6 @@ The final merged dataset included X individuals and Y variants.
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-        </div>
-        <div id="Imputation" class="tab-pane fade">
-            <h2 class="text-center">Imputation</h2>
-		<hr></hr>
-            <span style="font-size:20px;">&nbsp;</span></p>
-            <ol style="list-style-type: undefined;">
-                <li>Before imputation, all variant exhibiting strong allele frequency difference (&gt;0.2) were identified using an in-house script (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">Github</a>)</li>
-		<center><a href="static/Difference.png"><img src="static/Difference.png"  width="50%" height="50%"></a></center>
-		<li> All samples were separated randomly into two batches of 25000 (maximum number of samples in TOPMed at the time) with overlap. And imputed as batches.</li>
-		<center><a href="static/schema_imputation.png"><img src="static/schema_imputation.png"  width="50%" height="50%"></a></center>
-		<li>Batches were remerged and variants were filtered for Rsq &gt; 0.3</li>
-            </ol>
-            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-	    <center><a href="static/rsq.png"><img src="static/rsq.png"  width="50%" height="50%"></a></center>
-            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-            <span style="font-size:20px;">&nbsp;</span></p>
         </div>
         <div id="PhenotypeAssociation" class="tab-pane fade">
     <h2 class="text-center">Phenotype Association</h2>

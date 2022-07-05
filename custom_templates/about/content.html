@@ -305,8 +305,13 @@ The final merged dataset included X individuals and Y variants.
 		<li>Batches were remerged and variants were filtered for Rsq &gt; 0.3</li>
             </ol>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-	    <center><a href="static/rsq.png"><img src="static/rsq.png"  width="50%" height="50%"></a></center>
-            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <div class="panel panel-default">
+        	<div class="panel-body">
+                	<a href="static/rsq.png"><img src="static/rsq.png"  width="50%" height="50%"></a>
+        	</div>
+        <div class="panel-footer"><b>Figure 2.</b> Imputation quality per minor allele frequency.</div>
+</div>
+	<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <span style="font-size:20px;">&nbsp;</span></p>
 </div>
 
@@ -317,9 +322,19 @@ The final merged dataset included X individuals and Y variants.
             <hr></hr>
             <ol style="list-style-type: undefined;">
             	<li>Ancestry was established based on proximity of 1000 genomes samples within a PCA projection (performed with the <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> software, samples with clear ancestry were identified (K-NN, 10/10 within 6 dimension)
-			<center><a href="static/PCA.png"><img class="img-responsive" src="static/PCA.png" width="60%" height="60%"></a></center>
+		<div class="panel panel-default">
+        		<div class="panel-body">
+                		<a href="static/PCA.png"><img src="static/PCA.png"  width="50%" height="50%"></a>
+        		</div>
+        		<div class="panel-footer"><b>Figure 1.</b> PCA projection of CARTaGENE samples with clear ancestry (10/10 nearest neighbour) on 1000 genomes.</div>
+		</div>
                 <li>Ancestry was also established based on questionnaire answers.</li>
-		<center><a href="static/CARTaGENE_Questionnaire_eth_ethnicity.png"><img class="img-responsive" src="static/CARTaGENE_Questionnaire_eth_ethnicity.png" width="60%" height="60%"></a></center>
+		<div class="panel panel-default">
+        		<div class="panel-body">
+                		<a href="static/CARTaGENE_Questionnaire_eth_ethnicity.png"><img src="static/CARTaGENE_Questionnaire_eth_ethnicity.png"  width="50%" height="50%"></a>
+        		</div>
+        		<div class="panel-footer"><b>Figure 2.</b> PCA projection of CARTaGENE samples with separated by their reported ethnicity on 1000 genomes.</div>
+		</div>
                 <li>Individuals with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</li>
 		<li> Individuals the relationship between individuals was also estimated using plink2"s kinship function. Duplicate infered form questionnaire and this kinship were deduplicated for phenotype Association.</li>
 	    </ol>

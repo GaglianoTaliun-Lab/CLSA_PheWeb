@@ -238,37 +238,42 @@
 <hr></hr>
 <p>We merged the genotypes from the five arrays in the following steps:</p>
 <ol>
-	<li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on 760 and 5k arrays. We kept only genotypes from 5k array for these individuals due to higher array coverage.</li>
+	<li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on the 760 and 5K arrays. We kept only genotypes from the 5K array for these individuals due to higher array coverage.</li>
 	<li>We merged arrays' genotypes and kept 481,223 shared variants (i.e. genotyped in all five arrays).</li>
 	<li>We identified and removed 1,608 variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
 		<ol type="i">
-			<li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> (see Population Structures for more informations).</li>
+			<li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
 			<li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option).</li>
-			<li>We performed likelihood ratio test comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script. For the non pseudo-autosomal region of the X chromosme, we performed this test for both sexes seperately.</li>
-			<div class="panel panel-default">
-        <div class="panel-body">
+			<li>We performed likelihood ratio test (LRT) comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script. For the X chromosme non-PAR regions, we performed this test seperately for males and females.</li>
+			<li>We ran Firth association test (PLINK's --glm firth option) using unrelated individuals and genotyping array and phase as outcomes, and sex and first five PCs as covariates. We confirmed that our filtering removes variants with potential batch effects (Figure 2). In addition, we didn't see any evidence of systematic batch effects between phase 1 and 2 (Figure 3).</li>
+		</ol>
+	</li>
+</ol>
+<p>The final merged dataset included 29,330 individuals and 479,615 variants.</p>
+<div class="panel panel-default" style="display: inline-block">
+	<div class="panel-body text-center">
                 <a href="static/Autosomal_AF.png"><img src="static/Autosomal_AF.png"  width="30%" height="30%"></a>
 		<a href="static/MaleX_AF.png"><img src="static/MaleX_AF.png"  width="30%" height="30%"></a>
 		<a href="static/FemaleX_AF.png"><img src="static/FemaleX_AF.png"  width="30%" height="30%"></a>
         </div>
-	<div class="panel-footer"><b>Figure 1.</b> Alternate allele frequency comparison accross arrays. significance threshold : Likelyhood ratio test p-value &lt; 0.00000101739 (i.e 0.05/ number of variant tested). </div>
+	<div class="panel-footer"><b>Figure 1.</b> Alternate allele frequency (AF) comparison accross arrays. Red circles denote variants with LRT P-value &lt; XYZ (i.e. 0.05 / XYZ), which we filtered out before the imputation.</div>
 </div>
-			<li>We ran Firth association test using unrelated individuals and genotyping array and phase as outcomes, and sex and first five PCs as covariates. We confirmed that our variant filtering removes potentially spurious associations (Figure 2).</li>
-			<div class="panel panel-default">
-        <div class="panel-body">
+<div class="panel panel-default" style="display: inline-block">
+        <div class="panel-body text-center">
                 <a href="static/4kvs5k.png"><img src="static/4kvs5k.png"  width="50%" height="50%"></a>
 		<a href="static/4kvsArchi.png"><img src="static/4kvsArchi.png"  width="50%" height="50%"></a>
 		<a href="static/17kvs5k.png"><img src="static/17kvs5k.png"  width="50%" height="50%"></a>
-		<a href="static/17kvs17k.png"><img src="static/17kvs17k.png"  width="50%" height="50%"></a>
 		<a href="static/Archivs760.png"><img src="static/Archivs760.png"  width="50%" height="50%"></a>
+	</div>
+        <div class="panel-footer"><b>Figure 2.</b> The results of the Firth association test with genotyping array and phase as outcomes. Left panels show results using all shared variants, and right panels show results without variants failing LRT test for possible batch effects.</div>
+</div>
+<div class="panel panel-default" style="display: inline-block">
+	<div class="panel-body text-center">
+		<a href="static/17kvs17k.png"><img src="static/17kvs17k.png"  width="50%" height="50%"></a>
 		<a href="static/5kvs5k.png"><img src="static/5kvs5k.png"  width="50%" height="50%"></a>
 	</div>
-        <div class="panel-footer"><b>Figure 2.</b> Firth association test.</div>
-		</ol>
-	</li>
-</ol>
-
-The final merged dataset included 2,9330 individuals and 479,615 variants.
+	<div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as outcome. Left panels show results using all shared variants, and right panels show results without variants failing LRT test for possible batch effects.</div>
+</div>
 </div>
 
 
@@ -281,8 +286,8 @@ The final merged dataset included 2,9330 individuals and 479,615 variants.
 	<li>We downloaded TOPMed Freeze 8 allele frequencies from the <a href="https://bravo.sph.umich.edu/freeze8/hg38/">BRAVO</a> variant browser.</li>
 	<li>We identified and removed variants from CARTaGENE's merged array data with AF difference &gt;0.2 compared to TOPMed Freeze 8 (Figure 1). See <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">plink_freq_vs_topmed.py</a> script for more details.</li>
 </ol>
-<div class="panel panel-default">
-	<div class="panel-body">
+<div class="panel panel-default" style="display: inline-block">
+	<div class="panel-body text-center">
 		<a href="static/Difference.png"><img src="static/Difference.png"  width="50%" height="50%"></a>
   	</div>
 	<div class="panel-footer"><b>Figure 1.</b> Alternate allele frequencies in TOPMed Freeze 8 and CARTaGENE.</div>

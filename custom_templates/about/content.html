@@ -250,7 +250,7 @@
 <ol>
     <li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on the 760 and 5K arrays. We kept only genotypes from the 5K array for these individuals due to higher array coverage.</li>
     <li>We merged arrays' genotypes and kept 481,223 shared variants (i.e. genotyped in all five arrays).</li>
-    <li>We identified and removed 1,335 variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
+    <li>We identified and removed {triple checking} variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
         <ol type="i">
             <li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
             <li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option).</li>
@@ -259,7 +259,7 @@
         </ol>
     </li>
 </ol>
-<p>The final merged dataset included 29,330 individuals and 479,888 variants.</p>
+<p>The final merged dataset included 29,330 individuals and {triple checking} variants.</p>
 <div class="panel panel-default" style="display: inline-block">
     <div class="panel-body text-center">
                 <a href="static/Autosomal_AF.png"><img src="static/Autosomal_AF.png"  width="30%" height="30%"></a>

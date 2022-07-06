@@ -238,19 +238,37 @@
 <hr></hr>
 <p>We merged the genotypes from the five arrays in the following steps:</p>
 <ol>
-	<li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on X and Y arrays. We kept only genotypes from X array for these individuals due to higher array coverage.</li>
-	<li>We merged arrays' genotypes and kept X shared variants (i.e. genotyped in all five arrays).</li>
-	<li>We identified and removed X variants (Figure X) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
+	<li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on 760 and 5k arrays. We kept only genotypes from 5k array for these individuals due to higher array coverage.</li>
+	<li>We merged arrays' genotypes and kept 481,223 shared variants (i.e. genotyped in all five arrays).</li>
+	<li>We identified and removed 1,608 variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
 		<ol type="i">
-			<li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
+			<li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> (see Population Structures for more informations).</li>
 			<li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option).</li>
-			<li>We performed likelihood ratio test comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script.</li>
-			<li>We run Firth association test using unrelated individuals and genotyping array and phase as outcomes, and sex and first four PCs as covariates. We confirmed that our variant filtering removes potentially spurious associations (Figure X).</li>
+			<li>We performed likelihood ratio test comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script. For the non pseudo-autosomal region of the X chromosme, we performed this test for both sexes seperately.</li>
+			<div class="panel panel-default">
+        <div class="panel-body">
+                <a href="static/Autosomal_AF.png"><img src="static/Autosomal_AF.png"  width="30%" height="30%"></a>
+		<a href="static/MaleX_AF.png"><img src="static/MaleX_AF.png"  width="30%" height="30%"></a>
+		<a href="static/FemaleX_AF.png"><img src="static/FemaleX_AF.png"  width="30%" height="30%"></a>
+        </div>
+	<div class="panel-footer"><b>Figure 1.</b> Alternate allele frequency comparison accross arrays. significance threshold : Likelyhood ratio test p-value &lt; 0.00000101739 (i.e 0.05/ number of variant tested). </div>
+</div>
+			<li>We ran Firth association test using unrelated individuals and genotyping array and phase as outcomes, and sex and first five PCs as covariates. We confirmed that our variant filtering removes potentially spurious associations (Figure 2).</li>
+			<div class="panel panel-default">
+        <div class="panel-body">
+                <a href="static/4kvs5k.png"><img src="static/4kvs5k.png"  width="50%" height="50%"></a>
+		<a href="static/4kvsArchi.png"><img src="static/4kvsArchi.png"  width="50%" height="50%"></a>
+		<a href="static/17kvs5k.png"><img src="static/17kvs5k.png"  width="50%" height="50%"></a>
+		<a href="static/17kvs17k.png"><img src="static/17kvs17k.png"  width="50%" height="50%"></a>
+		<a href="static/Archivs760.png"><img src="static/Archivs760.png"  width="50%" height="50%"></a>
+		<a href="static/5kvs5k.png"><img src="static/5kvs5k.png"  width="50%" height="50%"></a>
+	</div>
+        <div class="panel-footer"><b>Figure 2.</b> Firth association test.</div>
 		</ol>
 	</li>
 </ol>
 
-The final merged dataset included X individuals and Y variants.
+The final merged dataset included 2,9330 individuals and 479,615 variants.
 </div>
 
 
@@ -336,7 +354,7 @@ The final merged dataset included X individuals and Y variants.
         		<div class="panel-footer"><b>Figure 2.</b> PCA projection of CARTaGENE samples (separated by their reported ancestry) on 1000 genomes dataset.</div>
 		</div>
                 <li>Individuals with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</li>
-		<li> Individuals the relationship between individuals was also estimated using plink2"s kinship function. Duplicate infered form questionnaire and this kinship were deduplicated for phenotype Association.</li>
+		<li> Individuals the relationship between individuals was also estimated using plink2's kinship function. Duplicate infered form questionnaire and this kinship were deduplicated for phenotype Association.</li>
 	    </ol>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <table class="table table-bordered table-condensed">
@@ -354,7 +372,7 @@ The final merged dataset included X individuals and Y variants.
                 <th class="text-right">61</th>
                 <th class="text-right">654</th>
                 <th class="text-right">535</th>
-                <th class="text-right">3290</th>
+                <th class="text-right">3,290</th>
         </tr>
             </table>
 
@@ -416,3 +434,4 @@ The final merged dataset included X individuals and Y variants.
     </div>
     <!-- </div> -->
 <!--</div>-->
+

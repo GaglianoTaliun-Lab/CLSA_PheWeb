@@ -250,23 +250,22 @@
 <ol>
     <li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on the 760 and 5K arrays. We kept only genotypes from the 5K array for these individuals due to higher array coverage.</li>
     <li>We merged arrays' genotypes and kept 481,223 shared variants (i.e. genotyped in all five arrays).</li>
-    <li>We identified and removed {triple checking} variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
+    <li>We identified and removed 1,336 variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
         <ol type="i">
             <li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
             <li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option).</li>
-            <li>We performed likelihood ratio test (LRT) comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting inidividual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script. For the X chromosme non-PAR regions, we performed this test seperately for males and females.</li>
-            <li>We ran Firth association test (PLINK's --glm firth option) using unrelated individuals and genotyping array and phase as outcomes, and sex and first five PCs as covariates. We confirmed that our filtering removes variants with potential batch effects (Figure 2). In addition, we didn't see any evidence of systematic batch effects between phase 1 and 2 (Figure 3).</li>
+            <li>We performed likelihood ratio test (LRT) comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting individual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script. For the non pseudo-autosomal region of the X chromosome, we performed this test for both sexes separately.</li>
+	    <li>We ran Firth association test (PLINK's --glm firth option) using unrelated individuals and genotyping array and phase as outcomes, and sex and first five PCs as covariates. We confirmed that our filtering removes variants with potential batch effects (Figure 2). In addition, we didn't see any evidence of systematic batch effects between phase 1 and 2 (Figure 3).</li>
         </ol>
     </li>
 </ol>
-<p>The final merged dataset included 29,330 individuals and {triple checking} variants.</p>
 <div class="panel panel-default" style="display: inline-block">
     <div class="panel-body text-center">
-                <a href="static/Autosomal_AF.png"><img src="static/Autosomal_AF.png"  width="30%" height="30%"></a>
-        <a href="static/MaleX_AF.png"><img src="static/MaleX_AF.png"  width="30%" height="30%"></a>
-        <a href="static/FemaleX_AF.png"><img src="static/FemaleX_AF.png"  width="30%" height="30%"></a>
+                <a href="#" class="pop"><img src="static/Autosomal_AF.png"  width="30%" height="30%"></a>
+        <a href="#" class="pop"><img src="static/MaleX_AF.png"  width="30%" height="30%"></a>
+        <a href="#" class="pop"><img src="static/FemaleX_AF.png"  width="30%" height="30%"></a>
         </div>
-    <div class="panel-footer"><b>Figure 1.</b> Alternate allele frequency (AF) comparison accross arrays. Red circles denote variants with LRT P-value &lt; 1.01740164e-7 (i.e. 0.05 / 4,91449), which we filtered out before the imputation.</div>
+    <div class="panel-footer"><b>Figure 1.</b> Alternate allele frequency (AF) comparison across arrays. Red circles denote variants with LRT P-value &lt; 1.03527385e-7 (i.e. 0.05 / 482,964), which we filtered out before the imputation.</div>
 </div>
 <div class="panel panel-default" style="display: inline-block">
         <div class="panel-body text-center">
@@ -279,10 +278,10 @@
 </div>
 <div class="panel panel-default" style="display: inline-block">
     <div class="panel-body text-center">
-        <a href="static/17kvs17k.png"><img src="static/17kvs17k.png"  width="50%" height="50%"></a>
-        <a href="static/5kvs5k.png"><img src="static/5kvs5k.png"  width="50%" height="50%"></a>
+        <a href="#" class="pop"><img src="static/17kvs17k.png"  width="50%" height="50%"></a>
+        <a href="#" class="pop"><img src="static/5kvs5k.png"  width="50%" height="50%"></a>
     </div>
-    <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as outcome. Left panels show results using all shared variants, and right panels show results without variants failing LRT test for possible batch effects.</div>
+    <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as the outcome. Left panels show results using all shared variants, and right panels show results without variants failing LRT test for possible batch effects.</div>
 </div>
 </div>
 
@@ -291,24 +290,17 @@
 <div id="CheckAgainstReference" class="tab-pane fade">
 <h2 class="text-center">Check against the TOPMed reference panel</h2>
 <hr></hr>
-<p>We removed XXX variants which showed substantial differences in alternate allele frequencies when compared to the TOPMed reference panel.</p>
+<p>We removed 159 variants which showed substantial differences in alternate allele frequencies when compared to the TOPMed reference panel.</p>
 <ol>
 	<li>We downloaded TOPMed Freeze 8 allele frequencies from the <a href="https://bravo.sph.umich.edu/freeze8/hg38/">BRAVO</a> variant browser.</li>
 	<li>We identified and removed variants from CARTaGENE's merged array data with AF difference &gt;0.2 compared to TOPMed Freeze 8 (Figure 1). See <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">plink_freq_vs_topmed.py</a> script for more details.</li>
 </ol>
+
+<p>The final merged dataset included 29,330 individuals and 479,728 variants.</p>
+
 <div class="panel panel-default">
 	<div class="panel-body">
-		<a href="#" class="pop">><img src="static/Difference.png"  width="50%" height="50%"></a>
-		<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-      	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <img src="" class="imagepreview" style="width: 100%;" >
-      </div>
-    </div>
-  </div>
-</div>
+		<a href="#" class="pop"><img src="static/Difference.png"  width="50%" height="50%"></a>
   	</div>
 	<div class="panel-footer"><b>Figure 1.</b> Alternate allele frequencies in TOPMed Freeze 8 and CARTaGENE.</div>
 </div>
@@ -327,8 +319,8 @@
 <hr></hr>
 <p>For imputation purposes, we split CARTaGENE's merged array data into two overlapping batches (Figure 1).</p>
 <ol>
-	<li>We randomly permuted the list of XYZ individual IDs.</li>
-	<li>We generated two separate lists. The 1st included the top 25,000 IDs, and the 2nd included the bottom 25,000 IDs from the permuted list. Thus, the overlap between the two lists was XYZ individuals.</li>
+	<li>We randomly permuted the list of 29,330 individual IDs.</li>
+	<li>We generated two separate lists. The 1st included the top 25,000 IDs, and the 2nd included the bottom 25,000 IDs from the permuted list. Thus, the overlap between the two lists was 20,670 individuals.</li>
 	<li>We generated two sets of VCFs for imputation - each included only the individuals from the corresponding lists.</li>
 </ol>
 <p>By generating the overlap between two batches, we wanted to end up with comparable population allele frequencies between sets, which helps compare the imputation results.</p>
@@ -344,10 +336,14 @@
 <div id="ImputationMerge" class="tab-pane fade">
 <h2 class="text-center">Merging imputation results</h2>
 <hr></hr>
-            <ol style="list-style-type: undefined;">
-		<li>Batches were remerged and variants were filtered for Rsq &gt; 0.3</li>
-            </ol>
-            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+<p> Once imputed,  the two outputs  corresponding to the two list of 25,000 individuals were remerged. </p>
+
+<ol>
+        <li> Using  merge_minimac_dosages.py, the <var>r</var><sup>2</sup> determined the values selected for overlapping individuals and the genotypes are merged. </li>
+        <li>We also filtered the genotypes for imputation quality (<var>r</var><sup>2</sup> &#62; 0.3) (Figure 2).</li>
+</ol>
+            
+<p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <div class="panel panel-default">
         	<div class="panel-body">
                 	<a href="#" class="pop"><img src="static/rsq.png"  width="50%" height="50%"></a>
@@ -364,7 +360,7 @@
             <h2 class="text-center">Population Structure</h2>
             <hr></hr>
             <ol style="list-style-type: undefined;">
-            	<li>Ancestry was established based on proximity of 1000 genomes samples within a PCA projection (performed with the <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> software, samples with clear ancestry were identified (K-NN, 10/10 within 6 dimension)
+            	<li>Ancestry was established based on proximity of 1000 genomes samples within a PCA projection (performed with the <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a> software, samples with clear ancestry were identified (K-NN, 10/10 within 6 dimensions)
 		<div class="panel panel-default">
         		<div class="panel-body">
                 		<a href="#" class="pop"><img src="static/PCA.png"  width="50%" height="50%"></a>
@@ -372,14 +368,8 @@
         		<div class="panel-footer"><b>Figure 1.</b> PCA projection of CARTaGENE samples with clear ancestry (10/10 nearest neighbour) on 1000 genomes dataset.</div>
 		</div>
                 <li>Ancestry was also established based on questionnaire answers.</li>
-		<div class="panel panel-default">
-        		<div class="panel-body">
-                		<a href="#" class="pop"><img src="static/CARTaGENE_Questionnaire_eth_ethnicity.png"  width="50%" height="50%"></a>
-        		</div>
-        		<div class="panel-footer"><b>Figure 2.</b> PCA projection of CARTaGENE samples (separated by their reported ancestry) on 1000 genomes dataset.</div>
-		</div>
-                <li>Individuals with both clear DNA and questionnaire based European ancestry were selected in phenotype analysis.</li>
-		<li> Individuals the relationship between individuals was also estimated using plink2's kinship function. Duplicate infered form questionnaire and this kinship were deduplicated for phenotype Association.</li>
+                <li>Individuals with both clear DNA and questionnaire-based European ancestry were selected in phenotype analysis.</li>
+		<li> Individuals the relationship between individuals was also estimated using plink2's kinship function. Duplicates inferred form questionnaire and this kinship were deduplicated for phenotype association.</li>
 	    </ol>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <table class="table table-bordered table-condensed">
@@ -408,32 +398,29 @@
         <div id="PhenotypeAssociation" class="tab-pane fade">
     <h2 class="text-center">Phenotype Association</h2>
     <hr></hr>
+    <p>We performed genotype/phenotype association test using <a href="https://rgcgithub.github.io/regenie/">regenie</a> (version 3.0.1).</p>
             <ol style="list-style-type: undefined;">
             <span style="font-size:20px;">&nbsp;</span></p>
-            <li><a href="https://rgcgithub.github.io/regenie/">Regenie</a> was distributed across a cluster per 50 phenotypes (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>)</li>
-	    <li>Covariants were the arrays (as categorical), the individual&rsquo;s sex (as categorical), age, square(age) &nbsp;and the 10 first PC.</li>
-	    <li>File preparation for Regenie were performed using the script provided in the github repository (github <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">script</a>).&nbsp;
-            <ol class="decimal_type" style="list-style-type: circle;">
-                <li>Step 1 files were filtered using&nbsp;
-                    <ul class="decimal_type" style="list-style-type: square;">
-                        <li>maf=0.01 (i.e. Minimum allele frequency)</li>
-                        <li>geno=0.99 (i.e. Maximum Missing genotype frequency per-variant)</li>
-                        <li>mind=0.99 (i.e. Maximum Missing genotype frequency per-sample)</li>
-                        <li>HWE=1e-15 (i.e. threshold for Hardy-Weindberg Equilibrium)</li>
-                    </ul>
-                </li>
-                <li>Step 2 files were unfiltered.&nbsp;
-                    </ul>
-                        <li>Dosage (DS) was integrated into the analysis.</li>
-                    </ul>
-                </li>
-                <li>Regenie Options
-                    <ul style="list-style-type: square;">
-                        <li>Binairy traits Options : --bt --firth --approx --pThresh 0.05</li>
-                        <li>continuous traits option : --apply-rint</li>
-                    </ul>
-                </li>
-            </ol>
+	    <li>In preparation files were prepared using the <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">REGENIE Nextflow pipeline</a> :</li>
+	    <ol class="decimal_type" style="list-style-type: circle;">
+	    	<li>For the first step of regenie, we prepared filtered unimputed data with the following filters :</li>
+		<ol class="decimal_type" style="list-style-type: square;">
+			<li>maf&#8805;0.01 (i.e. Minimum allele frequency) </li>
+			<li>geno&#8805;0.99 (i.e. Maximum Missing genotype frequency per-variant) </li>
+			<li>mind&#8805;0.99 (i.e. Maximum Missing genotype frequency per-sample) </li>
+			<li>HWE&#8805;1e-15 (i.e. threshold for Hardy-Weindberg Equilibrium)</li>
+		</ol>
+		<li>For the second step of REGENIE, merged imputed data was used directly. </li>
+		</ol>
+		<li>In this pipestance :</li>
+	<ul class="decimal_type" style="list-style-type: circle;">
+		<li>The covariant arrays (as categorical), the individual’s sex (as categorical), age, age&sup2;  and the 10 first Principal Components were regressed out or offset.</li>
+		<li> The dosage data (DS) was used. </li>
+		<li> Continuous traits were subjected to rank inverse normal transformation. </li>
+		<li>In binary traits, association of p-value&#8804;0.05 were tested using REGENIE’s firth approximation. </li>
+		<li> Phenotypes were analyzed per tranche of 50 over cluster. </li>
+	    </ol>
+	</ul>
         </div>
         <div id="PheWeb" class="tab-pane fade">
             <h2 class="text-center">PheWeb</h2>
@@ -449,9 +436,9 @@
             <span style="font-size:20px;">&nbsp;</span></p>
             <ul  type="disc">
                 <ul  type="circle">
-                    <li>Authors : Vincent Chapdelaine, Claude Bh&eacute; rer, Vincent Mooser, Sarah Gagliano-Taliun, Daniel Taliun</li>
+                    <li>Authors : Vincent Chapdelaine, Claude Bh&eacute;rer, Vincent Mooser, Sarah Gagliano-Taliun, Daniel Taliun</li>
                     <li>Data was provided by the CARTaGENE consortium</li>
-                    <li>Analysis were performed on Compute Canada and this site is hosted on Compute Canada.</span></li>
+                    <li>Analysis were performed on Compute Canada's and this site is hosted on Compute Canada's server.</span></li>
                     <li>We would like to thank all participant to the CARTaGENE who volonteered their time and informations for this research.</span></li>
                 </ul>
           </ul>
@@ -459,3 +446,4 @@
     </div>
     <!-- </div> -->
 <!--</div>-->
+

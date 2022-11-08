@@ -265,27 +265,27 @@
             <p>The final merged dataset included 29,330 individuals and 479,893 variants.</p>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
-                            <a class="pop"><img src="static/images/Autosomal_AF.png"  width="30%" height="30%"></a>
-                    <a class="pop"><img src="static/images/MaleX_AF.png"  width="30%" height="30%"></a>
-                    <a class="pop"><img src="static/images/FemaleX_AF.png"  width="30%" height="30%"></a>
+                            <a class="pop" style="cursor: zoom-in"><img src="static/images/Autosomal_AF.png"  width="30%" height="30%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/MaleX_AF.png"  width="30%" height="30%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/FemaleX_AF.png"  width="30%" height="30%"></a>
                     </div>
-                <div class="panel-footer"><b>Figure 1.</b> Alternate allele frequency (AF) comparison across arrays. Red circles denote variants with LRT P-value &lt; 1.03520097e-7  (i.e. 0.05 / 482,998 ; 9,748 Female non PAR X, 9,741 male non PAR X and 463,509 autosomal or pseudo-autosomal , which we filtered out before the imputation.</div>
+                <div class="panel-footer"><b>Figure 1.</b> Pairwise Alternate allele Frequency (AF) differences between arrays. Red circles denote variants with LRT P-value &lt; 1.03520097e-7  (i.e. 0.05 / 482,998; 9,748 Female non-PAR X, 9,741 male non-PAR X, and 463,509 autosomal or PAR), which we filtered out before the imputation.</div>
             </div>
             <div class="panel panel-default" style="display: inline-block">
                     <div class="panel-body text-center">
-                            <a class="pop"><img src="static/images/4kvs5k.png"  width="50%" height="50%"></a>
-                    <a class="pop"><img src="static/images/4kvsArchi.png"  width="50%" height="50%"></a>
-                    <a class="pop"><img src="static/images/17kvs5k.png"  width="50%" height="50%"></a>
-                    <a class="pop"><img src="static/images/Archivs760.png"  width="50%" height="50%"></a>
+                            <a class="pop" style="cursor: zoom-in"><img src="static/images/4kvs5k.png"  width="50%" height="50%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/4kvsArchi.png"  width="50%" height="50%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/17kvs5k.png"  width="50%" height="50%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/Archivs760.png"  width="50%" height="50%"></a>
                 </div>
-                    <div class="panel-footer"><b>Figure 2.</b> The results of the Firth association test with genotyping array and phase as outcomes. Left panels show results using all shared variants, and right panels show results without variants failing LRT test for possible batch effects.</div>
+                    <div class="panel-footer"><b>Figure 2.</b> The results of the Firth association test with genotyping array and phase as binary outcomes and sex and 1-5 PCs as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants which failed the LRT test for possible batch effects.</div>
             </div>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
-                    <a class="pop"><img src="static/images/17kvs17k.png"  width="50%" height="50%"></a>
-                    <a class="pop"><img src="static/images/5kvs5k.png"  width="50%" height="50%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/17kvs17k.png"  width="50%" height="50%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/5kvs5k.png"  width="50%" height="50%"></a>
                 </div>
-                <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as the outcome. Left panels show results using all shared variants, and right panels show results without variants failing LRT test for possible batch effects.</div>
+                <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as the outcome and sex and 1-5 PCs as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants failing the LRT test for possible batch effects.</div>
             </div>
         </div>
 
@@ -299,11 +299,11 @@
             	<li>We downloaded TOPMed Freeze 8 allele frequencies from the <a href="https://bravo.sph.umich.edu/freeze8/hg38/">BRAVO</a> variant browser.</li>
             	<li>We identified and removed variants from CARTaGENE's merged array data with AF difference &gt;0.2 compared to TOPMed Freeze 8 (Figure 1). See <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">plink_freq_vs_topmed.py</a> script for more details.</li>
             </ol>
-            <div class="panel panel-default">
-            	<div class="panel-body">
-            		<a class="pop"><img src="static/images/TOPMed_differences.png"  width="50%" height="50%"></a>
+            <div class="panel panel-default" style="dislpay: inline-block">
+            	<div class="panel-body text-center">
+            		<a class="pop" style="cursor: zoom-in"><img src="static/images/TOPMed_differences.png"  width="30%" height="30%"></a>
               	</div>
-            	<div class="panel-footer"><b>Figure 1.</b> Alternate allele frequencies in TOPMed Freeze 8 and CARTaGENE.</div>
+            	<div class="panel-footer"><b>Figure 1.</b> Alternate allele Frequencies (AF) in TOPMed Freeze 8 and CARTaGENE.</div>
             </div>
         </div>
 
@@ -311,32 +311,32 @@
         <div id="Imputation" class="tab-pane fade">
             <h2 class="text-center">Imputation to the TOPMed reference panel</h2>
             <hr></hr>
-            <p>We performed the CARTaGENE imputation to the TOPMed reference panel using the <a href="https://imputation.biodatacatalyst.nhlbi.nih.gov/#!">TOPMed Imputation Server</a> at the NHLBI BioData Catalyst platform. At the moment of our analyses, the TOPMed Imputation Server was limiting the imputation jobs to 25,000 individuals. To overcome this limitation, we split the CARTaGENE imputation into two batches. The following sections describe our approach.</p>
+            <p>We imputed CARTaGENE genotypes using the TOPMed reference panel through the <a href="https://imputation.biodatacatalyst.nhlbi.nih.gov/#!">TOPMed Imputation Server</a> at the NHLBI BioData Catalyst platform. At the moment of our analyses, the TOPMed Imputation Server was limiting the imputation jobs to 25,000 individuals. To overcome this limitation, we split the CARTaGENE imputation into two batches. The following sections describe our approach.</p>
             </div>
 
-            <!-- IMPUTATION: SPLIT -->
+<!-- IMPUTATION: SPLIT -->
             <div id="ImputationSplit" class="tab-pane fade">
             <h2 class="text-center">Splitting array data for imputation</h2>
             <hr></hr>
-            <p>For imputation purposes, we split CARTaGENE's merged array data into two overlapping batches (Figure 1).</p>
+            <p>For imputation purposes, we split CARTaGENE's merged array data into two overlapping batches (Figure 1):</p>
             <ol>
             	<li>We randomly permuted the list of 29,330 individual IDs.</li>
-            	<li>We generated two separate lists. The 1st included the top 25,000 IDs, and the 2nd included the bottom 25,000 IDs from the permuted list. Thus, the overlap between the two lists was 20,670 individuals.</li>
+            	<li>We generated two separate lists: the 1st included the top 25,000 IDs, and the 2nd had the bottom 25,000 IDs from the permuted list. Thus, the overlap between the two lists was 20,670 individuals.</li>
             	<li>We generated two sets of VCFs for imputation - each included only the individuals from the corresponding lists.</li>
             </ol>
-            <p>By generating the overlap between two batches, we wanted to end up with comparable population allele frequencies between sets, which helps compare the imputation results.</p>
-            <div class="panel panel-default">
-                    <div class="panel-body">
-                            <a class="pop"><img src="static/images/scheme_imputation.png"  width="50%" height="50%"></a>
+            <p>By generating the overlap between two batches, we ended up with similar population allele frequencies between variants in two sets (Figure 2).</p>
+            <div class="panel panel-default" style="display: inline-block">
+                    <div class="panel-body text-center">
+                            <a class="pop" style="cursor: zoom-in"><img src="static/images/scheme_imputation.png"  width="50%" height="50%"></a>
                     </div>
                     <div class="panel-footer"><b>Figure 1.</b> Splitting array data for imputation.</div>
             </div>
 
-            <div class="panel panel-default">
-                                    <div class="panel-body">
-                                            <a class="pop"><img src="static/images/AF_pre_imputation.png"  width="50%" height="50%"></a>
+            <div class="panel panel-default" style="display: inline-block">
+                    <div class="panel-body text-center">
+                                            <a class="pop" style="cursor: zoom-in"><img src="static/images/AF_pre_imputation.png"  width="50%" height="50%"></a>
                                     </div>
-                                    <div class="panel-footer"><b>Figure 2.</b> Comparison of Alternate Allele Frequency across batches pre-imputation. </div>
+                                    <div class="panel-footer"><b>Figure 2.</b> Alternate Allele Frequency (AF) of genotyped variants in two batches.</div>
             </div>
         </div>
 
@@ -344,105 +344,94 @@
         <div id="ImputationSplitQC" class="tab-pane fade">
             <h2 class="text-center">Imputation results</h2>
             <hr></hr>
-            <br>
-            <ol>
-            	<li>Imputed allele frequencies</li>
-            	<ul> <li>The allele frequency for each imputed variant issued from both batches were highly similar (figure 1).</li> </ul>
-             	<div class="panel panel-default">
-                    <div class="panel-body">
-                            <a class="pop"><img src="static/images/AF_scatter.png"  width="40%" height="40%"></a>
-                    </div>
-                    <div class="panel-footer"><b>Figure 1.</b> Comparison of the imputated variants' alternate allele frequency.</div>
-                </div>
-                <br>
-            	<li>Imputation quality score (R<sup>2</sup>)</li>
-            	<ul><li>In both batches the imputation quality scores (R<sup>2</sup>) showed similar distributions, with lowest imputation qualities in low frequency variants and highest imputation qualities in more frequent variants. </li></ul>
-            	<br>
-            	<div class="panel panel-default" style="display: inline-block">
-                    <div class="panel-body">
-                            <a class="pop"><img src="static/images/BATCH1_MAF_RSQ.png"  width="49%" height="49%"></a>
-                            <a class="pop"><img src="static/images/BATCH2_MAF_RSQ.png"  width="49%" height="49%"></a>
-            	   </div>
-                    <div class="panel-footer"><b>Figure 2.</b> Imputation Quality per Minor Allele Frequency in both imputations set.</div>
-                </div>
-                <br>
-                <li>Imputation concordance between batches</li>
-                <ul><li> We looked at the concorance of impute dosages in samples present in both batches. For each variant and each overlapped samples, we calculated the diffrence (in absolute terms). We calculated the mean of this difference for all overlapped samples pairs per variants (figure 3A) and we calculated the mean difference for all variant per overlapped samples pairs (Figures 3B).   </li></ul>
-                <br>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <a class="pop"><img src="static/images/Dosage_BIN_rec.png"  width="50%" height="50%"></a>
-                	</div>
-                	<div class="panel-footer"><b>Figure 3A.</b> Mean difference of the overlapping samples' dosages per variants</div>
-                	<div class="panel-body">
-                		<a class="pop"><img src="static/images/Dosage_BIN_sample.png"  width="50%" height="50%"></a>
-                    </div>
-                    <div class="panel-footer"><b>Figure 3B.</b> Mean difference of the overlapping samples' dosages per samples</div>
-                </div>
-                <br>
-                <li>Imputation quality score (R<sup>2</sup>) differences.</li>
-                <ul><li> We also examined the difference (in absolute) terms accorss batches for all variants. While considerable number of variants (approximately 6.6 million) displayed drastic change in R<sup>2</sup> accross batches, those were concentrated in low frequency variants (MAF &#60; 4e-4). This is expected as the R<sup>2</sup> accuracy is known to be affected by low allele frequency. </li></ul>
-                <br>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <a class="pop"><img src="static/images/RSQ_diff_bin.png"  width="100%" height="100%"></a>
-                	</div>
-                    <div class="panel-footer"><b>Figure 4.</b> Distribution of the differences in R<sup>2</sup>.</div>
-                </div>
-            </ol>
+	    <p>We imputed the XYZ variants in each of the two batches. The alternate allele frequencies (AF) of imputed variants were similar in both batches (Figure 1).</p>
+
+	    <p>The low-frequency variants with MAF&lt;0.001 had the lowest imputation qualities (median Rsq<sub>batch #1</sub>=XYZ and median Rsq<sub>batch #2</sub>=XYZ), while more frequent variants with MAF&gt;0.01 had the highest imputation qualities (median Rsq<sub>batch #1</sub>&gt;XYZ and median Rsq<sub>batch #2</sub>&gt;XYZ) (Figure 2).</p>
+	   <p>For each imputed variant in two batches, we looked at the absolute difference between its imputation qualities Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> in these batches (Figure 4). We observed the largest Rsq difference (&gt;0.5) only in variants with the lowest minor allele frequency (MAF&lt;XYZ, corresponding to 20 alternate alleles). For the vast majority (&gt;99%) of variants with MAF&gt;0.01, the Rsq difference didn't exceed 0.01.</p>
+
+
+<div class="panel panel-default" style="display: inline-block">
+        <div class="panel-body text-center">
+                <a class="pop" style="cursor: zoom-in"><img src="static/images/AF_scatter.png"  width="45%" height="45%"></a>
         </div>
+        <div class="panel-footer"><b>Figure 1.</b> Alternate Allele Frequency (AF) of imputed variants in two batches.</div>
+</div>
+<div class="panel panel-default" style="display: inline-block">
+        <div class="panel-body text-center">
+                <a class="pop" style="cursor: zoom-in"><img src="static/images/BATCH1_MAF_RSQ.png"  width="49%" height="49%"></a>
+                <a class="pop" style="cursor: zoom-in"><img src="static/images/BATCH2_MAF_RSQ.png"  width="49%" height="49%"></a>
+        </div>
+        <div class="panel-footer"><b>Figure 2.</b> Variant imputation qualities (Minimac Rsq) in two batches stratified by Minor Allele Frequency (MAF).</div>
+</div>
+<div class="panel panel-default" style="display: inline-block">
+        <div class="panel-body text-center">
+                <a class="pop" style="cursor: zoom-in"><img src="static/images/RSQ_diff_bin.png"  width="75%" height="75%"></a>
+        </div>
+        <div class="panel-footer"><b>Figure 4.</b> The distribution of the absolute differences in variant imputation qualities Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> in two batches.</div>
+</div>
+</div>
 
 <!-- IMPUTATION: MERGE -->
         <div id="ImputationMerge" class="tab-pane fade">
             <h2 class="text-center">Merging imputation results</h2>
             <hr></hr>
-            <p> Once imputed,  the two outputs  corresponding to the two lists of 25,000 individuals were remerged. </p>
-            <ol>
-            	<li> Using  <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/merge_minimac_dosages.py">merge_minimac_dosages.py</a>, the R<sup>2</sup> determined the values selected for overlapping individuals and the genotypes are merged. </li>
-                <li>We also filtered the genotypes for imputation quality (R<sup>2</sup> &#62; 0.3) (Figure 1).</li>
-            </ol>
-            <li>The final dataset was composed of 103,572,194 variants.</li>         
-            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <a class="pop"><img src="static/images/rsq.png"  width="50%" height="50%"></a>
+	    <p>We merged the imputed genotypes from two batches using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/merge_minimac_dosages.py">merge_minimac_dosages.py</a> script. For the dosages imputed in both batches, we selected the dosage from the batch with the highest imputation quality (Minimac Rsq) for the corresponding variant. After, we filtered out variants with the combined imputation quality Rsq<sub>combined</sub>&leq;0.3 (Figure 1). The underlying distributions of Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> were similar for each quantile of Rsq<sub>combined</sub> (Figures 2-3).</p>
+
+	    <p>The final dataset included 103,572,194 imputed variants (Table XYZ).</p>
+
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                        <a class="pop" style="cursor: zoom-in"><img src="static/images/rsq.png"  width="50%" height="50%"></a>
                 </div>
-                <div class="panel-footer"><b>Figure 1.</b> Imputation quality per minor allele frequency.</div>
+            	<div class="panel-footer"><b>Figure 1.</b> Imputation quality (Minimac Rsq) after merging imputed dosages from two batches and filtering out variants with Rsq&lt;0.3.</div>
+	    </div>
+
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body">
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/RSQ_merged_batch1.png"  width="100%" height="100%"></a>
+                </div>
+                <div class="panel-footer"><b>Figure 2.</b> Comparison of the imputation quality in merged data to batch #1 separated by minimal allele frequency in merged data.</div>
+             </div>
+	     <div class="panel panel-default" style="display: inline-block">
+		<div class="panel-body">
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/RSQ_merged_batch2.png"  width="100%" height="100%"></a>
+                </div>
+                <div class="panel-footer"><b>Figure 3.</b> Comparison of the imputation quality in merged data to batch #2 separated by minimal allele frequency in merged data.</div>
             </div>
-            <ul><li>When compared the merged R<sup>2</sup> of each each variant we observed the correlation of merged R<sup>2</sup> with the underlying batches and also  the influence of the MAF on the R<sup>2</sup> (as previously mentionned) . </li></ul>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <a class="pop"><img src="static/images/RSQ_merged_batch1.png"  width="100%" height="100%"></a>
-                </div>
-                <div class="panel-footer"><b>Figure 2A.</b> Comparison of the imputation quality in merged data to batch #1 separated by minimal allele frequency in merged data.</div>
-                <div class="panel-body">
-                    <a class="pop"><img src="static/images/RSQ_merged_batch2.png"  width="100%" height="100%"></a>
-                </div>
-                <div class="panel-footer"><b>Figure 2B.</b> Comparison of the imputation quality in merged data to batch #2 separated by minimal allele frequency in merged data.</div>
-            </div>
-        <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-        <span style="font-size:20px;">&nbsp;</span></p>
         </div>
+
+
+
             <!-- Association Mapping -->
         <div id="PhenotypeAssociation" class="tab-pane fade">
         	<h2 class="text-center">Phenotype Association</h2>
         	<hr></hr>
-        	<p> We performed genome wide association mapping of XXX phenotypes to imputed genotypes. The following sections describe our approach : </p>
-        	<ol> 
-        		<li> Selecting individuals of European ancestry : To increase the power of our analysis, we selected the largest genetically homogeneous subsection of our data though ancestry selection. </li>
-        		<li> Kinship and cryptic relatedness : To assess certain factor leading to false positive in association mapping, we assess the presence of related individuals and any structure in our data. </li>
-        		<li> Association model : We performed genome-wide association mapping.
-        </div>
+		<p>In this version of the CARTaGENE PheWeb, we restricted our genome-wide association analyses (GWASs) to individuals of European genetic ancestry. We used <a href="https://rgcgithub.github.io/regenie/">Regenie</a> to run GWASs. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
+	</div>
 
 <!-- Ancestry -->
         <div id="Ancestry" class="tab-pane fade">
             <h2 class="text-center">Selecting individuals of European genetic ancestry</h2>
             <hr></hr>
-        	<p> We explored the CARTaGENE population structure using a PCA projection of the CARTaGENE data onto the PCA space of unrelated samples from 1000 Genomes Project. </p>
-        	<ul> 
-                <ol>
-    			    <li> DNA ancestry were estimated using the mahalanobis distance (<a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/Mahalanobis.py">Mahalanobis.py</a>) from each of 1000 Genomes Project's superpopulations in 6 dimensions of the PCA projection (table 1). Samples were categorised as one ancestry if their distance form the corresponding ancestry were not rejected form the distribution (p-value  &ge; 0.001) and rejected from the distribution of all other ancestry. Samples were categorized as other if rejected by all distributions or not rejected by more than one distribution. </li> 
-    			    <table class="table table-bordered table-condensed">
+            <p>We selected CARTaGENE participants of European genetic ancestry in the following steps:</p>
+	    <ol>
+	    	<li>We projected CARTaGENE sample to the reference PCA space constructed using unrelated individuals in the 1000 Genomes Project (1000G) (Figure 1).</li>
+		<li>For each CARTaGENE individual, we computed the Mahalanobis distance to each of the 5 superpopulations in the 1000G PCA space (Admixed American, African, East Asian, South Asian, European). We used the first 6 principal components and <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/Mahalanobis.py">Mahalanobis.py</a> to compute the Mahalanobis distance.</li>
+		<li>We assigned a CARTaGENE individual to a superpopulation if the corresponding Mahalanobis distance's P-value was &geq;0.001 and all other P-values were &lt;0.001 (Table 1).</li>
+		<li>We removed 879 CARTaGENE individuals for whom the inferred genetic ancestry didn't match the ETHNICITY variable value derived from the questionnaire data.</li>
+		<li>We confirmed that 25,017 CARTaGENE individuals with assigned European genetic ancestry: (a) cluster together with European individuals in 1000G (Figure 2), (b) have vast proportion of autosomal chromosomes of European ancestry (Figure 3). </li>
+	    </ol>
+
+		<div class="panel panel-default" style="display: inline-block">
+                	<div class="panel-body text-center">
+                    		<a class="pop" style="cursor: zoom-in"><img src="static/images/PCA_total.png"  width="100%" height="100%"></a>
+                	</div>
+                	<div class="panel-footer"><b>Figure 1.</b> CARTaGENE sample projected into the 1000 Genomes Project's PCA space.</div>
+                </div>
+              
+		<div class="panel panel-default" style="display: inline-block">
+		<div class="panel-body text-center">
+   			    <table class="table table-bordered table-condensed">
                         <tr>
                             <th>Ancestry</th>
                             <th class="text-right">Ad Mixed American</th>
@@ -462,31 +451,28 @@
                             <td class="text-right">2,146</td>
                         </tr>
                     </table>
-    			    <li> To ensure the quality of our final data, we also filtered out 879 samples which had discordant ancestry within the questionnaire data </li>
-    		    </ol>
-		    <li> After filtering, there were 25,017 individuals categorised as European descent.</li>
-		    <div class="panel panel-default" style="display: inline-block">
-                <div class="panel-body text-center">
-                    <a class="pop"><img src="static/images/PCA_total.png"  width="100%" height="100%"></a>
+		   </div>
+		<div class="panel-footer"><b>Table 1.</b> Number of CARTaGENE individuals with assigned genetic ancestry based on the Mahalanobis distance.</div>
+		</div>
+
+	      <div class="panel panel-default" style="display: inline-block">
+		 <div class="panel-body text-center">		
+	               <a class="pop" style="cursor: zoom-in"><img src="static/images/PCA_filtered.png"  width="100%" height="100%"></a>
                 </div>
-                <div class="panel-footer"><b>Figure 1A.</b> PCA projection of all CARTaGENE samples onto 1000 Genomes Project pca space.
+                <div class="panel-footer"><b>Figure 2.</b> CARTaGENE individuals with inferred European genetic ancestry projected into the 1000 Genomes Project's PCA space.</div>
                 </div>
-                <div class="panel-body text-center">		
-	               <a class="pop"><img src="static/images/PCA_filtered.png"  width="100%" height="100%"></a>
-                </div>
-                <div class="panel-footer"><b>Figure 1B.</b> PCA projection of CARTaGENE samples classified as European onto the same 1000 Genomes Project's PCA space.
-                </div>
-			</div>
-    			<li> We confirmed the accuracy of this methodology using the RfMix software to infer the average ancestry proportion of our European subset based on the Human Genome Diversity Project and the 1000 Genomes project dataset. </li>
-                <div class="panel panel-default">
+
+                <div class="panel panel-default" style="display: inline-block">
                     <div class="panel-body text-center">
-                        <a class="pop"><img src="static/images/RfMix.png"  width="80%" height="80%"></a>
+                        <a class="pop" style="cursor: zoom-in"><img src="static/images/RfMix.png"  width="80%" height="80%"></a>
                     </div>
-                    <div class="panel-footer"><b>Figure 2.</b> Average Ancestry inferred through RfMix based on 1000 Genomes Project and Human Genome Diversity Project as references. 
+                    <div class="panel-footer"><b>Figure 3.</b> Average Ancestry inferred through RfMix based on 1000 Genomes Project and Human Genome Diversity Project as references.</div> 
                     </div>                
-                </div>
-    	    </ul>
-    	</div>
+
+
+         
+        	</div>
+
     <!-- Other Relatedness -->
     	<div id="related" class="tab-pane fade">
     	   <h2 class="text-center">Kinship and Cryptic Relatedness</h2>
@@ -574,7 +560,7 @@
             <span style="font-size:20px;">&nbsp;</span></p>
             <ul  type="disc">
                 <ul  type="circle">
-                    <li>Authors : Vincent Chapdelaine, Claude Bh&eacute;rer, Vincent Mooser, Sarah Gagliano-Taliun, Daniel Taliun</li>
+                    <li>Authors : Vincent Chapdelaine, Sarah Gagliano-Taliun, Daniel Taliun</li>
                     <li>Data was provided by the CARTaGENE consortium</li>
                     <li>Analysis were performed on Compute Canada's and this site is hosted on Compute Canada's server.</span></li>
                     <li>We would like to thank all participant to the CARTaGENE who volonteered their time and informations for this research.</span></li>

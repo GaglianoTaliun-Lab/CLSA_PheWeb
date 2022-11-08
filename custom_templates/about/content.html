@@ -24,9 +24,10 @@
     	<li><a data-toggle="tab" href="#PhenotypeAssociation"><b>4. Phenotype Association</b></a></li>
     	<li><a data-toggle="tab" href="#Ancestry">4.1 Selecting individuals of European genetic ancestry</a></li>
     	<li><a data-toggle="tab" href="#related">4.2 Kinship and cryptic relatedness</a></li>
-        <li><a data-toggle="tab" href="#GWAS">4.3 Association Model</a></li>
-    	<li><a data-toggle="tab" href="#PheWeb">5. PheWeb</a></li>
-        <li><a data-toggle="tab" href="#Acknowledgement">Acknowledgement</a></li>
+        <li><a data-toggle="tab" href="#Phenotypes">4.3 Selecting phenotypes</a></li>
+	<li><a data-toggle="tab" href="#GWAS">4.4 Association Model</a></li>
+    	<li><a data-toggle="tab" href="#PheWeb"><b>5. PheWeb</b></a></li>
+        <li><a data-toggle="tab" href="#Acknowledgement"><b>Acknowledgement</b></a></li>
     </ul>
 </div>
 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
@@ -516,6 +517,57 @@
                 
         <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
         </div>
+
+<!-- Phenotypes -->
+<div id="Phenotypes" class="tab-pane fade">
+<h2 class="text-center">Phenotypes</h2>
+<hr></hr>
+<p>We used binary and continuous phenotypes from the baseline assessment. To select the phenotypes of potential interest, we used the meta-information about CARTaGENE variables in the <mark>COMBINED_CATALOG_v2_9_7 - OCT2021</mark> catalogue.</p>
+
+<p>We selected binary phenotypes for GWASs in the following way:</p>
+<ol>
+	<li>We generated a list of binary phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_binary_variables.py">prepare_binary_variables.py</a> script. For each phenotype, this script performs the following:
+	<ul>
+		<li>checks if the variable is coded as described in the meta-information file;</li>
+		<li>recodes "NO" and "YES" to 0 and 1;</li>
+		<li>recodes everything that is not 0 or 1 to "NA";</li>
+		<li>counts the total number of non-missing values and number of cases and controls (stratified by sex). </li>
+	</ul>
+	</li>
+	<li>We manually curated the resulting list and removed phenotypes that:
+	<ul>
+		<li>had a small sample size (N&lt;1000)</li>
+		<li>had a low number of cases (N<sub>cases</sub>&lt;10)</li>
+		<li>included only males or females</li>
+		<li>were not relevant (e.g. LANGUAGE_SPOKEN_...)</li>
+	</ul>
+	</li>
+</ol>
+
+<p>We selected continuous phenotypes for GWASs in the following way:</p>
+<ol>
+	<li>We generated a list of continuous phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_continuous_variables.py">prepare_continuous_variables.py</a> script. For each phenotype, this script performs the following:
+	<ul>
+		<li>checks if all values are numeric;</li>
+		<li>recursively recodes missing values to “NA”</li>
+		<li>checks at least 10 unique numeric values are present</li>
+		<li>counts the total number of non-missing values and number of unique values (stratified by sex)</li>
+		<li>computes mininum, maximum, mode, mean, and median (stratified by sex)</li>
+	</ul>
+	</li>
+	<li>We manually curated the resulting list and removed phenotypes that:
+	<ul>
+		<li>had a small sample size (N&lt;100)</li>
+		<li>included only males or femailes</li>
+		<li>were not relevant (e.g. ..._ONSET)</li>
+		<li>had single observation for each value except mode</li>
+	</ul>
+	</li>
+</ol>
+
+</div>
+
+
     <!-- GWAS -->
         <div id="GWAS" class="tab-pane fade">
             <h2 class="text-center">Association Model</h2>

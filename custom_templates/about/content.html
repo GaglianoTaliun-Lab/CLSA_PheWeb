@@ -522,9 +522,9 @@
 <div id="Phenotypes" class="tab-pane fade">
 <h2 class="text-center">Phenotypes</h2>
 <hr></hr>
-<p>We used binary and continuous phenotypes from the baseline assessment. To select the phenotypes of potential interest, we used the meta-information about CARTaGENE variables in the <mark>COMBINED_CATALOG_v2_9_7 - OCT2021</mark> catalogue.</p>
+<p>We used binary and continuous phenotypes from the baseline assessment. To select the phenotypes of potential interest, we used the meta-information about CARTaGENE variables in the <mark>COMBINED_CATALOG_v2_9_7 - OCT2021</mark> catalogue. We based our phenotype selection on the sample size estimated using a subset of CARTaGENE individuals of European genetic ancestry.</p>
 
-<p>We selected binary phenotypes for GWASs in the following way:</p>
+<p>We selected <b>304 binary phenotypes</b> for GWASs in the following way:</p>
 <ol>
 	<li>We generated a list of binary phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_binary_variables.py">prepare_binary_variables.py</a> script. For each phenotype, this script performs the following:
 	<ul>
@@ -533,6 +533,7 @@
 		<li>recodes everything that is not 0 or 1 to "NA";</li>
 		<li>counts the total number of non-missing values and number of cases and controls (stratified by sex). </li>
 	</ul>
+	The number of binary phenotypes after this step was 475.
 	</li>
 	<li>We manually curated the resulting list and removed phenotypes that:
 	<ul>
@@ -541,10 +542,11 @@
 		<li>included only males or females</li>
 		<li>were not relevant (e.g. LANGUAGE_SPOKEN_...)</li>
 	</ul>
+	The final number of binary phenotypes selected for GWASs after this step was 304.
 	</li>
 </ol>
 
-<p>We selected continuous phenotypes for GWASs in the following way:</p>
+<p>We selected <b>333 continuous phenotypes</b> for GWASs in the following way:</p>
 <ol>
 	<li>We generated a list of continuous phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_continuous_variables.py">prepare_continuous_variables.py</a> script. For each phenotype, this script performs the following:
 	<ul>
@@ -554,6 +556,7 @@
 		<li>counts the total number of non-missing values and number of unique values (stratified by sex)</li>
 		<li>computes mininum, maximum, mode, mean, and median (stratified by sex)</li>
 	</ul>
+	The number of continuous phenotypes after this step was 562.
 	</li>
 	<li>We manually curated the resulting list and removed phenotypes that:
 	<ul>
@@ -562,6 +565,7 @@
 		<li>were not relevant (e.g. ..._ONSET)</li>
 		<li>had single observation for each value except mode</li>
 	</ul>
+	The final number of continuous phenotypes selected for GWASs after this step was 333.
 	</li>
 </ol>
 

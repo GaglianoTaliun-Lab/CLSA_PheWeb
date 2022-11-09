@@ -2,7 +2,7 @@
   <div class="modal-dialog" style="width: 60%;">
     <div class="modal-content" style="width: 100%;">              
       <div class="modal-body" style="width: 100%;">
-      	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <img src="" class="imagepreview" style="width: 100%;" >
       </div>
     </div>
@@ -19,14 +19,14 @@
         <li><a data-toggle="tab" href="#CheckAgainstReference">2.3. Check against the reference panel</a></li>
         <li><a data-toggle="tab" href="#Imputation"><b>3. Imputation</b></a></li>
         <li><a data-toggle="tab" href="#ImputationSplit">3.1. Splitting array data</a></li>
-    	<li><a data-toggle="tab" href="#ImputationSplitQC">3.2. Imputation results</a></li>
-    	<li><a data-toggle="tab" href="#ImputationMerge">3.3. Merging imputation results</a></li>
-    	<li><a data-toggle="tab" href="#PhenotypeAssociation"><b>4. Phenotype Association</b></a></li>
-    	<li><a data-toggle="tab" href="#Ancestry">4.1 Selecting individuals of European genetic ancestry</a></li>
-    	<li><a data-toggle="tab" href="#related">4.2 Kinship and cryptic relatedness</a></li>
+        <li><a data-toggle="tab" href="#ImputationSplitQC">3.2. Imputation results</a></li>
+        <li><a data-toggle="tab" href="#ImputationMerge">3.3. Merging imputation results</a></li>
+        <li><a data-toggle="tab" href="#PhenotypeAssociation"><b>4. Phenotype Association</b></a></li>
+        <li><a data-toggle="tab" href="#Ancestry">4.1 Selecting individuals of European genetic ancestry</a></li>
+        <li><a data-toggle="tab" href="#related">4.2 Kinship and cryptic relatedness</a></li>
         <li><a data-toggle="tab" href="#Phenotypes">4.3 Selecting phenotypes</a></li>
-	<li><a data-toggle="tab" href="#GWAS">4.4 Association model</a></li>
-    	<li><a data-toggle="tab" href="#PheWeb"><b>5. PheWeb</b></a></li>
+    <li><a data-toggle="tab" href="#GWAS">4.4 Association Model</a></li>
+        <li><a data-toggle="tab" href="#PheWeb"><b>5. PheWeb</b></a></li>
         <li><a data-toggle="tab" href="#Acknowledgement"><b>Acknowledgement</b></a></li>
     </ul>
 </div>
@@ -37,7 +37,7 @@
             <h2 class="text-center"> About CARTaGENE PheWeb</h2>
             <hr></hr>
             <p> This platform presents multiple analyses of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the Canada-wide "Canadian Partnership for Tomorrow's Health" </p>
-   	        <p> This platform presents a Phenome-wide (PheWas) association results from the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort).  </p>
+            <p> This platform presents a Phenome-wide (PheWas) association results from the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort).  </p>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <img src="static/images/CARTAGENE_logo.png" width="30%" height="30%" class="center-block">
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
@@ -203,46 +203,46 @@
             <hr></hr>
             <p>We converted each array's genotype data to genome build GRCh38 and aligned it to the "+" strand. Our conversion included the following steps:</p>
             <ol>
-            	<li>We lifted genetic positions from GRCh37 to GRCh38 using  <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">UCSC LiftOver</a> tool and the corresponding chain files.</li>
-            	<li>We excluded variants that did not map to GRCh38, mapped to alternate contigs in GRCh38, or located on the mitochondrial chromosome.</li>
-            	<li>We aligned A1/A2 alleles in the original PLINK files to the REF/ALT alleles on the "+" strand using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">plink2reference.py</a> script.</li>
-            	<li>We excluded palindromic variants (A/T and G/C), variants for which A1/A2 alleles didn't match REF/ALT, and for which A1/A2 alleles were not A, C, G, or T.</li>
-            	<li>We renamed all variants to the CHR:POS:REF:ALT notation.</li>
-            	<li>If multiple variants had the same name, we kept only one with the highest call rate using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">plink_dupvar_prioritize.py</a> script. We observed such duplicated variants only on customized genotyping arrays.</li>
-            	<li> All heterozygous genotypes for males in chromosome X and Y non-PAR regions were set to missing. </li>
+                <li>We lifted genetic positions from GRCh37 to GRCh38 using  <a href="https://genome.ucsc.edu/cgi-bin/hgLiftOver">UCSC LiftOver</a> tool and the corresponding chain files.</li>
+                <li>We excluded variants that did not map to GRCh38, mapped to alternate contigs in GRCh38, or located on the mitochondrial chromosome.</li>
+                <li>We aligned A1/A2 alleles in the original PLINK files to the REF/ALT alleles on the "+" strand using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">plink2reference.py</a> script.</li>
+                <li>We excluded palindromic variants (A/T and G/C), variants for which A1/A2 alleles didn't match REF/ALT, and for which A1/A2 alleles were not A, C, G, or T.</li>
+                <li>We renamed all variants to the CHR:POS:REF:ALT notation.</li>
+                <li>If multiple variants had the same name, we kept only one with the highest call rate using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">plink_dupvar_prioritize.py</a> script. We observed such duplicated variants only on customized genotyping arrays.</li>
+                <li> All heterozygous genotypes for males in chromosome X and Y non-PAR regions were set to missing. </li>
             </ol>
             <p>The final number of variants after these steps was:</p>
             <table class="table table-bordered table-condensed">
-            	<tr>
-            		<th>Array</th>
-            		<th class="text-right">N Variants in GRCh37</th>
-            		<th class="text-right">N Variants in GRCh38</th>
-            	</tr>
-            	<tr>
-            		<td>Archi</td>
-            		<td class="text-right">688,795</td>
-            		<td class="text-right">620,623</td>
-            	</tr>
-            	<tr>
-            		<td>17K</td>
-            		<td class="text-right">645,075</td>
-            		<td class="text-right">612,224</td>
-            	</tr>
-            	<tr>
-            		<td>4K</td>
-            		<td class="text-right">728,919</td>
-            		<td class="text-right">648,511</td>
-            	</tr>
-            	<tr>
-            		<td>5K</td>
-            		<td class="text-right">658,296</td>
-            		<td class="text-right">638,099</td>
-            	</tr>
-            	<tr>
-            		<td>760</td>
-            		<td class="text-right">626,377</td>
-            		<td class="text-right">581,440</td>
-            	</tr>
+                <tr>
+                    <th>Array</th>
+                    <th class="text-right">N Variants in GRCh37</th>
+                    <th class="text-right">N Variants in GRCh38</th>
+                </tr>
+                <tr>
+                    <td>Archi</td>
+                    <td class="text-right">688,795</td>
+                    <td class="text-right">620,623</td>
+                </tr>
+                <tr>
+                    <td>17K</td>
+                    <td class="text-right">645,075</td>
+                    <td class="text-right">612,224</td>
+                </tr>
+                <tr>
+                    <td>4K</td>
+                    <td class="text-right">728,919</td>
+                    <td class="text-right">648,511</td>
+                </tr>
+                <tr>
+                    <td>5K</td>
+                    <td class="text-right">658,296</td>
+                    <td class="text-right">638,099</td>
+                </tr>
+                <tr>
+                    <td>760</td>
+                    <td class="text-right">626,377</td>
+                    <td class="text-right">581,440</td>
+                </tr>
             </table>
         </div>
 
@@ -258,8 +258,8 @@
                     <ol type="i">
                         <li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
                         <li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option set at 0.0442).</li>
-                        		<li>We performed likelihood ratio test comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting individual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script. For the non pseudo-autosomal region of the X chromosome, we performed this test for both sexes separately.</li>
-            	    <li>We ran Firth association test (PLINK's --glm firth option) using unrelated individuals and genotyping array and phase as outcomes, and sex and first five PCs as covariates. We confirmed that our filtering removes variants with potential batch effects (Figure 2). In addition, we didn't see any evidence of systematic batch effects between phase 1 and 2 (Figure 3).</li>
+                                <li>We performed likelihood ratio test comparing two linear regression models <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub> + A<sub>2</sub> + ...  + A<sub>5</sub></code> and <code>G ~ m + PC<sub>1</sub> + ... + PC<sub>4</sub></code>, where G - individual genotype (0, 1, or 2), m - intercept corresponding to the average alternate allele frequency, PC<sub>i</sub> - i-th principal component, A<sub>j</sub> - indicator variable for array j. Assuming random sampling and no batch effects, the array variable should not have impact on predicting individual-specific allele frequency. The test is implemented in the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/compare_ancestry_adjusted_af.py">compare_ancestry_adjusted_af.py</a> script. For the non pseudo-autosomal region of the X chromosome, we performed this test for both sexes separately.</li>
+                    <li>We ran Firth association test (PLINK's --glm firth option) using unrelated individuals and genotyping array and phase as outcomes, and sex and first five PCs as covariates. We confirmed that our filtering removes variants with potential batch effects (Figure 2). In addition, we didn't see any evidence of systematic batch effects between phase 1 and 2 (Figure 3).</li>
                     </ol>
                 </li>
             </ol>
@@ -297,14 +297,14 @@
             <hr></hr>
             <p>We removed a further 159 variants which showed substantial differences in alternate allele frequencies when compared to the TOPMed reference panel.</p>
             <ol>
-            	<li>We downloaded TOPMed Freeze 8 allele frequencies from the <a href="https://bravo.sph.umich.edu/freeze8/hg38/">BRAVO</a> variant browser.</li>
-            	<li>We identified and removed variants from CARTaGENE's merged array data with AF difference &gt;0.2 compared to TOPMed Freeze 8 (Figure 1). See <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">plink_freq_vs_topmed.py</a> script for more details.</li>
+                <li>We downloaded TOPMed Freeze 8 allele frequencies from the <a href="https://bravo.sph.umich.edu/freeze8/hg38/">BRAVO</a> variant browser.</li>
+                <li>We identified and removed variants from CARTaGENE's merged array data with AF difference &gt;0.2 compared to TOPMed Freeze 8 (Figure 1). See <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_freq_vs_topmed.py">plink_freq_vs_topmed.py</a> script for more details.</li>
             </ol>
             <div class="panel panel-default" style="dislpay: inline-block">
-            	<div class="panel-body text-center">
-            		<a class="pop" style="cursor: zoom-in"><img src="static/images/TOPMed_differences.png"  width="30%" height="30%"></a>
-              	</div>
-            	<div class="panel-footer"><b>Figure 1.</b> Alternate allele Frequencies (AF) in TOPMed Freeze 8 and CARTaGENE.</div>
+                <div class="panel-body text-center">
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/TOPMed_differences.png"  width="30%" height="30%"></a>
+                </div>
+                <div class="panel-footer"><b>Figure 1.</b> Alternate allele Frequencies (AF) in TOPMed Freeze 8 and CARTaGENE.</div>
             </div>
         </div>
 
@@ -321,9 +321,9 @@
             <hr></hr>
             <p>For imputation purposes, we split CARTaGENE's merged array data into two overlapping batches (Figure 1):</p>
             <ol>
-            	<li>We randomly permuted the list of 29,330 individual IDs.</li>
-            	<li>We generated two separate lists: the 1st included the top 25,000 IDs, and the 2nd had the bottom 25,000 IDs from the permuted list. Thus, the overlap between the two lists was 20,670 individuals.</li>
-            	<li>We generated two sets of VCFs for imputation - each included only the individuals from the corresponding lists.</li>
+                <li>We randomly permuted the list of 29,330 individual IDs.</li>
+                <li>We generated two separate lists: the 1st included the top 25,000 IDs, and the 2nd had the bottom 25,000 IDs from the permuted list. Thus, the overlap between the two lists was 20,670 individuals.</li>
+                <li>We generated two sets of VCFs for imputation - each included only the individuals from the corresponding lists.</li>
             </ol>
             <p>By generating the overlap between two batches, we ended up with similar population allele frequencies between variants in two sets (Figure 2).</p>
             <div class="panel panel-default" style="display: inline-block">
@@ -345,10 +345,10 @@
         <div id="ImputationSplitQC" class="tab-pane fade">
             <h2 class="text-center">Imputation results</h2>
             <hr></hr>
-	    <p>We imputed the XYZ variants in each of the two batches. The alternate allele frequencies (AF) of imputed variants were similar in both batches (Figure 1).</p>
+        <p>We imputed the 307,841,049 variants in each of the two batches. The alternate allele frequencies (AF) of imputed variants were similar in both batches (Figure 1).</p>
 
-	    <p>The low-frequency variants with MAF&lt;0.001 had the lowest imputation qualities (median Rsq<sub>batch #1</sub>=XYZ and median Rsq<sub>batch #2</sub>=XYZ), while more frequent variants with MAF&gt;0.01 had the highest imputation qualities (median Rsq<sub>batch #1</sub>&gt;XYZ and median Rsq<sub>batch #2</sub>&gt;XYZ) (Figure 2).</p>
-	   <p>For each imputed variant in two batches, we looked at the absolute difference between its imputation qualities Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> in these batches (Figure 4). We observed the largest Rsq difference (&gt;0.5) only in variants with the lowest minor allele frequency (MAF&lt;XYZ, corresponding to 20 alternate alleles). For the vast majority (&gt;99%) of variants with MAF&gt;0.01, the Rsq difference didn't exceed 0.01.</p>
+        <p>The low-frequency variants with MAF&lt;0.001 had the lowest imputation qualities (median Rsq<sub>batch #1</sub>=0.02401 and median Rsq<sub>batch #2</sub>=0.02409), while more frequent variants with MAF&gt;0.01 had the highest imputation qualities (median Rsq<sub>batch #1</sub>&gt;0.93842 and median Rsq<sub>batch #2</sub>&gt;0.93825) (Figure 2).</p>
+       <p>For each imputed variant in two batches, we looked at the absolute difference between its imputation qualities Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> in these batches (Figure 4). We observed the largest Rsq difference (&gt;0.5) only in variants with the lowest minor allele frequency (MAF&lt;0.00034095, corresponding to 20 alternate alleles). For the vast majority (&gt;99%) of variants with MAF&gt;0.01, the Rsq difference didn't exceed 0.01.</p>
 
 
 <div class="panel panel-default" style="display: inline-block">
@@ -366,9 +366,9 @@
 </div>
 <div class="panel panel-default" style="display: inline-block">
         <div class="panel-body text-center">
-                <a class="pop" style="cursor: zoom-in"><img src="static/images/RSQ_diff_bin.png"  width="75%" height="75%"></a>
+                <a class="pop" style="cursor: zoom-in"><img src="static/images/RSQ_diff_bin.png"  width="65%" height="65%"></a>
         </div>
-        <div class="panel-footer"><b>Figure 4.</b> The distribution of the absolute differences in variant imputation qualities Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> in two batches.</div>
+        <div class="panel-footer"><b>Figure 3.</b> The distribution of the absolute differences in variant imputation qualities Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> in two batches stratified by the minimal Minor Allele Frequency (MAF) in either batches.</div>
 </div>
 </div>
 
@@ -376,28 +376,43 @@
         <div id="ImputationMerge" class="tab-pane fade">
             <h2 class="text-center">Merging imputation results</h2>
             <hr></hr>
-	    <p>We merged the imputed genotypes from two batches using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/merge_minimac_dosages.py">merge_minimac_dosages.py</a> script. For the dosages imputed in both batches, we selected the dosage from the batch with the highest imputation quality (Minimac Rsq) for the corresponding variant. After, we filtered out variants with the combined imputation quality Rsq<sub>combined</sub>&leq;0.3 (Figure 1). The underlying distributions of Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> were similar for each quantile of Rsq<sub>combined</sub> (Figures 2-3).</p>
+        <p>We merged the imputed genotypes from two batches using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/merge_minimac_dosages.py">merge_minimac_dosages.py</a> script. For the dosages imputed in both batches, we selected the dosage from the batch with the highest imputation quality (Minimac Rsq) for the corresponding variant. After, we filtered out variants with the combined imputation quality Rsq<sub>combined</sub>&leq;0.3 (Figure 1). The underlying distributions of Rsq<sub>batch #1</sub> and Rsq<sub>batch #2</sub> were similar for each quantile of Rsq<sub>combined</sub> (Figures 2).</p>
 
-	    <p>The final dataset included 103,572,194 imputed variants (Table XYZ).</p>
+        <p>The final dataset included 103,574,557 imputed variants (Table I).</p>
 
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
-                        <a class="pop" style="cursor: zoom-in"><img src="static/images/rsq.png"  width="50%" height="50%"></a>
+                        <a class="pop" style="cursor: zoom-in"><img src="static/images/rsq.png"  width="80%" height="80%"></a>
                 </div>
-            	<div class="panel-footer"><b>Figure 1.</b> Imputation quality (Minimac Rsq) after merging imputed dosages from two batches and filtering out variants with Rsq&lt;0.3.</div>
-	    </div>
+                <div class="panel-footer"><b>Figure 1.</b> Imputation quality (Minimac Rsq) after merging imputed dosages from two batches and filtering out variants with Rsq&lt;0.3.</div>
+        </div>
 
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body">
-                    <a class="pop" style="cursor: zoom-in"><img src="static/images/RSQ_merged_batch1.png"  width="100%" height="100%"></a>
+                    <a class="pop" style="cursor: zoom-in"><img src="static/images/Rsq_combined_MAF.png"  width="100%" height="100%"></a>
                 </div>
-                <div class="panel-footer"><b>Figure 2.</b> Comparison of the imputation quality in merged data to batch #1 separated by minimal allele frequency in merged data.</div>
+                <div class="panel-footer"><b>Figure 2.</b> Comparison of the imputation quality in merged data to batches separated by minimal allele frequency in merged data.</div>
              </div>
-	     <div class="panel panel-default" style="display: inline-block">
-		<div class="panel-body">
-                    <a class="pop" style="cursor: zoom-in"><img src="static/images/RSQ_merged_batch2.png"  width="100%" height="100%"></a>
-                </div>
-                <div class="panel-footer"><b>Figure 3.</b> Comparison of the imputation quality in merged data to batch #2 separated by minimal allele frequency in merged data.</div>
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                    <table class="table table-bordered table-condensed">
+                        <tr>
+                            <th>MAF<sub>combined</sub></th>
+                            <th class="text-right">[0,0.00034]</th>
+                            <th class="text-right">(0.00034,0.01]</th>
+                            <th class="text-right">(0.01,0.1]</th>
+                            <th class="text-right">(0.1,0.5]</th>
+                        </tr>
+                        <tr>
+                            <td>Number of variants</td>
+                            <td class="text-right">74,532,694</td>
+                            <td class="text-right">19,663,301</td>
+                            <td class="text-right">4,244,017</td>
+                            <td class="text-right">5,134,545</td>
+                        </tr>
+                    </table>
+                   </div>
+                    <div class="panel-footer"><b>Table 1.</b> Number of variants in merged dataset stratified by Minimal Allele Frequency.</div>
             </div>
         </div>
 
@@ -405,34 +420,34 @@
 
             <!-- Association Mapping -->
         <div id="PhenotypeAssociation" class="tab-pane fade">
-        	<h2 class="text-center">Phenotype Association</h2>
-        	<hr></hr>
-		<p>In this version of the CARTaGENE PheWeb, we restricted our genome-wide association analyses (GWASs) to individuals of European genetic ancestry. We used <a href="https://rgcgithub.github.io/regenie/">Regenie</a> to run GWASs. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
-	</div>
+            <h2 class="text-center">Phenotype Association</h2>
+            <hr></hr>
+        <p>In this version of the CARTaGENE PheWeb, we restricted our genome-wide association analyses (GWASs) to individuals of European genetic ancestry. We used <a href="https://rgcgithub.github.io/regenie/">Regenie</a> to run GWASs. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
+    </div>
 
 <!-- Ancestry -->
         <div id="Ancestry" class="tab-pane fade">
             <h2 class="text-center">Selecting individuals of European genetic ancestry</h2>
             <hr></hr>
             <p>We selected CARTaGENE participants of European genetic ancestry in the following steps:</p>
-	    <ol>
-	    	<li>We projected CARTaGENE sample to the reference PCA space constructed using unrelated individuals in the 1000 Genomes Project (1000G) (Figure 1).</li>
-		<li>For each CARTaGENE individual, we computed the Mahalanobis distance to each of the 5 superpopulations in the 1000G PCA space (Admixed American, African, East Asian, South Asian, European). We used the first 6 principal components and <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/Mahalanobis.py">Mahalanobis.py</a> to compute the Mahalanobis distance.</li>
-		<li>We assigned a CARTaGENE individual to a superpopulation if the corresponding Mahalanobis distance's P-value was &geq;0.001 and all other P-values were &lt;0.001 (Table 1).</li>
-		<li>We removed 879 CARTaGENE individuals for whom the inferred genetic ancestry didn't match the ETHNICITY variable value derived from the questionnaire data.</li>
-		<li>We confirmed that 25,017 CARTaGENE individuals with assigned European genetic ancestry: (a) cluster together with European individuals in 1000G (Figure 2), (b) have vast proportion of autosomal chromosomes of European ancestry (Figure 3). </li>
-	    </ol>
+        <ol>
+            <li>We projected CARTaGENE sample to the reference PCA space constructed using unrelated individuals in the 1000 Genomes Project (1000G) (Figure 1).</li>
+        <li>For each CARTaGENE individual, we computed the Mahalanobis distance to each of the 5 superpopulations in the 1000G PCA space (Admixed American, African, East Asian, South Asian, European). We used the first 6 principal components and <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/Mahalanobis.py">Mahalanobis.py</a> to compute the Mahalanobis distance.</li>
+        <li>We assigned a CARTaGENE individual to a superpopulation if the corresponding Mahalanobis distance's P-value was &geq;0.001 and all other P-values were &lt;0.001 (Table 1).</li>
+        <li>We removed 879 CARTaGENE individuals for whom the inferred genetic ancestry didn't match the ETHNICITY variable value derived from the questionnaire data.</li>
+        <li>We confirmed that 25,017 CARTaGENE individuals with assigned European genetic ancestry: (a) cluster together with European individuals in 1000G (Figure 2), (b) have vast proportion of autosomal chromosomes of European ancestry (Figure 3). </li>
+        </ol>
 
-		<div class="panel panel-default" style="display: inline-block">
-                	<div class="panel-body text-center">
-                    		<a class="pop" style="cursor: zoom-in"><img src="static/images/PCA_total.png"  width="100%" height="100%"></a>
-                	</div>
-                	<div class="panel-footer"><b>Figure 1.</b> CARTaGENE sample projected into the 1000 Genomes Project's PCA space.</div>
+        <div class="panel panel-default" style="display: inline-block">
+                    <div class="panel-body text-center">
+                            <a class="pop" style="cursor: zoom-in"><img src="static/images/PCA_total.png"  width="100%" height="100%"></a>
+                    </div>
+                    <div class="panel-footer"><b>Figure 1.</b> CARTaGENE sample projected into the 1000 Genomes Project's PCA space.</div>
                 </div>
               
-		<div class="panel panel-default" style="display: inline-block">
-		<div class="panel-body text-center">
-   			    <table class="table table-bordered table-condensed">
+        <div class="panel panel-default" style="display: inline-block">
+        <div class="panel-body text-center">
+                <table class="table table-bordered table-condensed">
                         <tr>
                             <th>Ancestry</th>
                             <th class="text-right">Ad Mixed American</th>
@@ -452,13 +467,13 @@
                             <td class="text-right">2,146</td>
                         </tr>
                     </table>
-		   </div>
-		<div class="panel-footer"><b>Table 1.</b> Number of CARTaGENE individuals with assigned genetic ancestry based on the Mahalanobis distance.</div>
-		</div>
+           </div>
+        <div class="panel-footer"><b>Table 1.</b> Number of CARTaGENE individuals with assigned genetic ancestry based on the Mahalanobis distance.</div>
+        </div>
 
-	      <div class="panel panel-default" style="display: inline-block">
-		 <div class="panel-body text-center">		
-	               <a class="pop" style="cursor: zoom-in"><img src="static/images/PCA_filtered.png"  width="100%" height="100%"></a>
+          <div class="panel panel-default" style="display: inline-block">
+         <div class="panel-body text-center">       
+                   <a class="pop" style="cursor: zoom-in"><img src="static/images/PCA_filtered.png"  width="100%" height="100%"></a>
                 </div>
                 <div class="panel-footer"><b>Figure 2.</b> CARTaGENE individuals with inferred European genetic ancestry projected into the 1000 Genomes Project's PCA space.</div>
                 </div>
@@ -467,22 +482,22 @@
                     <div class="panel-body text-center">
                         <a class="pop" style="cursor: zoom-in"><img src="static/images/RfMix.png"  width="80%" height="80%"></a>
                     </div>
-                    <div class="panel-footer"><b>Figure 3.</b> Average Ancestry inferred through RfMix based on 1000 Genomes Project and Human Genome Diversity Project as references.</div> 
+                    <div class="panel-footer"><b>Figure 3.</b> Ancestry proportion inferred through RfMix based on 1000 Genomes Project and Human Genome Diversity Project as references.</div> 
                     </div>                
 
 
          
-        	</div>
+            </div>
 
     <!-- Other Relatedness -->
-    	<div id="related" class="tab-pane fade">
-    	   <h2 class="text-center">Kinship and Cryptic Relatedness</h2>
+        <div id="related" class="tab-pane fade">
+           <h2 class="text-center">Kinship and Cryptic Relatedness</h2>
             <hr></hr>
-    	    <p> We analyzed other structural aspects potentially present within the data : </p>
-    		<ol>
-    			<li> We estimated the relationship between individuals of all ancestry using the <a href="https://www.kingrelatedness.com">King software</a>. </li> 
-    			<ul> <li>4 duplicate pairs were identified from inconsitency between DNA inference and questionnaire (i.e Are you a twin ? Do the pair share the same birthday?). The sample with the sample with the higher coverage within each pair was kept.</li> </ul>
-    	       <li> We further explored any structure within the European samples using a PCA Analysis. </li>
+            <p> We analyzed other structural aspects potentially present within the data : </p>
+            <ol>
+                <li> We estimated the relationship between individuals of all ancestry using the <a href="https://www.kingrelatedness.com">King software</a>. </li> 
+                <ul> <li>4 duplicate pairs were identified from inconsitency between DNA inference and questionnaire (i.e Are you a twin ? Do the pair share the same birthday?). The sample with the sample with the higher coverage within each pair was kept. Thus, our final European dataset is comprised of 25013 individuals. </li> </ul>
+               <li> We further explored any structure within the European samples using a PCA Analysis. </li>
                <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
                <table class="table table-bordered table-condensed">
                     <tr>
@@ -494,12 +509,12 @@
                         <th class="text-right">Third Degree</th>
                     </tr>
                     <tr>
-                        <th>Number of pairings</th>
-                        <td class="text-right">2</td>
-                        <td class="text-right">51</td>
-                        <td class="text-right">610</td>
-                        <td class="text-right">649</td>
-                        <td class="text-right">4,892</td>
+                        <th>Number of individuals</th>
+                        <td class="text-right">4</td>
+                        <td class="text-right">101</td>
+                        <td class="text-right">1,157</td>
+                        <td class="text-right">1,221</td>
+                        <td class="text-right">7,205</td>
                     </tr>
                 </table>
                 <div class="panel panel-default">
@@ -526,47 +541,47 @@
 
 <p>We selected <b>304 binary phenotypes</b> for GWASs in the following way:</p>
 <ol>
-	<li>We generated a list of binary phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_binary_variables.py">prepare_binary_variables.py</a> script. For each phenotype, this script performs the following:
-	<ul>
-		<li>checks if the variable is coded as described in the meta-information file;</li>
-		<li>recodes "NO" and "YES" to 0 and 1;</li>
-		<li>recodes everything that is not 0 or 1 to "NA";</li>
-		<li>counts the total number of non-missing values and number of cases and controls (stratified by sex). </li>
-	</ul>
-	The number of binary phenotypes after this step was 475.
-	</li>
-	<li>We manually curated the resulting list and removed phenotypes that:
-	<ul>
-		<li>had a small sample size (N&lt;1000)</li>
-		<li>had a low number of cases (N<sub>cases</sub>&lt;10)</li>
-		<li>included only males or females</li>
-		<li>were not relevant (e.g. LANGUAGE_SPOKEN_...)</li>
-	</ul>
-	The final number of binary phenotypes selected for GWASs after this step was 304.
-	</li>
+    <li>We generated a list of binary phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_binary_variables.py">prepare_binary_variables.py</a> script. For each phenotype, this script performs the following:
+    <ul>
+        <li>checks if the variable is coded as described in the meta-information file;</li>
+        <li>recodes "NO" and "YES" to 0 and 1;</li>
+        <li>recodes everything that is not 0 or 1 to "NA";</li>
+        <li>counts the total number of non-missing values and number of cases and controls (stratified by sex). </li>
+    </ul>
+    The number of binary phenotypes after this step was 475.
+    </li>
+    <li>We manually curated the resulting list and removed phenotypes that:
+    <ul>
+        <li>had a small sample size (N&lt;1000)</li>
+        <li>had a low number of cases (N<sub>cases</sub>&lt;10)</li>
+        <li>included only males or females</li>
+        <li>were not relevant (e.g. LANGUAGE_SPOKEN_...)</li>
+    </ul>
+    The final number of binary phenotypes selected for GWASs after this step was 304.
+    </li>
 </ol>
 
 <p>We selected <b>333 continuous phenotypes</b> for GWASs in the following way:</p>
 <ol>
-	<li>We generated a list of continuous phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_continuous_variables.py">prepare_continuous_variables.py</a> script. For each phenotype, this script performs the following:
-	<ul>
-		<li>checks if all values are numeric;</li>
-		<li>recursively recodes missing values to “NA”</li>
-		<li>checks at least 10 unique numeric values are present</li>
-		<li>counts the total number of non-missing values and number of unique values (stratified by sex)</li>
-		<li>computes mininum, maximum, mode, mean, and median (stratified by sex)</li>
-	</ul>
-	The number of continuous phenotypes after this step was 562.
-	</li>
-	<li>We manually curated the resulting list and removed phenotypes that:
-	<ul>
-		<li>had a small sample size (N&lt;100)</li>
-		<li>included only males or femailes</li>
-		<li>were not relevant (e.g. ..._ONSET)</li>
-		<li>had single observation for each value except mode</li>
-	</ul>
-	The final number of continuous phenotypes selected for GWASs after this step was 333.
-	</li>
+    <li>We generated a list of continuous phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_continuous_variables.py">prepare_continuous_variables.py</a> script. For each phenotype, this script performs the following:
+    <ul>
+        <li>checks if all values are numeric;</li>
+        <li>recursively recodes missing values to “NA”</li>
+        <li>checks at least 10 unique numeric values are present</li>
+        <li>counts the total number of non-missing values and number of unique values (stratified by sex)</li>
+        <li>computes mininum, maximum, mode, mean, and median (stratified by sex)</li>
+    </ul>
+    The number of continuous phenotypes after this step was 562.
+    </li>
+    <li>We manually curated the resulting list and removed phenotypes that:
+    <ul>
+        <li>had a small sample size (N&lt;100)</li>
+        <li>included only males or femailes</li>
+        <li>were not relevant (e.g. ..._ONSET)</li>
+        <li>had single observation for each value except mode</li>
+    </ul>
+    The final number of continuous phenotypes selected for GWASs after this step was 333.
+    </li>
 </ol>
 
 </div>
@@ -574,44 +589,55 @@
 
     <!-- GWAS -->
         <div id="GWAS" class="tab-pane fade">
-            <h2 class="text-center">Association model</h2>
+            <h2 class="text-center">Association Model</h2>
             <hr></hr>
-            <p>We performed GWASs on >600 phenotypes using <a href="https://rgcgithub.github.io/regenie/">Regenie</a> (version 3.0.1.) software, which handles unbalanced case-control ratios and accounts for the population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">here</a>.</p>
-
-	    <p>In Regenie's <a href="https://rgcgithub.github.io/regenie/overview/#overview">Step 1 (whole genome model)</a>, we used the merged array genotype data with the following filters:</p>
-	    <ol>
-	    	<li>MAF &geq;0.01</li>
-		<li>genotype missigness per variant &lt;0.01</li>
-		<li>genotype missigness per sample &lt;0.01</li>
-		<li>HWE P-value &ge;1e-15</li>
-		<li>removed low-complexity and high LD regions</li>
-		<li>pruned variants in high LD (r<sup>2</sup>&gt;0.9)</li>
-	    </ol>
-	    <p>In Regenie's <a href="https://rgcgithub.github.io/regenie/overview/#overview">Step 2 (single-variant association testing)</a>, we used the imputed data and the following settings:</p>
-	    <ol>
-	    	<li>Covariates: genotyping array (categorical), sex, age, age<sup>2</sup>, 1-10 PCs</li>
-		<li>Rank inverse normal transformation for continuous phenotypes</li>
-		<li>Firth approximation when p-value &lt;0.05 in binary phenotypes</li>
-	    </ol>
+            <p>We performed genotype/phenotype association test using <a href="https://rgcgithub.github.io/regenie/">regenie</a> (version 3.0.1).</p>
+            <ol style="list-style-type: undefined;">
+                <span style="font-size:20px;">&nbsp;</span></p>
+               <li>In preparation files were prepared using the <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">REGENIE Nextflow pipeline</a> :</li>
+               <ol class="decimal_type" style="list-style-type: circle;">
+                    <li>For the first step of regenie, we prepared filtered unimputed data with the following filters :</li>
+                    <ol class="decimal_type" style="list-style-type: square;">
+                        <li>maf&#8805;0.01 (i.e. Minimum allele frequency) </li>
+                        <li>geno&#8805;0.99 (i.e. Maximum Missing genotype frequency per-variant) </li>
+                        <li>mind&#8805;0.99 (i.e. Maximum Missing genotype frequency per-sample) </li>
+                        <li>HWE&#8805;1e-15 (i.e. threshold for Hardy-Weindberg Equilibrium)</li>
+                    </ol>
+                    <li>For the second step of REGENIE, merged imputed data was used directly. </li>
+                </ol>
+                <li>In this pipestance :</li>
+                <ul class="decimal_type" style="list-style-type: circle;">
+                   <li>The covariant arrays (as categorical), the individual’s sex (as categorical), age, age&sup2;  and the 10 first Principal Components were regressed out or offset.</li>
+                   <li> The dosage data (DS) was used. </li>
+                   <li> Continuous traits were subjected to rank inverse normal transformation. </li>
+                   <li>In binary traits, association of p-value&#8804;0.05 were tested using REGENIE’s firth approximation. </li>
+                   <li> Phenotypes were analyzed per tranche of 50 over cluster. </li>
+               </ul>
+            </ol>
         </div>
-
-
     <!-- PHEWEB  -->
         <div id="PheWeb" class="tab-pane fade">
             <h2 class="text-center">PheWeb</h2>
             <hr></hr>
-	    <p>The CARTaGENE PheWeb uses the open-source <a href="https://github.com/statgen/pheweb">PheWeb framework</a>. The customized source code for this instance is available <a href="https://github.com/CERC-Genomic-Medicine/CARTaGENE_PheWeb">here</a>.</p>
+            <span style="font-size:20px;">&nbsp;</span></p>
+            <ol style="margin-bottom:0cm;list-style-type: circle;margin-left:80px;">
+                <li>Variants with minimal allele count of 20 were loaded into <a href="https://github.com/statgen/pheweb">PheWeb</a>.</li>
+            </ol>
         </div>
      <!-- Acknowledgement  -->
         <div id="Acknowledgement" class="tab-pane fade">
             <h2 class="text-center">Acknowledgement</h2>
-	       <hr></hr>
-                           <ul >
+           <hr></hr>
+            <span style="font-size:20px;">&nbsp;</span></p>
+            <ul  type="disc">
+                <ul  type="circle">
                     <li>Authors : Vincent Chapdelaine, Sarah Gagliano-Taliun, Daniel Taliun</li>
-                    <li>All computational analyses were performed using compute resources of Digital Research Alliance of Canada, and the Digital Research Alliance of Canada hosts this site.</li>
-                    <li>We want to thank all participants of the CARTaGENE who volunteered their time and information for genetic research.</li>
+                    <li>Data was provided by the CARTaGENE consortium</li>
+                    <li>Analysis were performed on Compute Canada's and this site is hosted on Compute Canada's server.</span></li>
+                    <li>We would like to thank all participant to the CARTaGENE who volonteered their time and informations for this research.</span></li>
                 </ul>
-       </div>
+            </ul>
+        </div>
     <!-- end of file -->
     </div>
 </div>

@@ -25,7 +25,7 @@
         <li><a data-toggle="tab" href="#Ancestry">4.1 Selecting individuals of European genetic ancestry</a></li>
         <li><a data-toggle="tab" href="#related">4.2 Kinship and cryptic relatedness</a></li>
         <li><a data-toggle="tab" href="#Phenotypes">4.3 Selecting phenotypes</a></li>
-    <li><a data-toggle="tab" href="#GWAS">4.4 Association Model</a></li>
+    <li><a data-toggle="tab" href="#GWAS">4.4 Association model</a></li>
         <li><a data-toggle="tab" href="#PheWeb"><b>5. PheWeb</b></a></li>
         <li><a data-toggle="tab" href="#Acknowledgement"><b>Acknowledgement</b></a></li>
     </ul>
@@ -589,54 +589,41 @@
 
     <!-- GWAS -->
         <div id="GWAS" class="tab-pane fade">
-            <h2 class="text-center">Association Model</h2>
+            <h2 class="text-center">Association model</h2>
             <hr></hr>
-            <p>We performed genotype/phenotype association test using <a href="https://rgcgithub.github.io/regenie/">regenie</a> (version 3.0.1).</p>
-            <ol style="list-style-type: undefined;">
-                <span style="font-size:20px;">&nbsp;</span></p>
-               <li>In preparation files were prepared using the <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">REGENIE Nextflow pipeline</a> :</li>
-               <ol class="decimal_type" style="list-style-type: circle;">
-                    <li>For the first step of regenie, we prepared filtered unimputed data with the following filters :</li>
-                    <ol class="decimal_type" style="list-style-type: square;">
-                        <li>maf&#8805;0.01 (i.e. Minimum allele frequency) </li>
-                        <li>geno&#8805;0.99 (i.e. Maximum Missing genotype frequency per-variant) </li>
-                        <li>mind&#8805;0.99 (i.e. Maximum Missing genotype frequency per-sample) </li>
-                        <li>HWE&#8805;1e-15 (i.e. threshold for Hardy-Weindberg Equilibrium)</li>
-                    </ol>
-                    <li>For the second step of REGENIE, merged imputed data was used directly. </li>
-                </ol>
-                <li>In this pipestance :</li>
-                <ul class="decimal_type" style="list-style-type: circle;">
-                   <li>The covariant arrays (as categorical), the individual’s sex (as categorical), age, age&sup2;  and the 10 first Principal Components were regressed out or offset.</li>
-                   <li> The dosage data (DS) was used. </li>
-                   <li> Continuous traits were subjected to rank inverse normal transformation. </li>
-                   <li>In binary traits, association of p-value&#8804;0.05 were tested using REGENIE’s firth approximation. </li>
-                   <li> Phenotypes were analyzed per tranche of 50 over cluster. </li>
-               </ul>
-            </ol>
+            <p>We performed GWASs on >600 phenotypes using <a href="https://rgcgithub.github.io/regenie/">Regenie</a> (version 3.0.1.) software, which handles unbalanced case-control ratios and accounts for the population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">here</a>.</p>
+
+        <p>In Regenie's <a href="https://rgcgithub.github.io/regenie/overview/#overview">Step 1 (whole genome model)</a>, we used the merged array genotype data with the following filters:</p>
+        <ol>
+            <li>MAF &geq;0.01</li>
+        <li>genotype missigness per variant &lt;0.01</li>
+        <li>genotype missigness per sample &lt;0.01</li>
+        <li>HWE P-value &ge;1e-15</li>
+        <li>removed low-complexity and high LD regions</li>
+        <li>pruned variants in high LD (r<sup>2</sup>&gt;0.9)</li>
+        </ol>
+        <p>In Regenie's <a href="https://rgcgithub.github.io/regenie/overview/#overview">Step 2 (single-variant association testing)</a>, we used the imputed data and the following settings:</p>
+        <ol>
+            <li>Covariates: genotyping array (categorical), sex, age, age<sup>2</sup>, 1-10 PCs</li>
+        <li>Rank inverse normal transformation for continuous phenotypes</li>
+        <li>Firth approximation when p-value &lt;0.05 in binary phenotypes</li>
+        </ol>
         </div>
     <!-- PHEWEB  -->
         <div id="PheWeb" class="tab-pane fade">
             <h2 class="text-center">PheWeb</h2>
             <hr></hr>
-            <span style="font-size:20px;">&nbsp;</span></p>
-            <ol style="margin-bottom:0cm;list-style-type: circle;margin-left:80px;">
-                <li>Variants with minimal allele count of 20 were loaded into <a href="https://github.com/statgen/pheweb">PheWeb</a>.</li>
-            </ol>
+             <ul>
+                 <li>All computational analyses were performed using compute resources of Digital Research Alliance of Canada, and the Digital Research Alliance of Canada hosts this site.</li>
+                    <li>We want to thank all participants of the CARTaGENE who volunteered their time and information for genetic research.</li>
+            </ul>
         </div>
      <!-- Acknowledgement  -->
         <div id="Acknowledgement" class="tab-pane fade">
             <h2 class="text-center">Acknowledgement</h2>
            <hr></hr>
             <span style="font-size:20px;">&nbsp;</span></p>
-            <ul  type="disc">
-                <ul  type="circle">
-                    <li>Authors : Vincent Chapdelaine, Sarah Gagliano-Taliun, Daniel Taliun</li>
-                    <li>Data was provided by the CARTaGENE consortium</li>
-                    <li>Analysis were performed on Compute Canada's and this site is hosted on Compute Canada's server.</span></li>
-                    <li>We would like to thank all participant to the CARTaGENE who volonteered their time and informations for this research.</span></li>
-                </ul>
-            </ul>
+
         </div>
     <!-- end of file -->
     </div>

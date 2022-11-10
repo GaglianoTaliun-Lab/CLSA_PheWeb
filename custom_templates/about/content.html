@@ -27,7 +27,7 @@
         <li><a data-toggle="tab" href="#Phenotypes">4.3 Selecting phenotypes</a></li>
     <li><a data-toggle="tab" href="#GWAS">4.4 Association model</a></li>
         <li><a data-toggle="tab" href="#PheWeb"><b>5. PheWeb</b></a></li>
-        <li><a data-toggle="tab" href="#Acknowledgement"><b>Acknowledgement</b></a></li>
+        <li><a data-toggle="tab" href="#Acknowledgements"><b>Acknowledgements</b></a></li>
     </ul>
 </div>
 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
@@ -36,8 +36,8 @@
         <div id="Overview" class="tab-pane fade in active">
             <h2 class="text-center"> About CARTaGENE PheWeb</h2>
             <hr></hr>
-            <p> This platform presents multiple analyses of the CARTaGENE's biobank to the scientific community as well as the public at large. CARTaGENE's cohort is specific to Quebec and is a regional subset of the Canada-wide "Canadian Partnership for Tomorrow's Health" </p>
-            <p> This platform presents a Phenome-wide (PheWas) association results from the CARTaGENE cohort (i.e. association between individuals' information and  genomic variations across the cohort).  </p>
+            <p> This platform presents multiple analyses conducted using CARTaGENE data to the scientific community as well as the public at large. The <a href="https://www.cartagene.qc.ca/en/index.html">CARTaGENE</a> cohort is specific to Quebec and is a regional subset of the Canada-wide "Canadian Partnership for Tomorrow's Health" </p>
+            <p> This platform displays Phenome-wide association (PheWAS) results from the CARTaGENE cohort (i.e. statistical associations between individuals' trait information and genomic variations across the cohort).  </p>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <img src="static/images/CARTAGENE_logo.png" width="30%" height="30%" class="center-block">
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
@@ -183,15 +183,15 @@
             <hr></hr>
             <p>We started with the genotype data on genome build GRCh37/hg19 saved in five different files (i.e. one per array in PLINK format). We confirmed that each array's genotype data had undergone the initial QC at CARTaGENE.</p>
             <ol>
-                <li>Variants showing departures from the Hardy-Weinberg Equilibrium (P-value &lt; 10e-6) were removed.</li>
+                <li>Variants showing departures from Hardy-Weinberg Equilibrium (P-value &lt; 10e-6) were removed.</li>
                 <li>Variants with call rate &lt;95% were removed.</li>
                 <li>Samples with call rate &lt;95% were removed.</li>
                 <li>Samples with discordance between reported and inferred sex were removed.</li>
             </ol>
             <p>Our steps for CARTaGENE genotype data imputation to the TOPMed reference panel included:</p>
             <ol>
-                <li>Lift each array's genotype data to the human genome build GRCh38.</li>
-                <li>Combine genotype data from five arrays and keep only shared variants.</li>
+                <li>Lift over each array's genotype data to human genome build GRCh38.</li>
+                <li>Combine genotype data from the five arrays and keep only shared variants.</li>
                 <li>Impute combined genotype data.</li>
             </ol>
             <p>The following sections describe each of these steps in detail.</p>
@@ -207,7 +207,7 @@
                 <li>We excluded variants that did not map to GRCh38, mapped to alternate contigs in GRCh38, or located on the mitochondrial chromosome.</li>
                 <li>We aligned A1/A2 alleles in the original PLINK files to the REF/ALT alleles on the "+" strand using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink2reference.py">plink2reference.py</a> script.</li>
                 <li>We excluded palindromic variants (A/T and G/C), variants for which A1/A2 alleles didn't match REF/ALT, and for which A1/A2 alleles were not A, C, G, or T.</li>
-                <li>We renamed all variants to the CHR:POS:REF:ALT notation.</li>
+                <li>We renamed all variants to follow the CHR:POS:REF:ALT notation.</li>
                 <li>If multiple variants had the same name, we kept only one with the highest call rate using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/plink_dupvar_prioritize.py">plink_dupvar_prioritize.py</a> script. We observed such duplicated variants only on customized genotyping arrays.</li>
                 <li> All heterozygous genotypes for males in chromosome X and Y non-PAR regions were set to missing. </li>
             </ol>
@@ -286,7 +286,7 @@
                     <a class="pop" style="cursor: zoom-in"><img src="static/images/17kvs17k.png"  width="50%" height="50%"></a>
                     <a class="pop" style="cursor: zoom-in"><img src="static/images/5kvs5k.png"  width="50%" height="50%"></a>
                 </div>
-                <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as the outcome and sex and 1-5 PCs as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants failing the LRT test for possible batch effects.</div>
+                <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as the outcome and sex and PCs 1-5 as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants failing the LRT test for possible batch effects.</div>
             </div>
         </div>
 
@@ -429,13 +429,13 @@
         <div id="Ancestry" class="tab-pane fade">
             <h2 class="text-center">Selecting individuals of European genetic ancestry</h2>
             <hr></hr>
-            <p>We selected CARTaGENE participants of European genetic ancestry in the following steps:</p>
+            <p>We selected CARTaGENE participants of inferred European genetic ancestry using the following steps:</p>
         <ol>
-            <li>We projected CARTaGENE sample to the reference PCA space constructed using unrelated individuals in the 1000 Genomes Project (1000G) (Figure 1).</li>
+            <li>We projected CARTaGENE samples to the reference PCA space constructed using unrelated individuals in the 1000 Genomes Project (1000G) (Figure 1).</li>
         <li>For each CARTaGENE individual, we computed the Mahalanobis distance to each of the 5 superpopulations in the 1000G PCA space (Admixed American, African, East Asian, South Asian, European). We used the first 6 principal components and <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/Mahalanobis.py">Mahalanobis.py</a> to compute the Mahalanobis distance.</li>
         <li>We assigned a CARTaGENE individual to a superpopulation if the corresponding Mahalanobis distance's P-value was &geq;0.001 and all other P-values were &lt;0.001 (Table 1).</li>
         <li>We removed 879 CARTaGENE individuals for whom the inferred genetic ancestry didn't match the ETHNICITY variable value derived from the questionnaire data.</li>
-        <li>We confirmed that 25,017 CARTaGENE individuals with assigned European genetic ancestry: (a) cluster together with European individuals in 1000G (Figure 2), (b) have vast proportion of autosomal chromosomes of European ancestry (Figure 3). </li>
+        <li>We confirmed that 25,017 CARTaGENE individuals with assigned European genetic ancestry: (a) cluster together with European ancestry individuals in 1000G (Figure 2), (b) have a vast proportion of European ancestry autosomal chromosomes (Figure 3). </li>
         </ol>
 
         <div class="panel panel-default" style="display: inline-block">
@@ -449,13 +449,13 @@
         <div class="panel-body text-center">
                 <table class="table table-bordered table-condensed">
                         <tr>
-                            <th>Ancestry</th>
+                            <th>Genetic ancestry</th>
                             <th class="text-right">Ad Mixed American</th>
                             <th class="text-right">African</th>
                             <th class="text-right">East Asian</th>
                             <th class="text-right">South Asian</th>
                             <th class="text-right">European</th>
-                            <th class="text-right">Others</th>
+                            <th class="text-right">Other</th>
                         </tr>
                         <tr>
                             <th>Number of individuals</th>
@@ -537,9 +537,9 @@
 <div id="Phenotypes" class="tab-pane fade">
 <h2 class="text-center">Phenotypes</h2>
 <hr></hr>
-<p>We used binary and continuous phenotypes from the baseline assessment. To select the phenotypes of potential interest, we used the meta-information about CARTaGENE variables in the <mark>COMBINED_CATALOG_v2_9_7 - OCT2021</mark> catalogue. We based our phenotype selection on the sample size estimated using a subset of CARTaGENE individuals of European genetic ancestry.</p>
+<p>We used binary and continuous phenotypes from the baseline assessment. To select the phenotypes of potential interest, we used the meta-information for CARTaGENE variables in the <mark>COMBINED_CATALOG_v2_9_7 - OCT2021</mark> catalogue. We based our phenotype selection on the sample size estimated using a subset of CARTaGENE individuals of European genetic ancestry.</p>
 
-<p>We selected <b>304 binary phenotypes</b> for GWASs in the following way:</p>
+<p>We selected <b>304 binary phenotypes</b> to perform GWASs in the following way:</p>
 <ol>
     <li>We generated a list of binary phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_binary_variables.py">prepare_binary_variables.py</a> script. For each phenotype, this script performs the following:
     <ul>
@@ -561,7 +561,7 @@
     </li>
 </ol>
 
-<p>We selected <b>333 continuous phenotypes</b> for GWASs in the following way:</p>
+<p>We selected <b>333 continuous phenotypes</b> to perform GWASs in the following way:</p>
 <ol>
     <li>We generated a list of continuous phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_continuous_variables.py">prepare_continuous_variables.py</a> script. For each phenotype, this script performs the following:
     <ul>
@@ -591,7 +591,7 @@
         <div id="GWAS" class="tab-pane fade">
             <h2 class="text-center">Association model</h2>
             <hr></hr>
-            <p>We performed GWASs on >600 phenotypes using <a href="https://rgcgithub.github.io/regenie/">Regenie</a> (version 3.0.1.) software, which handles unbalanced case-control ratios and accounts for the population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">here</a>.</p>
+            <p>We performed GWASs on >600 phenotypes using <a href="https://rgcgithub.github.io/regenie/">Regenie</a> (version 3.0.1.) software, which handles unbalanced case-control ratios and accounts for population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow">here</a>.</p>
 
         <p>In Regenie's <a href="https://rgcgithub.github.io/regenie/overview/#overview">Step 1 (whole genome model)</a>, we used the merged array genotype data with the following filters:</p>
         <ol>
@@ -615,14 +615,14 @@
             <hr></hr>
 	    <p>The CARTaGENE PheWeb uses the open-source <a href="https://github.com/statgen/pheweb">PheWeb framework</a>. The customized source code for this instance is available <a href="https://github.com/CERC-Genomic-Medicine/CARTaGENE_PheWeb">here</a>.</p>
         </div>
-     <!-- Acknowledgement  -->
-        <div id="Acknowledgement" class="tab-pane fade">
-            <h2 class="text-center">Acknowledgement</h2>
+     <!-- Acknowledgements  -->
+        <div id="Acknowledgements" class="tab-pane fade">
+            <h2 class="text-center">Acknowledgements</h2>
            <hr></hr>
             <ul>
-                                  <li>Authors : Vincent Chapdelaine, Sarah Gagliano-Taliun, Daniel Taliun</li>
+                                  <li>Authors : Vincent Chapdelaine, Sarah Gagliano Taliun, Daniel Taliun</li>
                                 <li>All computational analyses were performed using compute resources of Digital Research Alliance of Canada, and the Digital Research Alliance of Canada hosts this site.</li>
-                    <li>We want to thank all participants of the CARTaGENE who volunteered their time and information for genetic research.</li>
+                    <li>We thank all CARTaGENE participants who volunteered their time and information for research.</li>
             </ul>
 
         </div>

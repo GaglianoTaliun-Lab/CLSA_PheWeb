@@ -39,7 +39,7 @@
             <p> This platform presents multiple analyses conducted using CARTaGENE data to the scientific community as well as the public at large. The <a href="https://www.cartagene.qc.ca/en/index.html">CARTaGENE</a> cohort is specific to Quebec and is a regional subset of the Canada-wide "Canadian Partnership for Tomorrow's Health" </p>
             <p> This platform displays Phenome-wide association (PheWAS) results from the CARTaGENE cohort (i.e. statistical associations between individuals' trait information and genomic variations across the cohort).  </p>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-            <img src="static/images/CARTAGENE_logo.png" width="30%" height="30%" class="center-block">
+            <img src="static/images/CARTAGENE_logo.png" width="60%" height="60%" class="center-block">
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
         </div>
 <!-- DATA DESCRIPTION -->
@@ -254,7 +254,7 @@
             <ol>
                 <li>We looked for the individuals with the same ID across two or more arrays. We identified 3 individuals with same ID present on the 760 and 5K arrays. We kept only genotypes from the 5K array for these individuals due to higher array coverage.</li>
                 <li>We merged arrays' genotypes and kept 481,223 shared variants (i.e. genotyped in all five arrays), Y chromosome specific variants were not considered.</li>
-                <li>We identified and removed 1,330 variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
+                <li>We identified and removed 1,315 variants (Figure 1) which showed statistically significant deviations of allele frequencies between arrays while accounting for genetic ancestry:
                     <ol type="i">
                         <li>We projected all individuals to the 1000 Genomes Project reference panel's PCA space using <a href="http://csg.sph.umich.edu/chaolong/LASER/">TRACE</a>.</li>
                         <li>We removed all related individuals with 3rd, 2nd, and 1st degree of relatedness (PLINK's --king-cutoff option set at 0.0442).</li>
@@ -263,7 +263,7 @@
                     </ol>
                 </li>
             </ol>
-            <p>The final merged dataset included 29,330 individuals and 479,893 variants.</p>
+            <p>The final merged dataset included 29,330 individuals and 479,908 variants.</p>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
                             <a class="pop" style="cursor: zoom-in"><img src="static/images/Autosomal_AF.png"  width="30%" height="30%"></a>
@@ -279,14 +279,14 @@
                     <a class="pop" style="cursor: zoom-in"><img src="static/images/17kvs5k.png"  width="50%" height="50%"></a>
                     <a class="pop" style="cursor: zoom-in"><img src="static/images/Archivs760.png"  width="50%" height="50%"></a>
                 </div>
-                    <div class="panel-footer"><b>Figure 2.</b> The results of the Firth association test with genotyping array and phase as binary outcomes and sex and 1-5 PCs as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants which failed the LRT test for possible batch effects.</div>
+                    <div class="panel-footer"><b>Figure 2.</b> The results of the Firth association test with genotyping array and phase as binary outcomes and sex and 1-4 PCs as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants which failed the LRT test for possible batch effects.</div>
             </div>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
                     <a class="pop" style="cursor: zoom-in"><img src="static/images/17kvs17k.png"  width="50%" height="50%"></a>
                     <a class="pop" style="cursor: zoom-in"><img src="static/images/5kvs5k.png"  width="50%" height="50%"></a>
                 </div>
-                <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as the outcome and sex and PCs 1-5 as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants failing the LRT test for possible batch effects.</div>
+                <div class="panel-footer"><b>Figure 3.</b> The results of the Firth association test with phase as the outcome and sex and PCs 1-4 as covariates. The left panels show results with all shared variants, and the right panels show results excluding variants failing the LRT test for possible batch effects.</div>
             </div>
         </div>
 
@@ -482,7 +482,7 @@
                     <div class="panel-body text-center">
                         <a class="pop" style="cursor: zoom-in"><img src="static/images/RfMix.png"  width="80%" height="80%"></a>
                     </div>
-                    <div class="panel-footer"><b>Figure 3.</b> Ancestry proportion inferred through RfMix based on 1000 Genomes Project and Human Genome Diversity Project as references.</div> 
+                    <div class="panel-footer"><b>Figure 3.</b> Ancestry proportion of selected samples inferred through RfMix based on 1000 Genomes Project and Human Genome Diversity Project as references.</div> 
                     </div>                
 
 
@@ -496,7 +496,7 @@
             <p> We analyzed other structural aspects potentially present within the data : </p>
             <ol>
                 <li> We estimated the relationship between individuals of all ancestry using the <a href="https://www.kingrelatedness.com">King software</a>. </li> 
-                <ul> <li>4 duplicate pairs were identified from inconsitency between DNA inference and questionnaire (i.e Are you a twin ? Do the pair share the same birthday?). The sample with the sample with the higher coverage within each pair was kept. Thus, our final European dataset is comprised of 25013 individuals. </li> </ul>
+                <ul> <li>4 duplicate pairs were identified from inconsitency between DNA inference and questionnaire (i.e Are you a twin ? Do the pair share the same birthday?). The sample with the sample with the higher variant call rate within each pair was kept. Thus, our final European dataset is comprised of 25013 individuals. </li> </ul>
                <li> We further explored any structure within the European samples using a PCA Analysis. </li>
                <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
                <table class="table table-bordered table-condensed">
@@ -539,7 +539,7 @@
 <hr></hr>
 <p>We used binary and continuous phenotypes from the baseline assessment. To select the phenotypes of potential interest, we used the meta-information for CARTaGENE variables in the <mark>COMBINED_CATALOG_v2_9_7 - OCT2021</mark> catalogue. We based our phenotype selection on the sample size estimated using a subset of CARTaGENE individuals of European genetic ancestry.</p>
 
-<p>We selected <b>304 binary phenotypes</b> to perform GWASs in the following way:</p>
+<p>We selected <b>326 binary phenotypes</b> to perform GWASs in the following way:</p>
 <ol>
     <li>We generated a list of binary phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_binary_variables.py">prepare_binary_variables.py</a> script. For each phenotype, this script performs the following:
     <ul>
@@ -554,14 +554,13 @@
     <ul>
         <li>had a small sample size (N&lt;1000)</li>
         <li>had a low number of cases (N<sub>cases</sub>&lt;10)</li>
-        <li>included only males or females</li>
         <li>were not relevant (e.g. LANGUAGE_SPOKEN_...)</li>
     </ul>
-    The final number of binary phenotypes selected for GWASs after this step was 304.
+    The final number of binary phenotypes selected for GWASs after this step was 326. Phenotypes including only males or females were processed as sex-specific.
     </li>
 </ol>
 
-<p>We selected <b>333 continuous phenotypes</b> to perform GWASs in the following way:</p>
+<p>We selected <b>375 continuous phenotypes</b> to perform GWASs in the following way:</p>
 <ol>
     <li>We generated a list of continuous phenotypes and the corresponding sample sizes using the <a href="https://github.com/CERC-Genomic-Medicine/scripts/blob/master/prepare_continuous_variables.py">prepare_continuous_variables.py</a> script. For each phenotype, this script performs the following:
     <ul>
@@ -576,11 +575,10 @@
     <li>We manually curated the resulting list and removed phenotypes that:
     <ul>
         <li>had a small sample size (N&lt;100)</li>
-        <li>included only males or femailes</li>
-        <li>were not relevant (e.g. ..._ONSET)</li>
+        <li>were not relevant (e.g. LAST_MEAL_WHEN_HOUR_24)</li>
         <li>had single observation for each value except mode</li>
     </ul>
-    The final number of continuous phenotypes selected for GWASs after this step was 333.
+    The final number of continuous phenotypes selected for GWASs after this step was 375.Phenotypes including only males or females were processed as sex-specific.
     </li>
 </ol>
 

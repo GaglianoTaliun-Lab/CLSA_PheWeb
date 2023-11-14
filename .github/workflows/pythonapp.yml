@@ -8,11 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.6
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
       with:
-        python-version: 3.6
+        python-version: '3.10'
     - name: Lint with flake8 and mypy
       run: |
         python3 -m pip install flake8 mypy
@@ -22,6 +21,8 @@ jobs:
       run: |
         python3 -m pip install wheel # for bdist_wheel
         python3 -m pip install pytest
+        python3 -m pip freeze
         python3 setup.py sdist bdist_wheel
         sh -c "cd /tmp && python3 -m pip install $PWD/dist/*.whl" # must be in a new dir to avoid finding build artifacts
+        python3 -m pip freeze
         sh -c "cd /tmp && pytest $PWD/tests" # must be in a new dir to avoid finding source code

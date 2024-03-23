@@ -14,25 +14,25 @@
         <li class="active"><a data-toggle="tab" href="#Overview"><b>Overview</b></a></li>
         <li><a data-toggle="tab" href="#GenotypeData"><b>1. Genotype Data</b></a></li>
         <li><a data-toggle="tab" href="#LiftOver"><b>2. LiftOver</b></a></li>
-        <li><a href="#PreLiftOver">2.1. Pre-LiftOver Filtering</a></li>
-        <li><a href="#LiftOverGRCh38">2.2. LiftOver to GRCh38</a></li>
-        <li><a href="#HweRuth">2.3. Ancestry-Aware Hardy-Weinberg Check with RUTH</a></li>
+        <li><a data-toggle="tab" href="#PreLiftOver">2.1. Pre-LiftOver Filtering</a></li>
+        <li><a data-toggle="tab" href="#LiftOverGRCh38">2.2. LiftOver to GRCh38</a></li>
+        <li><a data-toggle="tab" href="#HweRuth">2.3. Ancestry-Aware Hardy-Weinberg Check with RUTH</a></li>
         <li><a data-toggle="tab" href="#AncestryEuro"><b>3. Ancestry Check and European Subset</b></a></li>
         <li><a data-toggle="tab" href="#CommonVariantFiltering"><b>4. Common Variant Filtering</b></a></li>
         <li><a data-toggle="tab" href="#TOPMedImputation"><b>5. TOPMed Imputation</b></a></li>
         <li><a data-toggle="tab" href="#PhenotypeAssociation"><b>6. Phenotype Association</b></a></li>
-        <li><a href="#BinaryPhenotype">6.1 Selecting Binary Phenotypes</a></li>
-        <li><a href="#ContinuousPhenotype">6.2 ContinuousPhenotype</a></li>
-        <li><a href="#Regenie">6.3 Regenie</a></li>
+        <li><a data-toggle="tab" href="#BinaryPhenotype">6.1 Selecting Binary Phenotypes</a></li>
+        <li><a data-toggle="tab" href="#ContinuousPhenotype">6.2 ContinuousPhenotype</a></li>
+        <li><a data-toggle="tab" href="#Regenie">6.3 Regenie</a></li>
         <li><a data-toggle="tab" href="#PheWeb"><b>7. PheWeb</b></a></li>
-        <li><a href="#Preperation">7.1 Preperation</a></li>
-        <li><a href="#SetUpHosting">7.2 Set Up and Hosting</a></li>
+        <li><a data-toggle="tab" href="#Preperation">7.1 Preperation</a></li>
+        <li><a data-toggle="tab" href="#SetUpHosting">7.2 Set Up and Hosting</a></li>
         <li><a data-toggle="tab" href="#Acknowledgements"><b>Acknowledgements</b></a></li>
     </ul>
 </div>
 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
     <div class="tab-content">
-        
+
 <!-- OVERVIEW SECTION-->
         <div id="Overview" class="tab-pane fade in active">
             <h2 class="text-center"> About CLSA PheWeb</h2>
@@ -58,7 +58,7 @@
             <h2 class="text-center">LiftOver</h2>
             <p>LiftOver scripts and in-depth description of usage available on <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/tree/main/GRCh37_to_GRCh38" target="_blank">Github</a></p>
             <hr></hr>
-            <div id="PreLiftOver">
+            <div id="PreLiftOver" class="tab-pane fade">
                 <h3>Pre-LiftOver Filtering</h3>
                 <p>Before liftOver, we used the CLSA's quality checks for marker and sample quality control.</p>
                 <p>The CLSA filtered out variants with:</p>
@@ -71,7 +71,6 @@
                     <li>Indels</li>
                 </ol>
                 <p>This removed 131,892 variants, keeping 662,517.</p>
-                <hr></hr>
                 <p>We removed samples with:</p>
                 <ol>
                     <li>Identification as an outlier in relation to heterozygosity or genotype missingness</li>
@@ -82,7 +81,7 @@
                 <p>This removed 66 samples, keeping 26,563</p>
             </div>
             <hr></hr>
-            <div id="LiftOverGRCh38">
+            <div id="LiftOverGRCh38" class="tab-pane fade">
                 <h3>LiftOver</h3>
                 <p>We converted genotype array data from genome build GRCh37 to GRCh38, aligned to the "+" strand using LiftOver. The conversion included the following steps:</p>
                 <ol>
@@ -95,7 +94,8 @@
                 </ol>
                 <p>We started with 662,517 variants (GRCh37) and following these steps, ended up with 620,446 variants (GRCh38) successfully lifted over.</p>
             </div>
-            <div id="HweRuth">
+            <hr></hr>
+            <div id="HweRuth" class="tab-pane fade">
                 <h3>Ancestry-Aware Hardy-Weinberg Check with RUTH</h3>
                 <p>Using Robust Unified Hardy-Weingberg Equilibrium Test (<a href="https://github.com/statgen/ruth" target = "_blank" >RUTH</a>), we confirmed the CLSA's hardy-weinberg equilibrium exclusion criteria.</p>
                 <p>We ran RUTH on the results from step 2.2 using the 20 first PCs using the likelihood-ratio test with max lambda parameter of 0, using the GT field. We used seed 101.</p>
@@ -340,10 +340,11 @@
         <div id="PhenotypeAssociation" class="tab-pane fade">
             <h2 class="text-center">Phenotype Association</h2>
             <hr></hr>
-            <div id="BinaryPhenotype">
+            <div id="BinaryPhenotype" class="tab-pane fade">
                 <!-- Enter information about Binary Phenotypes here -->
             </div>
-            <div id="ContinuousPhenotype">
+            <hr></hr>
+            <div id="ContinuousPhenotype" class="tab-pane fade">
                 <h3>Selecting Continuous Phenotypes</h3>
                 <p>Continous phenotypes were selected with the following criteria:</p>
                 <ol>
@@ -355,7 +356,8 @@
                 </ol>
                 <p>The final number of continuous phenotypes was 357.</p>
             </div>
-            <div id="Regenie">
+            <hr></hr>
+            <div id="Regenie" class="tab-pane fade">
                 <h3>Regenie</h3>
                 <p>Association testing was performed using <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a>.</p>
                 <p>Variants from step 4 were used in step 1. Variants from step 5 were used in step 2.</p>
@@ -368,10 +370,11 @@
         <div id="PheWeb" class="tab-pane fade">
             <h2 class="text-center">PheWeb</h2>
             <hr></hr>
-            <div id="Preperation">
+            <div id="Preperation" class="tab-pane fade">
                 <h3>PheWeb Preperation</h3>
             </div>
-            <div id="SetUpHosting">
+            <hr></hr>
+            <div id="SetUpHosting" class="tab-pane fade">
                 <h3>PheWeb Set up and Hosting</h3>
             </div>
         </div>

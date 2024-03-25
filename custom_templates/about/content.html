@@ -227,7 +227,7 @@
                 <li>Variants departing from Hardy-Weinberg equilibrium with a p-value less than 1e-15</li>
                 <li>Linkage disequilibrium pruning of correlated variants with window size of 1000, step size of 100 and Rsq threshold of 0.9</li>
             </ol>
-            <p>At the end, we had this distribution of variants per chromosome for 24505 individuals:</p>
+            <p>At the end, we had this distribution of variants per chromosome for 24,505 individuals:</p>
             <table class="table table-bordered table-condensed">
                 <tr>
                     <th>Chromosome</th>
@@ -326,19 +326,29 @@
                     <td>7860</td>
                 </tr>
             </table>
-            <p>For a total of 338706 SNPs.</p>
+            <p>For a total of 338,706 SNPs.</p>
         </div>
 
 
 <!-- TOPMed Imputation -->
         <div id="TOPMedImputatione" class="tab-pane fade">
             <h2 class="text-center">TOPMed Imputation</h2>
-            <hr></hr>
+                <p>Imputation (in genetics) is a computational method to predict marker genotypes that are not directly capture by the genotype array.</p>
+                <p>To perform genotype imputation, <a href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program" target="_blank"></a>TOPMed was used as a reference panel.</p>
+                <p>As input to the imputation process the CLSA team used all 26,622 participants and 716,347 markers that:</p>
+                <ol>
+                    <li>Pass all tests (no discordance from genotype frequency, no departure form HWE, no discordance from controls, no discordance in genotype frequency between males and females).</li>
+                    <li>Genotype missingness of < 0.05</li>
+                    <li>MAF > 0.0001</li>
+                </ol>
+                <p>The CLSA team used the TOPMed reference panel version r2, containing 97,256 refernece samples with 308,107,085 genetic markers. EAGLE2 and Minimac where used to pre-phae and impute the genotyping data. </p>
+                <hr></hr>
         </div>
 
 <!-- Phenotype Association -->
         <div id="PhenotypeAssociation" class="tab-pane fade">
             <h2 class="text-center">Phenotype Association</h2>
+            <p>Before performing variant-trait association testing, we performed quality control of possible phenotypes measured by the CLSA.</p>
             <hr></hr>
             <div id="BinaryPhenotype">
                 <!-- Enter information about Binary Phenotypes here -->
@@ -385,7 +395,7 @@
             <hr></hr>
             <ul>
                 <li>Authors : </li>
-                <li>All computational analyses were performed using compute resources of Digital Research Alliance of Canada, and the Digital Research Alliance of Canada hosts this site.</li>
+                <li>All computational analyses were performed using the compute resources of Digital Research Alliance of Canada, and the Digital Research Alliance of Canada hosts this site.</li>
                 <li>We thank all CLSA participants who volunteered their time and information for research.</li>
             </ul>
         </div>

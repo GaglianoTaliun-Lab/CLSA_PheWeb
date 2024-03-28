@@ -35,7 +35,7 @@
         <div id="Overview" class="tab-pane fade in active">
             <h2 class="text-center"> About CLSA PheWeb</h2>
             <hr></hr>
-            <p> This platform presents multiple analyses conducted using CLSA data to the scientific community as well as the public at large. The <a href="https://www.clsa-elcv.ca/">CLSA</a> cohort is specific to Canada. </p>
+            <p> This platform presents multiple analyses conducted using CLSA data to the scientific community as well as the public at large. The <a href="https://www.clsa-elcv.ca/", target = "_blank">CLSA</a> cohort is specific to Canada. </p>
             <p> This platform displays Phenome-wide association (PheWAS) results from the CLSA cohort (i.e. statistical associations between individuals' trait information and genomic variations across the cohort).  </p>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <img src="https://www.clsa-elcv.ca/sites/all/themes/clsa2/img/logo_clsa.png" alt="CLSA Logo" width="60%" height="60%" class="center-block">
@@ -48,18 +48,19 @@
             <p>Original non-imputed CLSA genotype data (v3) has 794,409 variants for 26,622 participants.</p>
             <p>Participants were genotyped using the Affrymetrix UK Biobank Axiom array.</p>
             <p>Originally, all genomic positions were reported in reference to human genome build GRCh37.</p>
-            <p>More information can be found on the <a href="https://bmjopen.bmj.com/content/12/3/e059021" target="_blank"></a>official genomic cohort profile paper </a>.</p>
+            <p>More information can be found on the <a href="https://bmjopen.bmj.com/content/12/3/e059021" target="_blank">official genomic cohort profile paper</a>.</p>
         </div>
 
 <!-- LiftOver and CLSA filtering Overview-->
         <div id="LiftOver" class="tab-pane fade">
             <h2 class="text-center">LiftOver</h2>
             <hr></hr>
-            <p>LiftOver scripts and in-depth description of usage available on <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/tree/main/GRCh37_to_GRCh38" target="_blank">Github</a></p>
-            <hr></hr>
+            <p>We performed liftOver to change the reference genome from GRCh37 to GRCh38, as described in the following sections.</p>
+            <p>Scripts and in-depth description of usage available on <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/tree/main/GRCh37_to_GRCh38" target="_blank">Github</a></p>
         </div>
         <div id="PreLiftOver" class="tab-pane fade">
             <h3>Pre-LiftOver Filtering</h3>
+            <hr></hr>
             <p>Before liftOver, we used the CLSA's quality checks for marker and sample quality control.</p>
             <p>The CLSA filtered out variants with:</p>
             <ol>
@@ -80,6 +81,7 @@
         </div>
         <div id="LiftOverGRCh38" class="tab-pane fade">
             <h3>LiftOver to GRCh38 Reference</h3>
+            <hr></hr>
             <p>We converted genotype array data from genome build GRCh37 to GRCh38, aligned to the "+" strand using LiftOver. The conversion included the following steps:</p>
             <ol>
                 <li>We lifted genetic positions from GRCh37 to GRCh38 using the UCSC LiftOver tool and the corresponding chain files.</li>
@@ -192,6 +194,7 @@
         </div>
         <div id="HweRuth" class="tab-pane fade">
             <h3>Ancestry-Aware Hardy-Weinberg Check with RUTH</h3>
+            <hr></hr>
             <p>Using Robust Unified Hardy-Weingberg Equilibrium Test (<a href="https://github.com/statgen/ruth" target = "_blank" >RUTH</a>), we confirmed the CLSA's hardy-weinberg equilibrium exclusion criteria.</p>
             <p>We ran RUTH on the results from step 2.2 using the 20 first PCs using the likelihood-ratio test with max lambda parameter of 0, using the GT field. We used seed 101.</p>
             <p>No additional variants were excluded using this test.</p>
@@ -200,16 +203,16 @@
 <!-- TOPMed Imputation -->
         <div id="TOPMedImputation" class="tab-pane fade">
             <h2 class="text-center">TOPMed Imputation</h2>
-                <p>Imputation (in genetics) is a computational method to predict marker genotypes that are not directly capture by the genotype array.</p>
-                <p>To perform genotype imputation, <a href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program" target="_blank"></a>TOPMed was used as a reference panel.</p>
-                <p>As input to the imputation process the CLSA team used all 26,622 participants and 716,347 markers that:</p>
-                <ol>
-                    <li>Pass all tests (no discordance from genotype frequency, no departure form HWE, no discordance from controls, no discordance in genotype frequency between males and females).</li>
-                    <li>Genotype missingness of < 0.05</li>
-                    <li>MAF > 0.0001</li>
-                </ol>
-                <p>The CLSA team used the TOPMed reference panel version r2, containing 97,256 refernece samples with 308,107,085 genetic markers. EAGLE2 and Minimac where used to pre-phae and impute the genotyping data. </p>
-                <hr></hr>
+            <hr></hr>
+            <p>Imputation (in genetics) is a computational method to predict marker genotypes that are not directly capture by the genotype array.</p>
+            <p>To perform genotype imputation, <a href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program" target="_blank"></a>TOPMed was used as a reference panel.</p>
+            <p>As input to the imputation process the CLSA team used all 26,622 participants and 716,347 markers that:</p>
+            <ol>
+                <li>Pass all tests (no discordance from genotype frequency, no departure form HWE, no discordance from controls, no discordance in genotype frequency between males and females).</li>
+                <li>Genotype missingness of < 0.05</li>
+                <li>MAF > 0.0001</li>
+            </ol>
+            <p>The CLSA team used the TOPMed reference panel version r2, containing 97,256 refernece samples with 308,107,085 genetic markers. EAGLE2 and Minimac where used to pre-phae and impute the genotyping data. </p>
         </div>
 
 <!-- Phenotype Association -->

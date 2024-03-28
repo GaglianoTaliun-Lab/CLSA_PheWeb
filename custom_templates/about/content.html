@@ -90,7 +90,7 @@
                 <li>We excluded palindromic variants (A/T and G/C), variants for which A1/A2 alleles didn't match REF/ALT, and for which A1/A2 alleles were not A, C, G, or T.</li>
                 <li>We renamed all variants to follow the CHR:POS:REF:ALT notation.</li>
             </ol>
-            <p>We started with 662,517 variants (GRCh37) and following these steps, ended up with 620,446 variants (GRCh38) successfully lifted over (Figure 1).</p>
+            <p>We started with 662,517 variants (GRCh37) and following these steps, ended up with 620,446 variants (GRCh38) successfully lifted over.</p>
 
             <p> Table 1. Distribution of SNPs per chromosome after liftOver steps.</p>
             <table class="table table-bordered table-condensed">
@@ -232,7 +232,13 @@
                 <li>Using the projection results, we used a RandomForestModel to calculate probabilities of ancestry group.</li>
                 <li>We used 0.78 probability as our threshold to include in european subset.</li>
             </ol>
-            <p>In the end, this resultied in 24505 individuals being included with the following distribution of variants per chromosome:</p>
+            <p>In the end, this resultied in 24505 individuals being included in the proceeding analysis.</p>
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                        <a class="pop" style="cursor: zoom-in"><img src="static/images/pca.png"  width="100%" height="100%"></a>
+                </div>
+                <div class="panel-footer"><b>Figure 1.</b>CLSA sample's with inferred European ancestry projected into the HGDP and 1KG's PCA space.</div>
+            </div>
         </div>
         <div id="BinaryPhenotype" class="tab-pane fade">
             <h3>Selecting Binary Phenotypes</h3>
@@ -251,7 +257,7 @@
             <p>Continous phenotypes were selected with the following criteria:</p>
             <ol>
                 <li>Removed outliers <span>&#177;</span>5 standard deviations from the mean</li>
-                <li>The variable has more than 20 uniques numeric values</li>
+                <li>The variable has more than 20 uniques numeric values, as to remove semi-quantitative variables that are not modeled correctly in linear regression.</li>
                 <li>The variable has more than 1000 total numeric values</li>
                 <li>The variable has does not have one value which accounts for more than 10% of all values</li>
                 <li>The variable has GWAS relevance</li>

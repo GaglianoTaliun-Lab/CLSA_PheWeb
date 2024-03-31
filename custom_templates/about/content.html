@@ -22,8 +22,7 @@
         <li><a data-toggle="tab" href="#AncestryEuro">4.1 Ancestry Check and European Subset</a></li>
         <li><a data-toggle="tab" href="#BinaryPhenotype">4.2 Selecting Binary Phenotypes</a></li>
         <li><a data-toggle="tab" href="#ContinuousPhenotype">4.3 Selecting Continuous Phenotype</a></li>
-        <li><a data-toggle="tab" href="#CommonVariantFiltering">4.4 Common Variant Filtering</a></li>
-        <li><a data-toggle="tab" href="#Regenie">4.5 Association Model (Regenie)</a></li>
+        <li><a data-toggle="tab" href="#Regenie">4.4 Association Model (Regenie)</a></li>
         <li><a data-toggle="tab" href="#PheWeb"><b>5. PheWeb</b></a></li>
         <li><a data-toggle="tab" href="#Acknowledgements"><b>Acknowledgements</b></a></li>
     </ul>
@@ -93,7 +92,7 @@
             <p>We started with 662,517 variants (GRCh37) and following these steps, ended up with 620,446 variants (GRCh38) successfully lifted over.</p>
 
             <p> Table 1. Distribution of SNPs per chromosome after liftOver steps.</p>
-            <table class="table table-bordered table-condensed">
+            <table class="table table-bordered table-condensed" style="width:50%">
                 <tr>
                     <th>Chromosome</th>
                     <th>Number of SNPs</th>
@@ -195,7 +194,7 @@
         <div id="HweRuth" class="tab-pane fade">
             <h3>Ancestry-Aware Hardy-Weinberg Check with RUTH</h3>
             <hr></hr>
-            <p>Using Robust Unified Hardy-Weingberg Equilibrium Test (<a href="https://github.com/statgen/ruth" target = "_blank" >RUTH</a>), we confirmed the CLSA's hardy-weinberg equilibrium exclusion criteria.</p>
+            <p>Using Robust Unified Hardy-Weinberg Equilibrium Test (<a href="https://github.com/statgen/ruth" target = "_blank" >RUTH</a>), we confirmed the CLSA's hardy-weinberg equilibrium exclusion criteria.</p>
             <p>We ran RUTH on the results from step 2.2 using the 20 first PCs using the likelihood-ratio test with max lambda parameter of 0, using the GT field. We used seed 101.</p>
             <p>No additional variants were excluded using this test.</p>
         </div>
@@ -212,14 +211,14 @@
                 <li>Genotype missingness of < 0.05</li>
                 <li>MAF > 0.0001</li>
             </ol>
-            <p>The CLSA team used the TOPMed reference panel version r2, containing 97,256 refernece samples with 308,107,085 genetic markers. EAGLE2 and Minimac where used to pre-phae and impute the genotyping data. </p>
+            <p>The CLSA team used the TOPMed reference panel version r2, containing 97,256 reference samples with 308,107,085 genetic markers. EAGLE2 and Minimac where used to pre-phase and impute the genotyping data. </p>
         </div>
 
 <!-- Phenotype Association -->
         <div id="PhenotypeAssociation" class="tab-pane fade">
             <h2 class="text-center">Phenotype Association</h2>
             <hr></hr>
-            <p>In this version of the CLSA PheWeb, we restricted our genome-wide association analyses (GWASs) to individuals of European genetic ancestry. We used Regenie to run GWASs. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
+            <p>In this version of the CLSA PheWeb, we restricted our genome-wide association analyses (GWAS) to individuals of European genetic ancestry. We used Regenie to run GWAS. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
         </div>
         <!-- Ancestry Check and European Subset  -->
         <div id="AncestryEuro" class="tab-pane fade">
@@ -230,31 +229,37 @@
             <ol>
                 <li>We used <a href="https://csg.sph.umich.edu/chaolong/LASER/TRACE_Manual.pdf" target = "_blank">TRACE</a> to project principal components onto HGDP and 1KG combined references (Figure 1). We removed individuals that had a Z score of <span>&#177;</span>5.</li>
                 <li>Using the projection results, we used a RandomForestModel to calculate probabilities of ancestry group.</li>
-                <li>We used 0.78 probability as our threshold to include in european subset.</li>
+                <li>We used 0.78 probability as our threshold to include in European subset.</li>
             </ol>
             <p>In the end, this resulted in 24505 individuals being included in the proceeding analysis.</p>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
                         <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/pca.png?raw=true" alt="PCA plot"  width="100%" height="100%">
                 </div>
-                <div class="panel-footer"><b>Figure 1.</b>CLSA sample's with inferred European ancestry projected into the HGDP and 1KG's PCA space.</div>
+                <div class="panel-footer"><b>Figure 1.</b>CLSA sample's with inferred European ancestry projected onto the HGDP and 1KG's PCA space.</div>
             </div>
         </div>
         <div id="BinaryPhenotype" class="tab-pane fade">
             <h3>Selecting Binary Phenotypes</h3>
             <hr></hr>
-            <p>Binary phenotypes were selected with the following criteria:</p>
+            <p>Binary phenotypes were selected with the following criteria (Figure 2):</p>
             <ol>
                 <li>The variable is binary (2 choices)</li>
                 <li>The variable has more than 1000 cases</li>
                 <li>The variable has GWAS relevance</li>
             </ol>
             <p>The final number of continuous phenotypes was 348.</p>
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                        <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/binary_diagram.png?raw=true" alt="binary flow chart"  width="100%" height="100%">
+                </div>
+                <div class="panel-footer"><b>Figure 2.</b>Flow chart of filtering criteria for binary variables.</div>
+            </div>
         </div>
         <div id="ContinuousPhenotype" class="tab-pane fade">
             <h3>Selecting Continuous Phenotypes</h3>
             <hr></hr>
-            <p>Continous phenotypes were selected with the following criteria:</p>
+            <p>Continous phenotypes were selected with the following criteria (Figure 3):</p>
             <ol>
                 <li>Removed outliers <span>&#177;</span>5 standard deviations from the mean</li>
                 <li>The variable has more than 20 uniques numeric values, as to remove semi-quantitative variables that are not modeled correctly in linear regression.</li>
@@ -263,127 +268,136 @@
                 <li>The variable has GWAS relevance</li>
             </ol>
             <p>The final number of continuous phenotypes was 357.</p>
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                        <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/continuous_diagram.png?raw=true" alt="continuous flow chart"  width="100%" height="100%">
+                </div>
+                <div class="panel-footer"><b>Figure 3.</b>Flow chart of filtering criteria for continuous variables.</div>
+            </div>
         </div>
-        <!-- Common Variant Filtering -->
-        <div id="CommonVariantFiltering" class="tab-pane fade">
-            <h2 class="text-center">Common Variant Filtering</h2>
-            <hr></hr>
-            <p>After filtering european sub-population, we proceeded to further filter common non-imputed variants for step 1 of regenie.</p>
-            <p>We performed the following:</p>
-            <ol>
-                <li>Removed variants with sample missingness of > 0.1</li>
-                <li>Removed samples with genotype missingness of > 0.1</li>
-                <li>Variants departing from Hardy-Weinberg equilibrium with a p-value less than 1e-15</li>
-                <li>Linkage disequilibrium pruning of correlated variants with window size of 1000, step size of 100 and Rsq threshold of 0.9</li>
-            </ol>
-            <p>At the end, we had this distribution of variants per chromosome for 24,505 individuals:</p>
-            <table class="table table-bordered table-condensed">
-                <tr>
-                    <th>Chromosome</th>
-                    <th>Number of SNPs</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>26319</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>26537</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>21961</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>20823</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>20043</td>
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>19441</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>18494</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>16440</td>
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>15021</td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>17505</td>
-                </tr>
-                <tr>
-                    <td>11</td>
-                    <td>16159</td>
-                </tr>
-                <tr>
-                    <td>12</td>
-                    <td>15601</td>
-                </tr>
-                <tr>
-                    <td>13</td>
-                    <td>11919</td>
-                </tr>
-                <tr>
-                    <td>14</td>
-                    <td>11202</td>
-                </tr>
-                <tr>
-                    <td>15</td>
-                    <td>10768</td>
-                </tr>
-                <tr>
-                    <td>16</td>
-                    <td>11953</td>
-                </tr>
-                <tr>
-                    <td>17</td>
-                    <td>11463</td>
-                </tr>
-                <tr>
-                    <td>18</td>
-                    <td>10701</td>
-                </tr>
-                <tr>
-                    <td>19</td>
-                    <td>8816</td>
-                </tr>
-                <tr>
-                    <td>20</td>
-                    <td>8675</td>
-                </tr>
-                <tr>
-                    <td>21</td>
-                    <td>5338</td>
-                </tr>
-                <tr>
-                    <td>22</td>
-                    <td>5667</td>
-                </tr>
-                <tr>
-                    <td>X</td>
-                    <td>7860</td>
-                </tr>
-            </table>
-            <p>For a total of 338,706 SNPs.</p>
-        </div>
+
         <div id="Regenie" class="tab-pane fade">
             <h3>Regenie</h3>
-            <p>Association testing was performed using <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a>.</p>
-            <p>Variants from step 4 were used in step 1. Variants from step 5 were used in step 2.</p>
+            <hr></hr>
+            <p>Association testing was performed using <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a> v3.2.1, which handles unbalanced case-control ratios and accounts for population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow" target = "_blank" >here</a>.</p>
+            
+            <!-- Common Variant Filtering -->
+            <div id="CommonVariantFiltering" class="tab-pane fade">
+                <h2 class="text-center">Common Variant Filtering</h2>
+                <hr></hr>
+                <p>After filtering european sub-population, we proceeded to further filter common non-imputed variants for step 1 of Regenie.</p>
+                <p>We performed the following:</p>
+                <ol>
+                    <li>Removed variants with sample missingness of > 0.1</li>
+                    <li>Removed samples with genotype missingness of > 0.1</li>
+                    <li>Variants departing from Hardy-Weinberg equilibrium with a p-value less than 1e-15</li>
+                    <li>Linkage disequilibrium pruning of correlated variants with window size of 1000, step size of 100 and Rsq threshold of 0.9</li>
+                </ol>
+                <p>At the end, we had this distribution of variants per chromosome for 24,505 individuals:</p>
+                <table class="table table-bordered table-condensed" style="width:50%">
+                    <tr>
+                        <th>Chromosome</th>
+                        <th>Number of SNPs</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>26319</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>26537</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>21961</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>20823</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>20043</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>19441</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>18494</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>16440</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>15021</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>17505</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>16159</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>15601</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>11919</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>11202</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>10768</td>
+                    </tr>
+                    <tr>
+                        <td>16</td>
+                        <td>11953</td>
+                    </tr>
+                    <tr>
+                        <td>17</td>
+                        <td>11463</td>
+                    </tr>
+                    <tr>
+                        <td>18</td>
+                        <td>10701</td>
+                    </tr>
+                    <tr>
+                        <td>19</td>
+                        <td>8816</td>
+                    </tr>
+                    <tr>
+                        <td>20</td>
+                        <td>8675</td>
+                    </tr>
+                    <tr>
+                        <td>21</td>
+                        <td>5338</td>
+                    </tr>
+                    <tr>
+                        <td>22</td>
+                        <td>5667</td>
+                    </tr>
+                    <tr>
+                        <td>X</td>
+                        <td>7860</td>
+                    </tr>
+                </table>
+                <p>For a total of 338,706 SNPs.</p>
+            </div>
             <p>For both binary and continuous variables, we used a block size of 1000, leave-one-out cross validation</p>
             <p>For binary variables, the firth approximation was used for variants with p-value less than 0.05 for both steps.</p>
             <p>For continuous variables, rank inverse normal transformation was used for both steps.</p>
+            <p>For both steps, we used the covariates of: genotyping batch (1-5), sex, age, age<sup>2</sup>, 1-20 PCs</p>
         </div>
 
         <!-- PheWeb  -->

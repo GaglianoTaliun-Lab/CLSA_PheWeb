@@ -1,0 +1,417 @@
+<div class="modal fade" id="imagemodal" tabindex="-1" style="width: 100%;" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="width: 60%;">
+    <div class="modal-content" style="width: 100%;">              
+      <div class="modal-body" style="width: 100%;">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <img src="" class="imagepreview" style="width: 100%;" >
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Menu -->
+<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" role='complementary'>
+    <ul id="navigator" class="nav nav-tabs nav-stacked text-left" aria-orientation="vertical"  role="tablist">
+        <li class="active"><a data-toggle="tab" href="#Overview"><b>Overview</b></a></li>
+        <li><a data-toggle="tab" href="#GenotypeData"><b>1. Genotype Data</b></a></li>
+        <li><a data-toggle="tab" href="#LiftOver"><b>2. LiftOver</b></a></li>
+        <li><a data-toggle="tab" href="#PreLiftOver">2.1. Pre-LiftOver Filtering</a></li>
+        <li><a data-toggle="tab" href="#LiftOverGRCh38">2.2. LiftOver to GRCh38</a></li>
+        <li><a data-toggle="tab" href="#HweRuth">2.3. Ancestry-Aware Hardy-Weinberg Check with RUTH</a></li>
+        <li><a data-toggle="tab" href="#TOPMedImputation"><b>3. TOPMed Imputation</b></a></li>
+        <li><a data-toggle="tab" href="#PhenotypeAssociation"><b>4. Phenotype Association</b></a></li>
+        <li><a data-toggle="tab" href="#AncestryEuro">4.1 Ancestry Check and European Subset</a></li>
+        <li><a data-toggle="tab" href="#BinaryPhenotype">4.2 Selecting Binary Phenotypes</a></li>
+        <li><a data-toggle="tab" href="#ContinuousPhenotype">4.3 Selecting Continuous Phenotype</a></li>
+        <li><a data-toggle="tab" href="#Regenie">4.4 Association Model (Regenie)</a></li>
+        <li><a data-toggle="tab" href="#PheWeb"><b>5. PheWeb</b></a></li>
+        <li><a data-toggle="tab" href="#Acknowledgements"><b>Acknowledgements</b></a></li>
+    </ul>
+</div>
+<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+    <div class="tab-content">
+
+<!-- OVERVIEW SECTION-->
+        <div id="Overview" class="tab-pane fade in active">
+            <h2 class="text-center"> About CLSA PheWeb</h2>
+            <hr></hr>
+            <p> This platform presents multiple analyses conducted using CLSA data to the scientific community as well as the public at large. The <a href="https://www.clsa-elcv.ca/", target = "_blank">CLSA</a> cohort is specific to Canada. </p>
+            <p> This platform displays Phenome-wide association (PheWAS) results from the CLSA cohort (i.e. statistical associations between individuals' trait information and genomic variations across the cohort).  </p>
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+            <img src="https://www.clsa-elcv.ca/sites/all/themes/clsa2/img/logo_clsa.png" alt="CLSA Logo" width="60%" height="60%" class="center-block">
+            <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
+        </div>
+<!-- DATA DESCRIPTION -->
+        <div id="GenotypeData" class="tab-pane fade">
+            <h2 class="text-center">Genotype Data</h2>
+            <hr></hr>
+            <p>Original non-imputed CLSA genotype data (v3) has 794,409 variants for 26,622 participants.</p>
+            <p>Participants were genotyped using the Affrymetrix UK Biobank Axiom array.</p>
+            <p>Originally, all genomic positions were reported in reference to human genome build GRCh37.</p>
+            <p>More information can be found on the <a href="https://bmjopen.bmj.com/content/12/3/e059021" target="_blank">official genomic cohort profile paper</a>.</p>
+        </div>
+
+<!-- LiftOver and CLSA filtering Overview-->
+        <div id="LiftOver" class="tab-pane fade">
+            <h2 class="text-center">LiftOver</h2>
+            <hr></hr>
+            <p>We performed liftOver to change the reference genome from GRCh37 to GRCh38, as described in the following sections.</p>
+            <p>Scripts and in-depth description of usage available on <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/tree/main/GRCh37_to_GRCh38" target="_blank">Github</a></p>
+        </div>
+        <div id="PreLiftOver" class="tab-pane fade">
+            <h3>Pre-LiftOver Filtering</h3>
+            <hr></hr>
+            <p>Before liftOver, we used the CLSA's quality checks for marker and sample quality control.</p>
+            <p>The CLSA filtered out variants with:</p>
+            <ol>
+                <li>Batch Discordance</li>
+                <li>Hardy-Weinberg Discordance (p < 3.15e-10)</li>
+                <li>Control Genotype Discordance </li>
+                <li>Sex Discordance</li>
+            </ol>
+            <p>This removed 131,892 variants, keeping 662,517.</p>
+            <p>We removed samples with:</p>
+            <ol>
+                <li>Identification as an outlier in relation to heterozygosity or genotype missingness</li>
+                <li>Differences between reported sex and chromosomal sex</li>
+                <li>Missing self-reported sex </li>
+                <li>Missing chromosomal sex</li>
+            </ol>
+            <p>This removed 66 samples, keeping 26,563</p>
+        </div>
+        <div id="LiftOverGRCh38" class="tab-pane fade">
+            <h3>LiftOver to GRCh38 Reference</h3>
+            <hr></hr>
+            <p>We converted genotype array data from genome build GRCh37 to GRCh38, aligned to the "+" strand using LiftOver. The conversion included the following steps:</p>
+            <ol>
+                <li>We lifted genetic positions from GRCh37 to GRCh38 using the UCSC LiftOver tool and the corresponding chain files.</li>
+                <li>We excluded variants that did not map to GRCh38, mapped to alternate contigs in GRCh38, or located on the mitochondrial chromosome.</li>
+                <li>We aligned A1/A2 alleles in the original PLINK files to the REF/ALT alleles on the "+" strand using the plink2reference.py script.</li>
+                <li>We excluded palindromic variants (A/T and G/C), variants for which A1/A2 alleles didn't match REF/ALT, and for which A1/A2 alleles were not A, C, G, or T.</li>
+                <li>We renamed all variants to follow the CHR:POS:REF:ALT notation.</li>
+            </ol>
+            <p>We started with 662,517 variants (GRCh37) and following these steps, ended up with 620,446 variants (GRCh38) successfully lifted over.</p>
+
+            <p> Table 1. Distribution of SNPs per chromosome after liftOver steps.</p>
+            <table class="table table-bordered table-condensed" style="width:50%">
+                <tr>
+                    <th>Chromosome</th>
+                    <th>Number of SNPs</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>47826</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>48686</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>40648</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>38662</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>36654</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>42563</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>33200</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>31200</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>26652</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>30518</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>29892</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>28890</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>20865</td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>19620</td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>18916</td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>21012</td>
+                </tr>
+                <tr>
+                    <td>17</td>
+                    <td>19726</td>
+                </tr>
+                <tr>
+                    <td>18</td>
+                    <td>18143</td>
+                </tr>
+                <tr>
+                    <td>19</td>
+                    <td>16562</td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>15848</td>
+                </tr>
+                <tr>
+                    <td>21</td>
+                    <td>9102</td>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>9661</td>
+                </tr>
+                <tr>
+                    <td>X</td>
+                    <td>15503</td>
+                </tr>
+            </table>
+        </div>
+        <div id="HweRuth" class="tab-pane fade">
+            <h3>Ancestry-Aware Hardy-Weinberg Check with RUTH</h3>
+            <hr></hr>
+            <p>Using Robust Unified Hardy-Weinberg Equilibrium Test (<a href="https://github.com/statgen/ruth" target = "_blank" >RUTH</a>), we confirmed the CLSA's hardy-weinberg equilibrium exclusion criteria.</p>
+            <p>We ran RUTH on the results from step 2.2 using the 20 first PCs using the likelihood-ratio test with max lambda parameter of 0, using the GT field. We used seed 101.</p>
+            <p>No additional variants were excluded using this test.</p>
+        </div>
+
+<!-- TOPMed Imputation -->
+        <div id="TOPMedImputation" class="tab-pane fade">
+            <h2 class="text-center">TOPMed Imputation</h2>
+            <hr></hr>
+            <p>Imputation (in genetics) is a computational method to predict marker genotypes that are not directly capture by the genotype array.</p>
+            <p>To perform genotype imputation, <a href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program" target="_blank"></a>TOPMed was used as a reference panel.</p>
+            <p>As input to the imputation process the CLSA team used all 26,622 participants and 716,347 markers that:</p>
+            <ol>
+                <li>Pass all tests (no discordance from genotype frequency, no departure form HWE, no discordance from controls, no discordance in genotype frequency between males and females).</li>
+                <li>Genotype missingness of < 0.05</li>
+                <li>MAF > 0.0001</li>
+            </ol>
+            <p>The CLSA team used the TOPMed reference panel version r2, containing 97,256 reference samples with 308,107,085 genetic markers. EAGLE2 and Minimac where used to pre-phase and impute the genotyping data. </p>
+        </div>
+
+<!-- Phenotype Association -->
+        <div id="PhenotypeAssociation" class="tab-pane fade">
+            <h2 class="text-center">Phenotype Association</h2>
+            <hr></hr>
+            <p>In this version of the CLSA PheWeb, we restricted our genome-wide association analyses (GWAS) to individuals of European genetic ancestry. We used Regenie to run GWAS. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
+        </div>
+        <!-- Ancestry Check and European Subset  -->
+        <div id="AncestryEuro" class="tab-pane fade">
+            <h2 class="text-center">Subsetting the European sub-population</h2>
+            <hr></hr>
+            <p>We ran our own ancestry check and filtering using a custom pipeline implementing methods seen <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9900804/" target="_blank">here</a>. The pipeline can be found <a href="https://github.com/CERC-Genomic-Medicine/HGDP_1KG_ancestry_inference" target="_blank">here</a></p>
+            <p>We subset individuals of predicted european ancestry. For ancestry prediction we followed the following steps:</p>
+            <ol>
+                <li>We used <a href="https://csg.sph.umich.edu/chaolong/LASER/TRACE_Manual.pdf" target = "_blank">TRACE</a> to project principal components onto HGDP and 1KG combined references (Figure 1). We removed individuals that had a Z score of <span>&#177;</span>5.</li>
+                <li>Using the projection results, we used a RandomForestModel to calculate probabilities of ancestry group.</li>
+                <li>We used 0.78 probability as our threshold to include in European subset.</li>
+            </ol>
+            <p>In the end, this resulted in 24505 individuals being included in the proceeding analysis.</p>
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                        <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/pca.png?raw=true" alt="PCA plot"  width="100%" height="100%">
+                </div>
+                <div class="panel-footer"><b>Figure 1.</b>CLSA sample's with inferred European ancestry projected onto the HGDP and 1KG's PCA space.</div>
+            </div>
+        </div>
+        <div id="BinaryPhenotype" class="tab-pane fade">
+            <h3>Selecting Binary Phenotypes</h3>
+            <hr></hr>
+            <p>Binary phenotypes were selected with the following criteria (Figure 2):</p>
+            <ol>
+                <li>The variable is binary (2 choices)</li>
+                <li>The variable has more than 1000 cases</li>
+                <li>The variable has GWAS relevance</li>
+            </ol>
+            <p>The final number of continuous phenotypes was 348.</p>
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                        <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/binary_diagram.png?raw=true" alt="binary flow chart"  width="100%" height="100%">
+                </div>
+                <div class="panel-footer"><b>Figure 2.</b>Flow chart of filtering criteria for binary variables.</div>
+            </div>
+        </div>
+        <div id="ContinuousPhenotype" class="tab-pane fade">
+            <h3>Selecting Continuous Phenotypes</h3>
+            <hr></hr>
+            <p>Continous phenotypes were selected with the following criteria (Figure 3):</p>
+            <ol>
+                <li>Removed outliers <span>&#177;</span>5 standard deviations from the mean</li>
+                <li>The variable has more than 20 uniques numeric values, as to remove semi-quantitative variables that are not modeled correctly in linear regression.</li>
+                <li>The variable has more than 1000 total numeric values</li>
+                <li>The variable has does not have one value which accounts for more than 10% of all values</li>
+                <li>The variable has GWAS relevance</li>
+            </ol>
+            <p>The final number of continuous phenotypes was 357.</p>
+            <div class="panel panel-default" style="display: inline-block">
+                <div class="panel-body text-center">
+                        <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/continuous_diagram.jpg?raw=true" alt="continuous flow chart"  width="100%" height="100%">
+                </div>
+                <div class="panel-footer"><b>Figure 3.</b>Flow chart of filtering criteria for continuous variables.</div>
+            </div>
+        </div>
+
+        <div id="Regenie" class="tab-pane fade">
+            <h3>Regenie</h3>
+            <hr></hr>
+            <p>Association testing was performed using <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a> v3.2.1, which handles unbalanced case-control ratios and accounts for population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow" target = "_blank" >here</a>.</p>
+            <div>
+                <p>After filtering european sub-population, we proceeded to further filter common non-imputed variants for step 1 of Regenie.</p>
+                <p>We performed the following:</p>
+                <ol>
+                    <li>Removed variants with sample missingness of > 0.1</li>
+                    <li>Removed samples with genotype missingness of > 0.1</li>
+                    <li>Variants departing from Hardy-Weinberg equilibrium with a p-value less than 1e-15</li>
+                    <li>Linkage disequilibrium pruning of correlated variants with window size of 1000, step size of 100 and Rsq threshold of 0.9</li>
+                </ol>
+                <p>At the end, we had this distribution of variants per chromosome for 24,505 individuals:</p>
+                <table class="table table-bordered table-condensed" style="width:50%">
+                    <tr>
+                        <th>Chromosome</th>
+                        <th>Number of SNPs</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>26319</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>26537</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>21961</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>20823</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>20043</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>19441</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>18494</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>16440</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>15021</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>17505</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>16159</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>15601</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>11919</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>11202</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>10768</td>
+                    </tr>
+                    <tr>
+                        <td>16</td>
+                        <td>11953</td>
+                    </tr>
+                    <tr>
+                        <td>17</td>
+                        <td>11463</td>
+                    </tr>
+                    <tr>
+                        <td>18</td>
+                        <td>10701</td>
+                    </tr>
+                    <tr>
+                        <td>19</td>
+                        <td>8816</td>
+                    </tr>
+                    <tr>
+                        <td>20</td>
+                        <td>8675</td>
+                    </tr>
+                    <tr>
+                        <td>21</td>
+                        <td>5338</td>
+                    </tr>
+                    <tr>
+                        <td>22</td>
+                        <td>5667</td>
+                    </tr>
+                    <tr>
+                        <td>X</td>
+                        <td>7860</td>
+                    </tr>
+                </table>
+                <p>For a total of 338,706 SNPs.</p>
+            </div>
+            <p>For both binary and continuous variables, we used a block size of 1000, leave-one-out cross validation</p>
+            <p>For binary variables, the firth approximation was used for variants with p-value less than 0.05 for both steps.</p>
+            <p>For continuous variables, rank inverse normal transformation was used for both steps.</p>
+            <p>For both steps, we used the covariates of: genotyping batch (1-5), sex, age, age<sup>2</sup>, 1-20 PCs</p>
+        </div>
+
+        <!-- PheWeb  -->
+        <div id="PheWeb" class="tab-pane fade">
+            <h2 class="text-center">PheWeb</h2>
+            <hr></hr>
+            <p>The CLSA PheWeb uses the open-source <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7754083/" target="_blank">PheWeb framework</a>. The customized source code for this instance is available <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb" target = "_blank">here</a>.</p>
+        </div>
+
+        <!-- Acknowledgements  -->
+        <div id="Acknowledgements" class="tab-pane fade">
+            <h2 class="text-center">Acknowledgements</h2>
+            <hr></hr>
+            <ul>
+                <li>Authors : Mike Kazemi, Justin Bellavance, Daniel Taliun, Sarah Gagliano Taliun</li>
+                <li>All computational analyses were performed using the compute resources of Digital Research Alliance of Canada, and the Digital Research Alliance of Canada hosts this site.</li>
+                <li>We thank all CLSA participants who volunteered their time and information for research.</li>
+            </ul>
+        </div>
+    </div>
+</div>

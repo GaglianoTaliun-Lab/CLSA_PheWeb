@@ -186,6 +186,10 @@ def api_pheno_filtered(phenocode):
     #print(f'indel={indel} maf={min_maf}-{max_maf} #chosen={len(chosen_variants)} #bins={len(manhattan_data["variant_bins"])} #unbinned={len(manhattan_data["unbinned_variants"])} weakest_pval={weakest_pval_seen}')
     return jsonify(manhattan_data)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0a83c88f9ca672a71babf779cc0dbdf8cc12c39b
 @bp.route('/top_hits')
 @check_auth
 def top_hits_page():

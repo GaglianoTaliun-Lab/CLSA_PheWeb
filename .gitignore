@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .venv/
 .eggs/
 __pycache__/
@@ -9,3 +10,12 @@ sites.tsv
 tests/
 pheno-list*
 build/
+=======
+*.pyc
+.pytest_cache/
+PheWeb.egg-info
+build
+dist
+pheweb/load/cffi/_x*
+.eggs
+>>>>>>> 0a83c88f9ca672a71babf779cc0dbdf8cc12c39b

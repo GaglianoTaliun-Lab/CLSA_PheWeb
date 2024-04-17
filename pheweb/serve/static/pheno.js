@@ -270,7 +270,10 @@ function create_gwas_plot(variant_bins, unbinned_variants) {
         var variants_to_label = _.sortBy(_.where(unbinned_variants, {peak: true}), _.property('pval'))
             .filter(function(d) { return d.pval < 5e-8; })
             .slice(0,7);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0a83c88f9ca672a71babf779cc0dbdf8cc12c39b
         var genenames = gwas_plot.append('g')
             .attr('class', 'genenames')
             .selectAll('text.genenames')

@@ -1,0 +1,11 @@
+.venv/
+.eggs/
+__pycache__/
+generated-by-pheweb/
+PheWeb.egg-info/
+Blood_Creatine*
+results_*
+sites.tsv
+tests/
+pheno-list*
+build/

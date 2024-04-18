@@ -59,7 +59,7 @@
       var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
       if (i === 0) { text = '<b>' + text + '</b>'; }
       text = '<br>' + text;
-      $('.gc-control').append(text);
+      $('.gc-control_both').append(text);
     });
   if (data.by_maf)
     create_qq_plot(data.by_maf, data.ci);
@@ -69,6 +69,45 @@
   .fail(function() {
     console.log("QQ XHR failed");
   });
+
+  if (window.model.sex_stratified){
+      //male
+      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".male.json")
+      .done(function(data) {
+      window.debug.qq_male = data;
+      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_male').append(text);
+      });
+    if (data.by_maf)
+      create_qq_plot(data.by_maf, data.ci, "male");
+    else
+      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, "male");
+    })
+    .fail(function() {
+      console.log("QQ male XHR failed");
+    });
+    //female
+    $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".female.json")
+      .done(function(data) {
+      window.debug.qq_male = data;
+      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_female').append(text);
+      });
+    if (data.by_maf)
+      create_qq_plot(data.by_maf, data.ci, "female");
+    else
+      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, "female");
+    })
+    .fail(function() {
+      console.log("QQ female XHR failed");
+    });
+  }
 </script>
 <style type="text/css">
 .d3-tip {
@@ -250,8 +289,14 @@
 <div class="row">
     <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
       <h3 id="qq">QQ plot:</h3>
-      <div id="qq_plot_container"></div>
-      <p class="gc-control"></p>
+      <div id="qq_plot_container_both"></div>
+      <p class="gc-control_both"></p>
+      {% if sex_stratified %}
+        <div id="qq_plot_container_male"></div>
+        <p class="gc-control_male"></p>
+        <div id="qq_plot_container_female"></div>
+        <p class="gc-control_female"></p>
+      {% endif %}
       <i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
       <br><br><br>
     </div>

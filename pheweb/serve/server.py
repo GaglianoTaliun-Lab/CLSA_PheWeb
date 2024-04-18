@@ -137,7 +137,7 @@ def api_pheno(phenocode:str):
 @bp.route('/api/miami/pheno/<phenocode>.json')
 @check_auth
 def api_pheno_miami(phenocode:str):
-    return send_from_directory(get_filepath('miami'), '{}.json'.format(phenocode))
+    return send_from_directory(get_filepath('manhattan') + "/miami", '{}.json'.format(phenocode))
 
 @bp.route('/api/manhattan-filtered/pheno/<phenocode>.json')
 @check_auth
@@ -216,6 +216,11 @@ def download_phenotypes():
 @check_auth
 def api_pheno_qq(phenocode:str):
     return send_from_directory(get_filepath('qq'), '{}.json'.format(phenocode))
+
+@bp.route('/api/qq/miami/pheno/<phenocode>.json')
+@check_auth
+def api_pheno_qq_miami(phenocode:str):
+    return send_from_directory(get_filepath('qq') + "/miami", '{}.json'.format(phenocode))
 
 
 @bp.route('/random')

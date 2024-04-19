@@ -161,11 +161,29 @@
   stroke: #666;
 }
 
-#qq_plot_container .axis path.domain {
+#qq_plot_container_both .axis path.domain {
   stroke: black;
   fill: none;
 }
-#qq_plot_container .axis g.tick line {
+#qq_plot_container_both g.tick line {
+  stroke: #666;
+  opacity: 0.3;
+}
+
+#qq_plot_container_male .axis path.domain {
+  stroke: black;
+  fill: none;
+}
+#qq_plot_container_male g.tick line {
+  stroke: #666;
+  opacity: 0.3;
+}
+
+#qq_plot_container_female .axis path.domain {
+  stroke: black;
+  fill: none;
+}
+#qq_plot_container_female g.tick line {
   stroke: #666;
   opacity: 0.3;
 }
@@ -182,6 +200,20 @@
 .tabulator .tabulator-footer .tabulator-page.active {
   background-color: #337ab7;
   color: white;
+}
+
+.parent {
+  background: mediumpurple;
+  padding: 1rem
+}
+
+.child {
+  border: 1px solid indigo;
+  padding: 1rem
+}
+
+.inline-block-child {
+  display: inline-block;
 }
 
 </style>
@@ -287,20 +319,24 @@
 </div>
 
 <div class="row">
+  <h3 id="qq">QQ plot:</h3>
     <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-      <h3 id="qq">QQ plot:</h3>
-      <div id="qq_plot_container_both"></div>
-      <p class="gc-control_both"></p>
-      {% if sex_stratified %}
-        <div id="qq_plot_container_male"></div>
-        <p class="gc-control_male"></p>
-        <div id="qq_plot_container_female"></div>
-        <p class="gc-control_female"></p>
-      {% endif %}
-      <i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
-      <br><br><br>
+        <div id="qq_plot_container_both">All</div>
+        <p class="gc-control_both"></p>
     </div>
+    {% if sex_stratified %}
+    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
+      <div id="qq_plot_container_male">Male</div>
+      <p class="gc-control_male"></p>
+    </div>
+    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
+      <div id="qq_plot_container_female">Female</div>
+      <p class="gc-control_female"></p>
+    </div>
+    {% endif %}
 </div>
+<i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
+
 
 {% if show_correlations %}
   <div class="row" id="correlations">

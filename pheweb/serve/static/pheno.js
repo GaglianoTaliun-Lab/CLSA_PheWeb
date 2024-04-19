@@ -1111,6 +1111,7 @@ function create_qq_plot(maf_ranges, qq_ci, type = "both") {
         var exp_max = d3.max(maf_ranges, function(maf_range) {
             return maf_range.qq.max_exp_qval;
         });
+        
         // Note: we already removed all observed -log10(pval)s > ceil(exp_max*2) in python, so we can just use the max observed here.
         var obs_max = d3.max(maf_ranges, function(maf_range) {
             return d3.max(maf_range.qq.bins, function(bin) {

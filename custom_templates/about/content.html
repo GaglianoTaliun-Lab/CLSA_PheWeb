@@ -35,7 +35,7 @@
             <h2 class="text-center"> About CLSA PheWeb</h2>
             <hr></hr>
             <p> This platform presents multiple analyses conducted using CLSA data to the scientific community as well as the public at large. The <a href="https://www.clsa-elcv.ca/", target = "_blank">CLSA</a> cohort is specific to Canada. </p>
-            <p> This platform displays Phenome-wide association (PheWAS) results from the CLSA cohort (i.e. statistical associations between individuals' trait information and genomic variations across the cohort).  </p>
+            <p> This platform displays genome-wide association (GWAS) and phenome-wide association (PheWAS) results from the CLSA cohort (i.e. statistical associations between individuals' trait information and genomic variations across the available traits in the cohort).  </p>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
             <img src="https://www.clsa-elcv.ca/sites/all/themes/clsa2/img/logo_clsa.png" alt="CLSA Logo" width="60%" height="60%" class="center-block">
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
@@ -54,29 +54,29 @@
         <div id="LiftOver" class="tab-pane fade">
             <h2 class="text-center">LiftOver</h2>
             <hr></hr>
-            <p>We performed liftOver to change the reference genome from GRCh37 to GRCh38, as described in the following sections.</p>
+            <p>We performed liftOver to convert genomic positions from GRCh37 to GRCh38, as described in the following sections.</p>
             <p>Scripts and in-depth description of usage available on <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/tree/main/GRCh37_to_GRCh38" target="_blank">Github</a></p>
         </div>
         <div id="PreLiftOver" class="tab-pane fade">
             <h3>Pre-LiftOver Filtering</h3>
             <hr></hr>
-            <p>Before liftOver, we used the CLSA's quality checks for marker and sample quality control.</p>
-            <p>The CLSA filtered out variants with:</p>
+            <p>Before liftOver, we applied the CLSA's quality checks for marker and sample quality control.</p>
+            <p>Speficially, the CLSA filtered out variants with:</p>
             <ol>
                 <li>Batch Discordance</li>
                 <li>Hardy-Weinberg Discordance (p < 3.15e-10)</li>
                 <li>Control Genotype Discordance </li>
                 <li>Sex Discordance</li>
             </ol>
-            <p>This removed 131,892 variants, keeping 662,517.</p>
-            <p>We removed samples with:</p>
+            <p>These filters removed 131,892 variants, keeping 662,517.</p>
+            <p>With regard to sample quality control, we removed samples:</p>
             <ol>
-                <li>Identification as an outlier in relation to heterozygosity or genotype missingness</li>
-                <li>Differences between reported sex and chromosomal sex</li>
+                <li>Identified as an outlier in relation to heterozygosity or genotype missingness</li>
+                <li>Differing reported sex versus chromosomal sex</li>
                 <li>Missing self-reported sex </li>
                 <li>Missing chromosomal sex</li>
             </ol>
-            <p>This removed 66 samples, keeping 26,563</p>
+            <p>These filters removed 66 samples, keeping 26,563</p>
         </div>
         <div id="LiftOverGRCh38" class="tab-pane fade">
             <h3>LiftOver to GRCh38 Reference</h3>
@@ -203,9 +203,9 @@
         <div id="TOPMedImputation" class="tab-pane fade">
             <h2 class="text-center">TOPMed Imputation</h2>
             <hr></hr>
-            <p>Imputation (in genetics) is a computational method to predict marker genotypes that are not directly capture by the genotype array.</p>
-            <p>To perform genotype imputation, <a href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program" target="_blank"></a>TOPMed was used as a reference panel.</p>
-            <p>As input to the imputation process the CLSA team used all 26,622 participants and 716,347 markers that:</p>
+            <p>Genotype imputation is a computational method to infer genotypes at genetic variants that are not directly capture by the genotype array, but are present in reference whole-genome sequences.</p>
+            <p>Genotype imputation was carried out by the CLSA, and <a href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program" target="_blank"></a>TOPMed was used as a reference panel.</p>
+            <p>As input to the imputation process, the CLSA team used all 26,622 participants and 716,347 genetic variants that:</p>
             <ol>
                 <li>Pass all tests (no discordance from genotype frequency, no departure form HWE, no discordance from controls, no discordance in genotype frequency between males and females).</li>
                 <li>Genotype missingness of < 0.05</li>

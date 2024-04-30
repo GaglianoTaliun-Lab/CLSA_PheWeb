@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 
-
 {% block in_head %}
 <script src="https://cdn.jsdelivr.net/npm/d3@^5.16.0" type="text/javascript"></script>
 <script src="https://unpkg.com/d3-tip@0.9.1"></script>
@@ -15,9 +14,95 @@
 <script type="text/javascript">
   window.model.tooltip_underscoretemplate = {{ tooltip_underscoretemplate|tojson }};
   window.pheno = {{ phenocode|tojson|safe }};
+  window.pheno_male = {{ phenocode|tojson|safe }} + ".male";
+  window.pheno_female = {{ phenocode|tojson|safe }} + ".female";
+  window.model.sex_stratified = {{ sex_stratified | tojson }};
   window.model.show_correlations = {{ show_correlations | tojson }};
   window.model.correlations_url = {{ url_for('.api_pheno_correlations', phenocode=pheno['phenocode'] ) | tojson }};
   window.model.pheno_correlations_pvalue_threshold = {{ pheno_correlations_pvalue_threshold | tojson }};
+
+  //get max qq plot height and width value from combined, male and female jsons.
+  window.model.qq_plot_height = 0;
+  window.model.qq_plot_width = 0;  
+  var deferredObjects = [];
+
+  if (window.model.sex_stratified){
+    // Add JSON calls
+    addJsonCall(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json");
+    addJsonCall(window.model.urlprefix + "/api/qq/pheno/" + window.pheno_male + ".json");
+    addJsonCall(window.model.urlprefix + "/api/qq/pheno/" + window.pheno_female + ".json");
+
+    // Wait for all JSON calls to finish
+    $.when.apply($, deferredObjects).done(function(result1, result2, result3) {
+      // result1, result2, result3 correspond to the data from file1.json, file2.json, and file3.json respectively
+      var data1 = result1[0];
+      var data2 = result2[0];
+      var data3 = result3[0];
+
+      // Access and work with data1, data2, data3 here
+      console.log('Data from file1.json:', data1);
+      console.log('Data from file2.json:', data2);
+      console.log('Data from file3.json:', data3);
+
+      // Proceed with your code here
+  });
+  } else {
+    $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
+    .done(function(data) {
+      window.debug.qq = data;
+      console.log(window.debug.qq)
+      window.debug.qq.by_maf.forEach(function(maf_ranges){
+        console.log(maf_ranges.qq.bins)
+        max_height = maf_ranges.qq.bins[maf_ranges.qq.bins.length - 1][1]
+        max_width = maf_ranges.qq.bins[maf_ranges.qq.bins.length - 1][0]
+
+        if (window.model.qq_plot_height < max_height ){
+          window.model.qq_plot_height = max_height
+        }
+        if (window.model.qq_plot_width < max_width){
+          window.model.qq_plot_width = max_width
+        }
+      });
+    });
+  }
+
+  if (window.model.sex_stratified){
+    $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".male.json")
+    .done(function(data) {
+      window.debug.qq = data;
+      console.log(window.debug.qq)
+      window.debug.qq.by_maf.forEach(function(maf_ranges){
+        console.log(maf_ranges.qq.bins)
+        max_height = maf_ranges.qq.bins[maf_ranges.qq.bins.length - 1][1]
+        max_width = maf_ranges.qq.bins[maf_ranges.qq.bins.length - 1][0]
+
+        if (window.model.qq_plot_height < max_height ){
+          window.model.qq_plot_height = max_height
+        }
+        if (window.model.qq_plot_width < max_width){
+          window.model.qq_plot_width = max_width
+        }
+      });
+    });
+    $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".female.json")
+    .done(function(data) {
+      window.debug.qq = data;
+      console.log(window.debug.qq)
+      window.debug.qq.by_maf.forEach(function(maf_ranges){
+        console.log(maf_ranges.qq.bins)
+        max_height = maf_ranges.qq.bins[maf_ranges.qq.bins.length - 1][1]
+        max_width = maf_ranges.qq.bins[maf_ranges.qq.bins.length - 1][0]
+
+        if (window.model.qq_plot_height < max_height ){
+          window.model.qq_plot_height = max_height
+        }
+        if (window.model.qq_plot_width < max_width){
+          window.model.qq_plot_width = max_width
+        }
+      });
+    });
+  }
+  
 
   $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.pheno + ".json")
   .done(function(data) {
@@ -28,6 +113,28 @@
   .fail(function() {
     console.log("Manhattan XHR failed");
   });
+
+  if (window.model.sex_stratified){
+    $.when(
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.pheno_male + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.pheno_female + ".json")
+    ).done(function(data_male, data_female) {
+        window.debug.miami = {
+          male: data_male[0],
+          female: data_female[0]
+        };
+        create_miami_plot(
+          data_male[0].variant_bins, data_male[0].unbinned_variants,
+          data_female[0].variant_bins, data_female[0].unbinned_variants
+        );
+        // we won't worry about this for now.
+        // populate_streamtable(data_male.unbinned_variants);
+    })
+    .fail(function() {
+      console.log("Miami XHR failed");
+    });
+  }
+  
   $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
   .done(function(data) {
     window.debug.qq = data;
@@ -35,16 +142,55 @@
       var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
       if (i === 0) { text = '<b>' + text + '</b>'; }
       text = '<br>' + text;
-      $('.gc-control').append(text);
+      $('.gc-control_both').append(text);
     });
   if (data.by_maf)
-    create_qq_plot(data.by_maf, data.ci);
+    create_qq_plot(data.by_maf, data.ci, window.model.qq_plot_height, window.model.qq_plot_width);
   else
-    create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci);
+    create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, window.model.qq_plot_height, window.model.qq_plot_width);
   })
   .fail(function() {
     console.log("QQ XHR failed");
   });
+
+  if (window.model.sex_stratified){
+      //male
+      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".male.json")
+      .done(function(data) {
+      window.debug.qq_male = data;
+      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_male').append(text);
+      });
+    if (data.by_maf)
+      create_qq_plot(data.by_maf, data.ci, window.model.qq_plot_height, window.model.qq_plot_width, "male");
+    else
+      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, window.model.qq_plot_height, window.model.qq_plot_width, "male");
+    })
+    .fail(function() {
+      console.log("QQ male XHR failed");
+    });
+    //female
+    $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".female.json")
+      .done(function(data) {
+      window.debug.qq_male = data;
+      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_female').append(text);
+      });
+    if (data.by_maf)
+      create_qq_plot(data.by_maf, data.ci, window.model.qq_plot_height, window.model.qq_plot_width, "female");
+    else
+      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, window.model.qq_plot_height, window.model.qq_plot_width, "female");
+    })
+    .fail(function() {
+      console.log("QQ female XHR failed");
+    });
+  }
 </script>
 <style type="text/css">
 .d3-tip {
@@ -86,11 +232,44 @@
   stroke: #666;
 }
 
-#qq_plot_container .axis path.domain {
-  stroke: black;
+#miami_plot_container {
+  min-width: 700px;
+}
+#miami_plot_container .axis > path.domain {
+  stroke-width: 2px;
+  stroke: #666;
   fill: none;
 }
-#qq_plot_container .axis g.tick line {
+#miami_plot_container .axis g.tick line {
+  stroke: #666;
+}
+
+#qq_plot_container_both .axis path.domain {
+  stroke: black;
+  fill: none;
+  text-align: center;
+}
+#qq_plot_container_both g.tick line {
+  stroke: #666;
+  opacity: 0.3;
+}
+
+#qq_plot_container_male .axis path.domain {
+  stroke: black;
+  fill: none;
+  text-align: center;
+}
+#qq_plot_container_male g.tick line {
+  stroke: #666;
+  opacity: 0.3;
+}
+
+#qq_plot_container_female .axis path.domain {
+  stroke: black;
+  fill: none;
+  text-align: center;
+}
+#qq_plot_container_female g.tick line {
   stroke: #666;
   opacity: 0.3;
 }
@@ -107,6 +286,20 @@
 .tabulator .tabulator-footer .tabulator-page.active {
   background-color: #337ab7;
   color: white;
+}
+
+.parent {
+  background: mediumpurple;
+  padding: 1rem
+}
+
+.child {
+  border: 1px solid indigo;
+  padding: 1rem
+}
+
+.inline-block-child {
+  display: inline-block;
 }
 
 </style>
@@ -145,7 +338,12 @@
       {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
       <span class="pull-right">
         <a class="btn btn-default" href="{{ url_for('.download_pheno', phenocode=phenocode) }}">Download summary statistics</a>
+        {% if sex_stratified %}
+          <a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='male') }}">Download male summary statistics</a>
+          <a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='female') }}">Download female summary statistics</a>
+        {% endif %}
       </span>
+        
       {% endif %}
       {% if show_manhattan_filter_button %}
       <span class="pull-right" style="margin-left:1em;margin-right:1em">
@@ -158,6 +356,7 @@
   <div class="col-xs-12">
     <ul>
       <li class="section-link"><a href="#manhattan">Manhattan</a></li>
+      {% if sex_stratified %}<li class="section-link"><a href="#miami">Miami</a></li>{% endif %}
       <li class="section-link"><a href="#qq">QQ</a></li>
       {% if show_correlations %}<li class="section-link"><a href="#correlations">Correlated phenotypes</a></li>{% endif %}
     </ul>
@@ -169,6 +368,15 @@
         </div>
     </div>
 </div>
+
+{% if sex_stratified %}
+<div class="row" >
+    <div class="col-xs-12" id="miami" >
+        <div id="miami_plot_container">
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <div class="row">
   <div class="col-xs-12 col-md-8">
@@ -202,14 +410,24 @@
 </div>
 
 <div class="row">
+  <h3 id="qq">QQ plot:</h3>
     <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-      <h3 id="qq">QQ plot:</h3>
-      <div id="qq_plot_container"></div>
-      <p class="gc-control"></p>
-      <i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
-      <br><br><br>
+        <div id="qq_plot_container_both">All</div>
+        <p class="gc-control_both"></p>
     </div>
+    {% if sex_stratified %}
+    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
+      <div id="qq_plot_container_male">Male</div>
+      <p class="gc-control_male"></p>
+    </div>
+    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
+      <div id="qq_plot_container_female">Female</div>
+      <p class="gc-control_female"></p>
+    </div>
+    {% endif %}
 </div>
+<i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
+
 
 {% if show_correlations %}
   <div class="row" id="correlations">

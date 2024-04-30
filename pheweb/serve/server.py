@@ -203,10 +203,12 @@ def download_top_hits():
 @check_auth
 def phenotypes_page():
     return render_template('phenotypes.html')
+    
 @bp.route('/api/phenotypes.json')
 @check_auth
 def api_phenotypes():
     return send_file(get_filepath('phenotypes_summary'))
+
 @bp.route('/download/phenotypes.tsv')
 @check_auth
 def download_phenotypes():
@@ -411,6 +413,17 @@ if conf.is_secret_download_pheno_sumstats():
                                        attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
         except Exception as exc:
             die("Sorry, that file doesn't exist.", exception=exc)
+    
+    @bp.route('/download/<phenocode>/<sex>/<token>')
+    def download_pheno_sex_stratified(phenocode:str, token:str, sex:str):
+        phenocode_label = phenocode + "_" + sex
+        if phenocode not in phenos:
+            die("Sorry, that phenocode doesn't exist")
+        if not Hasher.check_hash(token, phenocode):
+            die("Sorry, that token is incorrect")
+        return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode_label),
+                                   as_attachment=True,
+                                   attachment_filename='phenocode-{}.tsv.gz'.format(phenocode_label))
 
     download_list_secret_token = Hasher.get_hash('|'.join(sorted(phenos.keys()))) # Shouldn't change when we restart the server.
     print('download page:', '/download-list/{}'.format(download_list_secret_token))
@@ -435,8 +448,15 @@ else:
         return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode),
                                    as_attachment=True,
                                    attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
-
-
+    
+    @bp.route('/download/<phenocode>/<sex>')
+    def download_pheno_sex_stratified(phenocode:str, sex:str):
+        phenocode_label = phenocode + "_" + sex
+        if phenocode_label not in phenos:
+            die("Sorry, that phenocode doesn't exist")
+        return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode_label),
+                                   as_attachment=True,
+                                   attachment_filename='phenocode-{}.tsv.gz'.format(phenocode_label))
 @bp.route('/')
 def homepage():
     return render_template('index.html')

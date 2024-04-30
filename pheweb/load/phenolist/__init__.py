@@ -276,6 +276,13 @@ def keep_only_columns(phenolist, good_keys):
                 del pheno[key]
     return phenolist
 
+#take the value from the sex column and append it to the phenocode.
+def append_sex(phenolist):
+    print(phenolist)
+    for pheno in phenolist:
+        print(pheno)
+    return phenolist
+
 class _hashabledict(dict):
     # TODO: could this be recursive? at that point, just jsonify everything.
     def __key(self):
@@ -564,6 +571,14 @@ def run(argv):
     p.add_argument('-f', dest="filepath", help="pheno-list filepath, used for both input and output (default: {!r})".format(default_phenolist_filepath))
     p.add_argument('renames', nargs='+', help="columns to rename, in pairs, like this: <oldname> <newname> <oldname> <newname>...")
 
+    @add_subcommand('prep-sex-stratified')
+    @modifies_phenolist
+    def f(args, phenolist):
+        phenolist = append_sex(phenolist)
+        return phenolist
+    p = subparsers.add_parser('prep-sex-stratified', help='Prepares the pheno-list.json file for sex-stratification visualisation by appending .male or .female to the phenotypes, which allows them to be treated differently in the PheWeb pages')
+    p.add_argument('-f', dest="filepath", help="output filepath (default: {!r})".format(default_phenolist_filepath))
+    
     # TODO:
     # =====
 

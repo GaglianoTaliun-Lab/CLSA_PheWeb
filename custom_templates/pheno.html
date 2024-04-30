@@ -61,17 +61,18 @@
       text = '<br>' + text;
       $('.gc-control_both').append(text);
     });
-  if (data.by_maf)
-    create_qq_plot(data.by_maf, data.ci);
-  else
-    create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci);
-  })
-  .fail(function() {
-    console.log("QQ XHR failed");
-  });
+    if (data.by_maf)
+      create_qq_plot(data.by_maf, data.ci, null, null);
+    else
+      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1]);
+    })
+    .fail(function() {
+      console.log("QQ XHR failed");
+    });
 
   if (window.model.sex_stratified){
       //male
+      console.log(window.model.urlprefix)
       $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".male.json")
       .done(function(data) {
       window.debug.qq_male = data;
@@ -81,32 +82,33 @@
         text = '<br>' + text;
         $('.gc-control_male').append(text);
       });
-    if (data.by_maf)
-      create_qq_plot(data.by_maf, data.ci, "male");
-    else
-      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, "male");
-    })
-    .fail(function() {
-      console.log("QQ male XHR failed");
-    });
-    //female
-    $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".female.json")
-      .done(function(data) {
-      window.debug.qq_male = data;
-      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-        if (i === 0) { text = '<b>' + text + '</b>'; }
-        text = '<br>' + text;
-        $('.gc-control_female').append(text);
+      if (data.by_maf)
+        create_qq_plot(data.by_maf, data.ci, null, null, "male");
+      else
+        create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1], "male");
+      })
+      .fail(function() {
+        console.log("QQ male XHR failed");
       });
-    if (data.by_maf)
-      create_qq_plot(data.by_maf, data.ci, "female");
-    else
-      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, "female");
-    })
-    .fail(function() {
-      console.log("QQ female XHR failed");
-    });
+
+      //female
+      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".female.json")
+        .done(function(data) {
+        window.debug.qq_male = data;
+        _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+          if (i === 0) { text = '<b>' + text + '</b>'; }
+          text = '<br>' + text;
+          $('.gc-control_female').append(text);
+        });
+      if (data.by_maf)
+        create_qq_plot(data.by_maf, data.ci, null, null, "female");
+      else
+        create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1], "female");
+      })
+      .fail(function() {
+        console.log("QQ female XHR failed");
+      });
   }
 </script>
 <style type="text/css">
@@ -164,6 +166,7 @@
 #qq_plot_container_both .axis path.domain {
   stroke: black;
   fill: none;
+  text-align: center;
 }
 #qq_plot_container_both g.tick line {
   stroke: #666;
@@ -173,6 +176,7 @@
 #qq_plot_container_male .axis path.domain {
   stroke: black;
   fill: none;
+  text-align: center;
 }
 #qq_plot_container_male g.tick line {
   stroke: #666;
@@ -182,6 +186,7 @@
 #qq_plot_container_female .axis path.domain {
   stroke: black;
   fill: none;
+  text-align: center;
 }
 #qq_plot_container_female g.tick line {
   stroke: #666;
@@ -252,7 +257,12 @@
       {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
       <span class="pull-right">
         <a class="btn btn-default" href="{{ url_for('.download_pheno', phenocode=phenocode) }}">Download summary statistics</a>
+        {% if sex_stratified %}
+          <a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='male') }}">Download male summary statistics</a>
+          <a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='female') }}">Download female summary statistics</a>
+        {% endif %}
       </span>
+        
       {% endif %}
       {% if show_manhattan_filter_button %}
       <span class="pull-right" style="margin-left:1em;margin-right:1em">

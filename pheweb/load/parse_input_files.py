@@ -61,6 +61,7 @@ def write_failures(filepath:str, failed_results:Dict[str,Any]):
 
 def convert(pheno:Dict[str,Any]) -> Iterator[Dict[str,Any]]:
     # suppress Exceptions so that we can report back on which phenotypes succeeded and which didn't.
+    print(pheno)
     try:
         with VariantFileWriter(get_pheno_filepath('parsed', pheno['phenocode'], must_exist=False)) as writer:
             pheno_reader = PhenoReader(pheno, minimum_maf=conf.get_assoc_min_maf())

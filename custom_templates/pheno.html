@@ -52,8 +52,54 @@
     });
   }
 
-  $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
-  .done(function(data) {
+  if (window.model.sex_stratified){
+    $.when(
+      $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno_male + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno_female + ".json")
+    ).done(function(data1, data2, data3) {
+      qq_combined = data1[0]
+      qq_male = data2[0]
+      qq_female = data3[0]
+      _.sortBy(_.pairs(qq_combined.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_both').append(text);
+      });
+      _.sortBy(_.pairs(qq_male.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_male').append(text);
+      });
+      _.sortBy(_.pairs(qq_female.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_female').append(text);
+      });
+
+      //return the max height and width to use based off the max of each .json
+      var dimensions = calculate_qq_dimension(qq_combined, qq_male, qq_female);
+
+      if (qq_combined.by_maf){
+        create_qq_plot(qq_combined.by_maf, qq_combined.ci, dimensions[0], dimensions[1]);
+        create_qq_plot(qq_male.by_maf, qq_male.ci, dimensions[0], dimensions[1], "male");
+        create_qq_plot(qq_female.by_maf, qq_female.ci, dimensions[0], dimensions[1], "female");
+      }
+      else {
+        create_qq_plot([{maf_range:[0,0.5], qq:qq_combined.overall.qq, count:qq_combined.overall.count}], qq_combined.ci, dimensions[0], dimensions[1]);
+        create_qq_plot([{maf_range:[0,0.5], qq:qq_male.overall.qq, count:qq_male.overall.count}], qq_male.ci, dimensions[0], dimensions[1], "male");
+        create_qq_plot([{maf_range:[0,0.5], qq:qq_female.overall.qq, count:qq_female.overall.count}], qq_female.ci, dimensions[0], dimensions[1], "female");
+      }
+      })
+      .fail(function() {
+        console.log("Sex stratified QQ XHR failed");
+      });
+  } else {
+    $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
+    .done(function(data) {
     window.debug.qq = data;
     _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
       var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
@@ -69,47 +115,8 @@
     .fail(function() {
       console.log("QQ XHR failed");
     });
-
-  if (window.model.sex_stratified){
-      //male
-      console.log(window.model.urlprefix)
-      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".male.json")
-      .done(function(data) {
-      window.debug.qq_male = data;
-      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-        if (i === 0) { text = '<b>' + text + '</b>'; }
-        text = '<br>' + text;
-        $('.gc-control_male').append(text);
-      });
-      if (data.by_maf)
-        create_qq_plot(data.by_maf, data.ci, null, null, "male");
-      else
-        create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1], "male");
-      })
-      .fail(function() {
-        console.log("QQ male XHR failed");
-      });
-
-      //female
-      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno + ".female.json")
-        .done(function(data) {
-        window.debug.qq_male = data;
-        _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-          if (i === 0) { text = '<b>' + text + '</b>'; }
-          text = '<br>' + text;
-          $('.gc-control_female').append(text);
-        });
-      if (data.by_maf)
-        create_qq_plot(data.by_maf, data.ci, null, null, "female");
-      else
-        create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1], "female");
-      })
-      .fail(function() {
-        console.log("QQ female XHR failed");
-      });
   }
+
 </script>
 <style type="text/css">
 .d3-tip {

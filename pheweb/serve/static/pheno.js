@@ -1045,6 +1045,37 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
     });
 }
 
+function calculate_qq_dimension(combined_data, male_data, female_data){
+    console.log(combined_data)
+    console.log(male_data)
+    console.log(female_data)
+
+    var height = 0
+    var width = 0
+    var dimensions = [height, width]
+
+    for (var qq_data of [combined_data, male_data, female_data]){
+
+        qq_data.by_maf.forEach(function(data){
+
+            //the last one will always be the one to increase the figure size
+            var max_height = data.qq.bins[data.qq.bins.length - 1][1]
+            var max_width = data.qq.bins[data.qq.bins.length - 1][0]
+
+            if (dimensions[0] < max_height)
+                dimensions[0] = max_height;
+    
+            if (dimensions[1] < max_width)
+                dimensions[1] = max_width;
+        });
+
+        console.log(dimensions)
+
+    }
+
+    return dimensions
+}
+
 function create_qq_plot(maf_ranges, qq_ci, height = null, width = null, type = "both") {
 
     console.log(height)

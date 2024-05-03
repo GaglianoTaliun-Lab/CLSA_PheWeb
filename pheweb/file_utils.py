@@ -64,7 +64,7 @@ _single_filepaths: Dict[str,Callable[[],str]] = {
     'pheno_gz': (lambda: get_generated_path('pheno_gz')),
     'best_of_pheno': (lambda: get_generated_path('best_of_pheno')),
     'manhattan': (lambda: get_generated_path('manhattan')),
-    'miami': (lambda: get_generated_path('miami')),
+    'manhattan-miami': (lambda: get_generated_path('manhattan/miami')),
     'qq': (lambda: get_generated_path('qq')),
 }
 
@@ -80,7 +80,7 @@ _pheno_filepaths: Dict[str,Callable[[str],str]] = {
     'pheno_gz_tbi': (lambda phenocode: get_generated_path('pheno_gz', '{}.gz.tbi'.format(phenocode))),
     'best_of_pheno': (lambda phenocode: get_generated_path('best_of_pheno', phenocode)),
     'manhattan': (lambda phenocode: get_generated_path('manhattan', '{}.json'.format(phenocode))),
-    'miami': (lambda phenocode: get_generated_path('miami', '{}.json'.format(phenocode))),
+    'manhattan-miami': (lambda phenocode: get_generated_path('manhattan/miami', '{}.json'.format(phenocode))),
     'qq': (lambda phenocode: get_generated_path('qq', '{}.json'.format(phenocode))),
 }
 

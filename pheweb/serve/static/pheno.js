@@ -642,8 +642,7 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
                 .attr('y1', y_axis_break_inf_offset_male+6).attr('y2', y_axis_break_inf_offset_male-6)
                 .attr('stroke', '#666').attr('stroke-width', '3px');
 
-            // TODO: test this
-            var y_axis_break_inf_offset_female = y_scale_male(Infinity) + (y_scale_male(0)-y_scale_male(Infinity)) * 0.03
+            var y_axis_break_inf_offset_female = y_scale_female(Infinity) + (y_scale_female(0)-y_scale_female(Infinity)) * 0.03
             miami_plot.append('line')
                 .attr('x1', -8-7).attr('x2', -8+7)
                 .attr('y1', y_axis_break_inf_offset_female+6).attr('y2', y_axis_break_inf_offset_female-6)
@@ -753,6 +752,7 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
             .offset([-6,0]);
         miami_svg.call(point_tooltip);
 
+        //TODO: add functionality for miami plot click vs manhattan plot click.
         function get_link_to_LZ(variant) {
             return fmt(window.model.urlprefix + '/region/{0}/{1}:{2}-{3}',
                         window.pheno,
@@ -1330,12 +1330,6 @@ function populate_streamtable(variants) {
         $('#stream_table').stream_table(options, data);
 
     });
-}
-
-// Function to add JSON calls to the array
-function addJsonCall(url) {
-    var deferred = $.getJSON(url);
-    deferredObjects.push(deferred);
 }
 
 // Optionally populate a table of correlated phenotypes.

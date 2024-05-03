@@ -53,10 +53,13 @@
         <tr>
           <th>Category</th>
           <th>Phenotype</th>
-          <th>#Samples</th>
-          <th>GCλ0.01</th>
-          <th>#Loci&lt;5e-8</th>
-          <th>Top variant in pheno</th>
+          <th># Samples</th>
+          <th># Samples (F)</th>
+          <th># Samples (M)</th>
+          <th># Loci&lt;5e-8</th>
+          <th># Loci&lt;5e-8 (F)</th>
+          <th># Loci&lt;5e-8 (M)</th>
+          <th>Top Variant</th>
           <th>P-value</th>
           <th class="nearest_genes_col">Nearest Gene(s)</th>
         </tr>
@@ -79,11 +82,28 @@
       <% } else if (h.num_samples) { %>
         <%= h.num_samples.toLocaleString() %>
       <% } %>
-    <td><%= (h.gc_lambda_hundred !== null) ? h.gc_lambda_hundred.toFixed(2) : '' %></td>
+      </td>
+    <td>
+      <% if (h.num_cases_female && h.num_controls_female) { %>
+        <%= h.num_cases_female.toLocaleString() %> + <%= h.num_controls_female.toLocaleString() %>
+      <% } else if (h.num_samples_female) { %>
+        <%= h.num_samples_female.toLocaleString() %>
+      <% } %>
+    </td>
+    <td>
+      <% if (h.num_cases_male && h.num_controls_male) { %>
+        <%= h.num_cases_male.toLocaleString() %> + <%= h.num_controls_male.toLocaleString() %>
+      <% } else if (h.num_samples_male) { %>
+        <%= h.num_samples_male.toLocaleString() %>
+      <% } %>
+    </td>    
     <td><%= h.num_peaks %></td>
+    <td><%= h.num_peaks_female %></td>
+    <td><%= h.num_peaks_male %></td>
     <td><a style="color:black" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= h.chrom %>-<%= h.pos %>-<%= h.ref %>-<%= h.alt %>">
         <%= h.chrom %>:<%= h.pos.toLocaleString() %> <%= h.ref %> / <%= h.alt %>
-        <% if (h.rsids) { %>(<%= h.rsids.replace(/,/g, ', ') %>)<% } %>
+        <% if (h.rsids) { %>(<%= h.rsids.replace(/,/g, ', ') %>)<% } %>,
+        <%= h.top_variant_group %>
     </a></td>
     <td><%= (h.pval == 0) ? '≤1e-320' : h.pval.toExponential(1) %></td>
     <td class="nearest_genes_col">

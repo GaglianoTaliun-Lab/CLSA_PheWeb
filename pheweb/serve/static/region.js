@@ -54,16 +54,36 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
 
 (function() {
     // Define LocusZoom Data Sources object
-    var localBase = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + "/lz-";
-    var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
-    var data_sources = new LocusZoom.DataSources()
-        .add("assoc", ["AssociationPheWeb", {url: localBase }])
-        .add("catalog", ["GwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/', params: { build: "GRCh"+window.model.grch_build_number }}])
-        .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
-            params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
-        }])
-        .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
-        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
+    console.log(window.model.sex_stratified)
+    console.log(window.pheno)
+    if (!window.model.sex_stratified){
+        var localBase = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + "/lz-";
+        var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
+        var data_sources = new LocusZoom.DataSources()
+            .add("assoc", ["AssociationPheWeb", {url: localBase }])
+            .add("catalog", ["GwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/', params: { build: "GRCh"+window.model.grch_build_number }}])
+            .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
+                params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
+            }])
+            .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
+            .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
+    } else {
+        var localBase = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + "/lz-";
+        var localBaseFemale = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + ".female/lz-";
+        var localBaseMale = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + ".male/lz-";
+        var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
+        var data_sources = new LocusZoom.DataSources()
+            .add("assoc", ["AssociationPheWeb", {url: localBase }])
+            .add("assoc_female", ["AssociationPheWeb", {url: localBaseFemale}])
+            .add("assoc_male", ["AssociationPheWeb", {url: localBaseMale}])
+            .add("catalog", ["GwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/', params: { build: "GRCh"+window.model.grch_build_number }}])
+            .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
+                params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
+            }])
+            .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
+            .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
+    }
+
 
     LocusZoom.TransformationFunctions.add("neglog10_or_323", function(x) {
         if (x === 0) return 323;
@@ -153,7 +173,27 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 title: 'Shift view 3/4 to the right',
                 direction: 0.75,
                 group_position: "end"
-            }, {
+            },
+            {
+                type: "display_options",
+                position: 'right',
+                layer_name: 'association_pvalues_catalog',
+                button_html: 'Sex Stratified Options',
+                button_title : 'Choose which LocusZoom plot to display by sex',
+                // options: [{
+                //     display_name: "Combined",
+                //     display: ""
+                // },
+                // {
+                //     display_name: "Male",
+                //     display: ""
+                // },
+                // {
+                //     display_name: "Female",
+                //     display: ""
+                // }]
+            }, 
+            {
                 type: 'download',
                 position: 'right',
             }, {
@@ -163,30 +203,89 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
         },
         panels: [
             function() {
-                var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
-                    unnamespaced: true,
-                    height: 52, min_height: 52,
-                    margin: { top: 30, bottom: 13 },
-                    toolbar: { widgets: [] },
-                    axes: {
-                        // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
-                        x: { render: false, extent: 'state' }
-                    },
-                    title: {
-                        text: 'Hits in GWAS Catalog',
-                        style: {'font-size': '14px'},
-                        x: 50,
-                    },
-                });
-                var anno_layer = base.data_layers[0];
-                anno_layer.id_field = "{{namespace[assoc]}}id";
-                anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
-                    "{{namespace[assoc]}}id",
-                    "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position",
-                    "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
-                ];
-                anno_layer.hit_area_width = 50;
-                return base;
+                if (window.model.sex_stratified){
+                    var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
+                        unnamespaced: true,
+                        height: 52, min_height: 52,
+                        margin: { top: 30, bottom: 13 },
+                        toolbar: { widgets: [] },
+                        axes: {
+                            // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
+                            x: { render: false, extent: 'state' }
+                        },
+                        title: {
+                            text: 'Hits in GWAS Catalog',
+                            style: {'font-size': '14px'},
+                            x: 50,
+                        },
+                    });
+                    var anno_layer = base.data_layers[0];
+                    anno_layer.id_field = "{{namespace[assoc]}}id";
+                    anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
+                        "{{namespace[assoc]}}id",
+                        "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position",
+                        "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                    ];
+                    anno_layer.hit_area_width = 50;
+                    return base;
+                } else {
+                    var base = [
+                        (LocusZoom.Layouts.get("panel", "annotation_catalog", {
+                        namespace: {assoc: 'assoc'},
+                        height: 52, min_height: 52,
+                        margin: { top: 30, bottom: 13 },
+                        toolbar: { widgets: [] },
+                        axes: {
+                            // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
+                            x: { render: false, extent: 'state' }
+                        },
+                        title: {
+                            text: 'Hits in GWAS Catalog',
+                            style: {'font-size': '14px'},
+                            x: 50,
+                        },
+                        })),
+                        LocusZoom.Layouts.get("panel", "annotation_catalog",{
+                            namespace: {assoc: 'assoc_male'},
+                            height: 52, min_height: 52,
+                            margin: { top: 30, bottom: 13 },
+                            toolbar: { widgets: [] },
+                            axes: {
+                                // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
+                                x: { render: false, extent: 'state' }
+                            },
+                            title: {
+                                text: 'Hits in GWAS Catalog',
+                                style: {'font-size': '14px'},
+                                x: 50,
+                            },
+                        }),
+                        LocusZoom.Layouts.get("panel", "annotation_catalog",{
+                            namespace: {assoc: 'assoc_female'},
+                            height: 52, min_height: 52,
+                            margin: { top: 30, bottom: 13 },
+                            toolbar: { widgets: [] },
+                            axes: {
+                                // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
+                                x: { render: false, extent: 'state' }
+                            },
+                            title: {
+                                text: 'Hits in GWAS Catalog',
+                                style: {'font-size': '14px'},
+                                x: 50,
+                            },
+                        })
+                    ];
+                    var anno_layer = base[0].data_layers[0];
+                    anno_layer.id_field = "{{namespace[assoc]}}id";
+                    anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
+                        "{{namespace[assoc]}}id",
+                        "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position",
+                        "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                    ];
+                    anno_layer.hit_area_width = 50;
+                    return base;
+                }
             }(),
             function() {
                 // FIXME: The only customization here is to make the legend button green and hide the "move panel" buttons; displayn options doesn't need to be copy-pasted
@@ -261,42 +360,48 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     data_layers: [
                         LocusZoom.Layouts.get("data_layer", "significance", { unnamespaced: true }),
                         LocusZoom.Layouts.get("data_layer", "recomb_rate", { unnamespaced: true }),
+                        //TODO: need to find a way to switch the data layer below using a button for combined, males females (dependent of what's available)
                         function() {
-                            var l = LocusZoom.Layouts.get("data_layer", "association_pvalues_catalog", {
-                                unnamespaced: true,
-                                fields: [
-                                    "{{namespace[assoc]}}all", // special mock value for the custom source
-                                    "{{namespace[assoc]}}id",
-                                    "{{namespace[assoc]}}position",
-                                    "{{namespace[assoc]}}pvalue|neglog10_or_323",
-                                    "{{namespace[ld]}}state", "{{namespace[ld]}}isrefvar",
-                                    "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
-                                ],
-                                id_field: "{{namespace[assoc]}}id",
-                                tooltip: {
-                                    closable: true,
-                                    show: {
-                                        "or": ["highlighted", "selected"]
+                            if (window.model.sex_stratified){
+                                var l = LocusZoom.Layouts.get("data_layer", "association_pvalues_catalog", {
+                                    unnamespaced: true,
+                                    fields: [
+                                        "{{namespace[assoc]}}all", // special mock value for the custom source
+                                        "{{namespace[assoc]}}id",
+                                        "{{namespace[assoc]}}position",
+                                        "{{namespace[assoc]}}pvalue|neglog10_or_323",
+                                        "{{namespace[ld]}}state", "{{namespace[ld]}}isrefvar",
+                                        "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                                    ],
+                                    id_field: "{{namespace[assoc]}}id",
+                                    tooltip: {
+                                        closable: true,
+                                        show: {
+                                            "or": ["highlighted", "selected"]
+                                        },
+                                        hide: {
+                                            "and": ["unhighlighted", "unselected"]
+                                        },
+                                        html: "<strong>{{{{namespace[assoc]}}id}}</strong><br><br>" +
+                                            window.model.tooltip_lztemplate.replace(/{{/g, "{{assoc:").replace(/{{assoc:#if /g, "{{#if assoc:").replace(/{{assoc:\/if}}/g, "{{/if}}") +
+                                            "<br>" +
+                                            "<a href=\"" + window.model.urlprefix+ "/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}\"" + ">Go to PheWAS</a>" +
+                                            "{{#if {{namespace[catalog]}}rsid}}<br><a href=\"https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}\" target=\"_new\">See hits in GWAS catalog</a>{{/if}}" +
+                                            "<br>{{#if {{namespace[ld]}}isrefvar}}<strong>LD Reference Variant</strong>{{#else}}<a href=\"javascript:void(0);\" onclick=\"var data = this.parentNode.__data__;data.getDataLayer().makeLDReference(data);\">Make LD Reference</a>{{/if}}<br>"
                                     },
-                                    hide: {
-                                        "and": ["unhighlighted", "unselected"]
-                                    },
-                                    html: "<strong>{{{{namespace[assoc]}}id}}</strong><br><br>" +
-                                        window.model.tooltip_lztemplate.replace(/{{/g, "{{assoc:").replace(/{{assoc:#if /g, "{{#if assoc:").replace(/{{assoc:\/if}}/g, "{{/if}}") +
-                                        "<br>" +
-                                        "<a href=\"" + window.model.urlprefix+ "/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}\"" + ">Go to PheWAS</a>" +
-                                        "{{#if {{namespace[catalog]}}rsid}}<br><a href=\"https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}\" target=\"_new\">See hits in GWAS catalog</a>{{/if}}" +
-                                        "<br>{{#if {{namespace[ld]}}isrefvar}}<strong>LD Reference Variant</strong>{{#else}}<a href=\"javascript:void(0);\" onclick=\"var data = this.parentNode.__data__;data.getDataLayer().makeLDReference(data);\">Make LD Reference</a>{{/if}}<br>"
-                                },
-                                x_axis: { field: "{{namespace[assoc]}}position" },
-                                y_axis: {
-                                    axis: 1,
-                                    field: "{{namespace[assoc]}}pvalue|neglog10_or_323",
-                                    floor: 0,
-                                    upper_buffer: 0.1,
-                                    min_extent: [0, 10]
-                                }
-                            });
+                                    x_axis: { field: "{{namespace[assoc]}}position" },
+                                    y_axis: {
+                                        axis: 1,
+                                        field: "{{namespace[assoc]}}pvalue|neglog10_or_323",
+                                        floor: 0,
+                                        upper_buffer: 0.1,
+                                        min_extent: [0, 10]
+                                    }
+                                });
+                            } else {
+
+                            }
+
                             l.behaviors.onctrlclick = [{
                                 action: "link",
                                 href: window.model.urlprefix+"/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}"

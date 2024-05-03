@@ -277,6 +277,7 @@ def region_page(phenocode:str, region:str):
     return render_template('region.html',
                            pheno=pheno,
                            region=region,
+                           sex_stratified=conf.should_show_sex_stratified(),
                            tooltip_lztemplate=parse_utils.tooltip_lztemplate,
     )
 

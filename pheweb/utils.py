@@ -63,7 +63,6 @@ def get_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.An
         pheno['phenocode'] = urllib.parse.quote_plus(pheno['phenocode'])
     return phenolist
 
-
 def pad_gene(start:int, end:int) -> ty.Tuple[int,int]:
     '''
     Calculates a range to show in LocusZoom region views for a gene.

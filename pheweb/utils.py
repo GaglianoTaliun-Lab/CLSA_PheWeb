@@ -63,6 +63,26 @@ def get_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.An
         pheno['phenocode'] = urllib.parse.quote_plus(pheno['phenocode'])
     return phenolist
 
+def get_unique_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.Any]]:
+    # TODO: should this be memoized?
+    from .file_utils import get_filepath
+    filepath = filepath or get_filepath('phenolist')  # Allow override for unit testing
+    try:
+        with open(os.path.join(filepath)) as f:
+            phenolist = json.load(f)
+    except (FileNotFoundError, PermissionError):
+        raise PheWebError(
+            "You need a file to define your phenotypes at '{}'.\n".format(filepath) +
+            "For more information on how to make one, see <https://github.com/statgen/pheweb#3-make-a-list-of-your-phenotypes>")
+    except json.JSONDecodeError as exc:
+        raise PheWebError("Your file at '{}' contains invalid json.\n".format(filepath)) from exc
+    phenolist_unique =[]
+    for pheno in phenolist:
+        pheno['phenocode'] = urllib.parse.quote_plus(pheno['phenocode'])
+        if pheno['sex'] != "female" and pheno['sex'] != 'male':
+            phenolist_unique.append(pheno)
+    return phenolist_unique
+
 def pad_gene(start:int, end:int) -> ty.Tuple[int,int]:
     '''
     Calculates a range to show in LocusZoom region views for a gene.

@@ -1,5 +1,5 @@
 
-from .utils import PheWebError, get_phenolist, chrom_order
+from .utils import PheWebError, get_phenolist, get_unique_phenolist, chrom_order
 from . import conf
 from . import parse_utils
 

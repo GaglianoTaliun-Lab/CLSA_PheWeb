@@ -1,6 +1,6 @@
 
 from ..load.load_utils import get_maf
-from ..utils import get_phenolist, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
+from ..utils import get_phenolist, get_unique_phenolist, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
 from .. import conf
 from .. import parse_utils
 from ..file_utils import get_filepath, get_pheno_filepath, VariantFileReader
@@ -47,7 +47,7 @@ if conf.get_custom_templates_dir():
     jinja_searchpath.insert(0, conf.get_custom_templates_dir())
 
 phenos = {pheno['phenocode']: pheno for pheno in get_phenolist()}
-
+phenos_unique = {pheno['phenocode']: pheno for pheno in get_unique_phenolist()}
 
 def email_is_allowed(user_email:Optional[str] = None) -> bool:
     if user_email is None:
@@ -237,7 +237,7 @@ def random_page():
 @check_auth
 def pheno_page(phenocode:str):
     try:
-        pheno = phenos[phenocode]
+        pheno = phenos_unique[phenocode]
     except KeyError:
         die("Sorry, I couldn't find the pheno code {!r}".format(phenocode))
 
@@ -270,7 +270,7 @@ def pheno_filter_page(phenocode):
 @check_auth
 def region_page(phenocode:str, region:str):
     try:
-        pheno = phenos[phenocode]
+        pheno = phenos_unique[phenocode]
     except KeyError:
         die("Sorry, I couldn't find the phewas code {!r}".format(phenocode))
     pheno['phenocode'] = phenocode

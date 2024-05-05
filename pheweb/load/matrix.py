@@ -28,6 +28,7 @@ def clear_out_junk() -> None:
             os.remove(filepath)
 
 def should_run() -> bool:
+    #TODO: Create male only and female only matrix
     sites_filepath = get_filepath('sites')
     matrix_gz_filepath = get_filepath('matrix', must_exist=False)
 

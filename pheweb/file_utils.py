@@ -61,11 +61,15 @@ _single_filepaths: Dict[str,Callable[[],str]] = {
     'phenotypes_summary_tsv': (lambda: get_generated_path('phenotypes.tsv')),
     # directories for pheno filepaths:
     'parsed': (lambda: get_generated_path('parsed')),
+    'parsed-sex_stratified': (lambda: get_generated_path('parsed/sex_stratified')),
     'pheno_gz': (lambda: get_generated_path('pheno_gz')),
+    'pheno_gz-sex_stratified': (lambda: get_generated_path('pheno_gz/sex_stratified')),
     'best_of_pheno': (lambda: get_generated_path('best_of_pheno')),
+    'best_of_pheno-sex_stratified': (lambda: get_generated_path('best_of_pheno/sex_stratified')),
     'manhattan': (lambda: get_generated_path('manhattan')),
-    'manhattan-miami': (lambda: get_generated_path('manhattan/miami')),
+    'manhattan-sex_stratified': (lambda: get_generated_path('manhattan/sex_stratified')),
     'qq': (lambda: get_generated_path('qq')),
+    'qq-sex_stratified': (lambda: get_generated_path('qq/sex_stratified')),
 }
 
 def get_pheno_filepath(kind:str, phenocode:str, *, must_exist:bool = True) -> str:
@@ -76,12 +80,17 @@ def get_pheno_filepath(kind:str, phenocode:str, *, must_exist:bool = True) -> st
     return filepath
 _pheno_filepaths: Dict[str,Callable[[str],str]] = {
     'parsed': (lambda phenocode: get_generated_path('parsed', phenocode)),
+    'parsed-sex_stratified': (lambda phenocode: get_generated_path('parsed/sex_stratified', phenocode)),
     'pheno_gz': (lambda phenocode: get_generated_path('pheno_gz', '{}.gz'.format(phenocode))),
+    'pheno_gz-sex_stratified': (lambda phenocode: get_generated_path('pheno_gz/sex_stratified', '{}.gz'.format(phenocode))),
     'pheno_gz_tbi': (lambda phenocode: get_generated_path('pheno_gz', '{}.gz.tbi'.format(phenocode))),
+    'pheno_gz_tbi-sex_stratified': (lambda phenocode: get_generated_path('pheno_gz/sex_stratified', '{}.gz.tbi'.format(phenocode))),
     'best_of_pheno': (lambda phenocode: get_generated_path('best_of_pheno', phenocode)),
+    'best_of_pheno-sex_stratified': (lambda: get_generated_path('best_of_pheno/sex_stratified', phenocode)),
     'manhattan': (lambda phenocode: get_generated_path('manhattan', '{}.json'.format(phenocode))),
-    'manhattan-miami': (lambda phenocode: get_generated_path('manhattan/miami', '{}.json'.format(phenocode))),
+    'manhattan-sex_stratified': (lambda phenocode: get_generated_path('manhattan/sex_stratified', '{}.json'.format(phenocode))),
     'qq': (lambda phenocode: get_generated_path('qq', '{}.json'.format(phenocode))),
+    'qq-sex_stratified': (lambda phenocode: get_generated_path('qq/sex_stratified', '{}.json'.format(phenocode))),
 }
 
 

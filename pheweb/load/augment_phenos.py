@@ -1,5 +1,6 @@
 
 from ..utils import PheWebError
+from .. import conf
 from ..file_utils import VariantFileReader, VariantFileWriter, get_filepath, get_pheno_filepath, with_chrom_idx, get_tmp_path, convert_VariantFile_to_IndexedVariantFile
 from .load_utils import parallelize_per_pheno, get_phenos_subset, get_phenolist
 
@@ -22,21 +23,39 @@ def run(argv:List[str]) -> None:
     )
 
 def get_input_filepaths(pheno:dict) -> List[str]:
-    return [
-        get_pheno_filepath('parsed', pheno['phenocode']),
-        get_filepath('sites'),
-    ]
+    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
+        return [
+            get_pheno_filepath('parsed-sex_stratified', pheno['phenocode']+"." + pheno['sex']),
+            get_filepath('sites'),
+        ]
+    else:
+        return [
+            get_pheno_filepath('parsed', pheno['phenocode']),
+            get_filepath('sites'),
+        ]
 def get_output_filepaths(pheno:dict) -> List[str]:
-    return [
-        get_pheno_filepath('pheno_gz', pheno['phenocode'], must_exist=False),
-        get_pheno_filepath('pheno_gz_tbi', pheno['phenocode'], must_exist=False),
-    ]
+    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
+        return [
+            get_pheno_filepath('pheno_gz-sex_stratified', pheno['phenocode'] + "." + pheno['sex'], must_exist=False),
+            get_pheno_filepath('pheno_gz_tbi-sex_stratified', pheno['phenocode'] + "." + pheno['sex'], must_exist=False),
+        ]
+    else:
+        return [
+            get_pheno_filepath('pheno_gz', pheno['phenocode'], must_exist=False),
+            get_pheno_filepath('pheno_gz_tbi', pheno['phenocode'], must_exist=False),
+        ]
 
 def convert(pheno:Dict[str,Any]) -> None:
 
-    parsed_filepath = get_pheno_filepath('parsed', pheno['phenocode'])
+    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
+        parsed_filepath = get_pheno_filepath('parsed-sex_stratified', pheno['phenocode'] + "." + pheno['sex'])
+        out_filepath = get_pheno_filepath('pheno_gz-sex_stratified', pheno['phenocode'] + "." + pheno['sex'], must_exist=False)
+    else:
+        parsed_filepath = get_pheno_filepath('parsed', pheno['phenocode'])
+        out_filepath = get_pheno_filepath('pheno_gz', pheno['phenocode'], must_exist=False)
+    
     sites_filepath = get_filepath('sites')
-    out_filepath = get_pheno_filepath('pheno_gz', pheno['phenocode'], must_exist=False)
+
     out_unzipped_filepath = get_tmp_path(out_filepath)
 
 

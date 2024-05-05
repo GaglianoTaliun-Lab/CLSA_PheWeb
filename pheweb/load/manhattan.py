@@ -39,13 +39,27 @@ def run(argv:List[str]) -> None:
         phenos = phenos,
     )
 
-def get_input_filepaths(pheno:dict) -> List[str]: return [get_pheno_filepath('pheno_gz', pheno['phenocode'])]
-def get_output_filepaths(pheno:dict) -> List[str]: return [get_pheno_filepath('manhattan', pheno['phenocode'], must_exist=False)]
+def get_input_filepaths(pheno:dict) -> List[str]:
+    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
+        return [get_pheno_filepath('pheno_gz-sex_stratified', pheno['phenocode'] + "." + pheno['sex'])]
+    else:
+        return [get_pheno_filepath('pheno_gz', pheno['phenocode'])]
+
+def get_output_filepaths(pheno:dict) -> List[str]: 
+    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
+        return [get_pheno_filepath('manhattan-sex_stratified', pheno['phenocode'] + "." + pheno['sex'], must_exist=False)]
+    else:
+        return [get_pheno_filepath('manhattan', pheno['phenocode'], must_exist=False)]
 
 
 def make_manhattan_json_file(pheno:Dict[str,Any]) -> None:
-    make_manhattan_json_file_explicit(get_pheno_filepath('pheno_gz', pheno['phenocode']),
-                                      get_pheno_filepath('manhattan', pheno['phenocode'], must_exist=False))
+    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
+        make_manhattan_json_file_explicit(get_pheno_filepath('pheno_gz-sex_stratified', pheno['phenocode'] + "." + pheno['sex']),
+                                          get_pheno_filepath('manhattan-sex_stratified', pheno['phenocode'] + "." + pheno['sex'], must_exist=False))    
+    else:
+        make_manhattan_json_file_explicit(get_pheno_filepath('pheno_gz', pheno['phenocode']),
+                                          get_pheno_filepath('manhattan', pheno['phenocode'], must_exist=False))
+
 def make_manhattan_json_file_explicit(in_filepath:str, out_filepath:str) -> None:
     binner = Binner()
     with VariantFileReader(in_filepath) as variants:

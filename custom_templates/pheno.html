@@ -296,6 +296,26 @@
 </div>
 
 {% if sex_stratified %}
+  <p>Testing</p>
+  <div class="pheno-info col-xs-12 col-sm-8">
+    {% if 'num_cases' in pheno_male and pheno_male['num_cases'] != "" %}
+      <p><b>{{ pheno_male.num_cases }}</b> male cases, <b>{{ pheno_male.num_controls }}</b> male controls</p>
+    {% elif 'num_samples' in pheno_male %}
+      <p><b>{{ pheno_male.num_samples }}</b> male samples</p>
+    {% endif %}
+    {% if 'num_cases' in pheno_female and pheno_female['num_cases'] != "" %}
+      <p><b>{{ pheno_female.num_cases }}</b> female cases, <b>{{ pheno_female.num_controls }}</b> female controls</p>
+    {% elif 'num_samples' in pheno_female %}
+      <p><b>{{ pheno_female.num_samples }}</b> female samples</p>
+    {% endif %}
+    {% if pheno.category %}
+      <p>Category: <b>{{ pheno.category}}</b></p>
+    {% endif %}
+    {% include "pheno/info.html" %}
+  </div>
+{% endif %}
+
+{% if sex_stratified %}
 <div class="row" >
     <div class="col-xs-12" id="miami" >
         <div id="miami_plot_container">

@@ -137,7 +137,7 @@ def api_pheno(phenocode:str):
 @bp.route('/api/miami/pheno/<phenocode>.json')
 @check_auth
 def api_pheno_miami(phenocode:str):
-    return send_from_directory(get_filepath('manhattan') + "/miami", '{}.json'.format(phenocode))
+    return send_from_directory(get_filepath('manhattan-sex_stratified'), '{}.json'.format(phenocode))
 
 @bp.route('/api/manhattan-filtered/pheno/<phenocode>.json')
 @check_auth
@@ -222,8 +222,7 @@ def api_pheno_qq(phenocode:str):
 @bp.route('/api/qq/miami/pheno/<phenocode>.json')
 @check_auth
 def api_pheno_qq_miami(phenocode:str):
-    return send_from_directory(get_filepath('qq') + "/miami", '{}.json'.format(phenocode))
-
+    return send_from_directory(get_filepath('qq-sex_stratified'), '{}.json'.format(phenocode))
 
 @bp.route('/random')
 @check_auth
@@ -241,6 +240,7 @@ def pheno_page(phenocode:str):
     except KeyError:
         die("Sorry, I couldn't find the pheno code {!r}".format(phenocode))
 
+    #TODO: if sex stratified -> send pheno_female and pheno_male to page to give proper stats of case controls, num_samples, etc..
     return render_template('pheno.html',
                            show_correlations=conf.should_show_correlations(),
                            pheno_correlations_pvalue_threshold=conf.get_pheno_correlations_pvalue_threshold(),
@@ -422,7 +422,7 @@ if conf.is_secret_download_pheno_sumstats():
             die("Sorry, that phenocode doesn't exist")
         if not Hasher.check_hash(token, phenocode):
             die("Sorry, that token is incorrect")
-        return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode_label),
+        return send_from_directory(get_filepath('pheno_gz-sex_stratified'), '{}.gz'.format(phenocode_label),
                                    as_attachment=True,
                                    attachment_filename='phenocode-{}.tsv.gz'.format(phenocode_label))
 
@@ -455,7 +455,7 @@ else:
         phenocode_label = phenocode + "_" + sex
         if phenocode_label not in phenos:
             die("Sorry, that phenocode doesn't exist")
-        return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode_label),
+        return send_from_directory(get_filepath('pheno_gz-sex_stratified'), '{}.gz'.format(phenocode_label),
                                    as_attachment=True,
                                    attachment_filename='phenocode-{}.tsv.gz'.format(phenocode_label))
 @bp.route('/')

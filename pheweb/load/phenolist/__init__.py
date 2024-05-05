@@ -2,6 +2,7 @@
 from ...utils import PheWebError
 from ...file_utils import get_generated_path, make_basedir, get_filepath, read_maybe_gzip
 from ..read_input_file import PhenoReader
+from ...conf import should_show_sex_stratified
 
 import os
 import string
@@ -90,13 +91,33 @@ def check_that_columns_are_present(phenolist, columns):
     if error_message: raise PheWebError(error_message)
 
 def check_that_phenocode_is_unique(phenolist):
-    phenocodes = [pheno['phenocode'] for pheno in phenolist]
-    phenocode_groups = boltons.iterutils.bucketize(phenocodes, key=lambda p:p).values()
-    repeated_phenocodes = [phenocode_group for phenocode_group in phenocode_groups if len(phenocode_group) > 1]
-    if repeated_phenocodes:
-        raise PheWebError(
-            "ERROR: At least one phenocode is used by multiple phenotypes.\n" +
-            "Here are some repeated phenocodes: {!r}\n".format(repeated_phenocodes[:5]))
+    #if sex stratified is True, then sex that non-unique phenos have different "sex" values in column.
+    #TODO: create a sex that the sex column exists with correct naming first.
+    if(should_show_sex_stratified):
+        phenocodes_sex = [[pheno['phenocode'], pheno['sex']] for pheno in phenolist]
+        seen = set()
+        duplicates = []
+        for sublist in phenocodes_sex:
+            sublist_tuple = tuple(sublist)
+            if sublist_tuple in seen:
+                duplicates.append(sublist)
+            else:
+                seen.add(sublist_tuple)
+        
+        # Print the duplicates (if any)
+        if duplicates:
+            raise PheWebError(
+            "ERROR: At least one phenocode + sex combination is used by multiple phenotypes.\n" +
+            "Here are some repeated phenocodes: {!r}\n".format(duplicates[:5])) 
+        
+    else:
+        phenocodes = [pheno['phenocode'] for pheno in phenolist]
+        phenocode_groups = boltons.iterutils.bucketize(phenocodes, key=lambda p:p).values()
+        repeated_phenocodes = [phenocode_group for phenocode_group in phenocode_groups if len(phenocode_group) > 1]
+        if repeated_phenocodes:
+            raise PheWebError(
+                "ERROR: At least one phenocode is used by multiple phenotypes.\n" +
+                "Here are some repeated phenocodes: {!r}\n".format(repeated_phenocodes[:5]))
 
 def check_that_all_phenos_have_same_columns(phenolist):
     all_columns = list(boltons.iterutils.unique(col for pheno in phenolist for col in pheno))
@@ -114,9 +135,10 @@ def check_that_all_phenotypes_have_assoc_files(phenolist):
 def check_that_num_samples_controls_cases_agree(phenolist):
     for pheno in phenolist:
         if all(key in pheno for key in ['num_samples', 'num_cases', 'num_controls']):
-            total_samples = pheno['num_cases'] + pheno['num_controls']
-            if pheno['num_samples'] != total_samples:
-                raise PheWebError("The pheno {} has num_samples={} but num_cases+num_controls={}: {}".format(pheno['phenocode'], pheno['num_samples'], total_samples, pheno))
+            if (pheno['num_cases'] != "" and pheno[num_controls] != ""):
+                total_samples = pheno['num_cases'] + pheno['num_controls']
+                if pheno['num_samples'] != total_samples:
+                    raise PheWebError("The pheno {} has num_samples={} but num_cases+num_controls={}: {}".format(pheno['phenocode'], pheno['num_samples'], total_samples, pheno))
 
 def extract_info_from_assoc_files(phenolist):
     for pheno in tqdm.tqdm(phenolist, bar_format='Read {n:7} files'):
@@ -570,14 +592,6 @@ def run(argv):
     p = subparsers.add_parser('rename-columns', help='')
     p.add_argument('-f', dest="filepath", help="pheno-list filepath, used for both input and output (default: {!r})".format(default_phenolist_filepath))
     p.add_argument('renames', nargs='+', help="columns to rename, in pairs, like this: <oldname> <newname> <oldname> <newname>...")
-
-    @add_subcommand('prep-sex-stratified')
-    @modifies_phenolist
-    def f(args, phenolist):
-        phenolist = append_sex(phenolist)
-        return phenolist
-    p = subparsers.add_parser('prep-sex-stratified', help='Prepares the pheno-list.json file for sex-stratification visualisation by appending .male or .female to the phenotypes, which allows them to be treated differently in the PheWeb pages')
-    p.add_argument('-f', dest="filepath", help="output filepath (default: {!r})".format(default_phenolist_filepath))
     
     # TODO:
     # =====

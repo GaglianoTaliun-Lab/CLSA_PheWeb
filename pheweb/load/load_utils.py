@@ -269,10 +269,17 @@ class PerPhenoParallelizer(Parallelizer):
             print("Processing {} phenos ({} already done)".format(len(tasks), len(phenos)-len(tasks)))
         pheno_results = {}
         for ret in self.run_single_tasks(tasks, convert, cmd=cmd):
-            pc = ret['task']['phenocode']
+            print(f"ret {ret}")
+            if (conf.should_show_sex_stratified and (ret['task']['sex'] != '')):
+                pc = ret['task']['phenocode'] + "." + ret['task']['sex']
+            else:
+                pc = ret['task']['phenocode']
             v = ret['value']
             if isinstance(v, dict) and v.get('type', '') == 'warning':
                 continue # TODO: self._progressbar.prepend_message(ret['message'])
+            print(f"pc : {pc}")
+            print(f"v : {v}")
+            print(f"pheno results : {pheno_results}")
             assert pc not in pheno_results
             pheno_results[pc] = v
         return pheno_results

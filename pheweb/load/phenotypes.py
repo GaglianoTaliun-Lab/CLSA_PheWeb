@@ -61,16 +61,16 @@ def get_phenotypes_including_top_variants_sex_stratified() -> Iterator[Dict[str,
 
             variants_female = []
             variants_male = []
-            if (os.path.exists(get_pheno_filepath('manhattan-miami', pheno['phenocode'] + '.female', must_exist = False))):
-                with open(get_pheno_filepath('manhattan-miami', pheno['phenocode'] + '.female')) as f:
+            if (os.path.exists(get_pheno_filepath('manhattan-sex_stratified', pheno['phenocode'] + '.female', must_exist = False))):
+                with open(get_pheno_filepath('manhattan-sex_stratified', pheno['phenocode'] + '.female')) as f:
                     variants_female = json.load(f)['unbinned_variants']
                 num_peaks_female = sum(variant.get('peak',False) and variant['pval']<=5e-8 for variant in variants_female)
             else:
                 variants_female = None
                 num_peaks_female = "NA"
 
-            if (os.path.exists(get_pheno_filepath('manhattan-miami', pheno['phenocode'] + '.male', must_exist = False))):
-                with open(get_pheno_filepath('manhattan-miami', pheno['phenocode'] + '.male')) as f:
+            if (os.path.exists(get_pheno_filepath('manhattan-sex_stratified', pheno['phenocode'] + '.male', must_exist = False))):
+                with open(get_pheno_filepath('manhattan-sex_stratified', pheno['phenocode'] + '.male')) as f:
                     variants_male = json.load(f)['unbinned_variants']
                 num_peaks_male = sum(variant.get('peak',False) and variant['pval']<=5e-8 for variant in variants_male)
             else:

@@ -83,6 +83,20 @@ def get_unique_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[st
             phenolist_unique.append(pheno)
     return phenolist_unique
 
+def get_phenotype_summary(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.Any]]:
+    from .file_utils import get_filepath
+    filepath = filepath or get_filepath('phenotypes_summary')
+    try:
+        with open(os.path.join(filepath)) as f:
+            phenotype_summary = json.load(f)
+    except (FileNotFoundError, PermissionError):
+        raise PheWebError("You need a file to define your phenotypes summary at '{}'.\n".format(filepath))
+    except json.JSONDecodeError as exc:
+        raise PheWebError("Your file at '{}' contains invalid json.\n".format(filepath)) from exc
+        for pheno in phenotype_summary:
+            pheno['phenocode'] = urllib.parse.quote_plus(pheno['phenocode'])
+    return phenotype_summary
+
 def pad_gene(start:int, end:int) -> ty.Tuple[int,int]:
     '''
     Calculates a range to show in LocusZoom region views for a gene.

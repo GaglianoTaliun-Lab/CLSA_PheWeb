@@ -1,4 +1,4 @@
-CARTaGENE custom_template 
+CLSA custom_template 
 
 as per https://github.com/statgen/pheweb/blob/master/etc/detailed-webserver-instructions.md, these files supersede default PheWeb pages. 
 These are bootstrap enabled and should be written in html. Only specific file names will supersede default cosmetic aspect of PheWeb :

@@ -1,6 +1,6 @@
 
 from ..load.load_utils import get_maf
-from ..utils import get_phenolist, get_unique_phenolist, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
+from ..utils import get_phenolist, get_unique_phenolist, get_phenotype_summary, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
 from .. import conf
 from .. import parse_utils
 from ..file_utils import get_filepath, get_pheno_filepath, VariantFileReader
@@ -13,7 +13,6 @@ from ..import weetabix
 from flask import Flask, jsonify, render_template, request, abort, flash, send_from_directory, send_file, session, url_for, Blueprint
 from flask_compress import Compress
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
-
 import functools, math
 import re
 import traceback
@@ -48,6 +47,7 @@ if conf.get_custom_templates_dir():
 
 phenos = {pheno['phenocode']: pheno for pheno in get_phenolist()}
 phenos_unique = {pheno['phenocode']: pheno for pheno in get_unique_phenolist()}
+pheno_summary = {pheno['phenocode']: pheno for pheno in get_phenotype_summary()}
 
 def email_is_allowed(user_email:Optional[str] = None) -> bool:
     if user_email is None:
@@ -238,7 +238,12 @@ def pheno_page(phenocode:str):
     try:
         pheno = phenos_unique[phenocode]
     except KeyError:
-        die("Sorry, I couldn't find the pheno code {!r}".format(phenocode))
+        die("Sorry, I couldn't find the pheno code in your pheno-list.json: {!r}".format(phenocode))
+
+    try:
+        pheno_summary_single = pheno_summary[phenocode]
+    except KeyError:
+        die("Sorry, I couldn't find the phenocode in phenotype summary (generated-by-pheweb/phenotypes.json) : {!r}".format(phenocode))
 
     #TODO: if sex stratified -> send pheno_female and pheno_male to page to give proper stats of case controls, num_samples, etc..
     return render_template('pheno.html',
@@ -248,6 +253,7 @@ def pheno_page(phenocode:str):
                            sex_stratified=conf.should_show_sex_stratified(),
                            phenocode=phenocode,
                            pheno=pheno,
+                           pheno_summary=pheno_summary_single,
                            tooltip_underscoretemplate=parse_utils.tooltip_underscoretemplate
     )
 

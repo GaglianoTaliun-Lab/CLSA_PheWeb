@@ -37,13 +37,31 @@
 </div>
 <div class="row">
     <div class="pheno-info col-xs-12">
-        {% if 'num_cases' in pheno %}
-          <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls.</p>
+        {% if 'num_cases' in pheno and pheno['num_cases'] != "" %}
+      <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls.</p>
         {% elif 'num_samples' in pheno %}
           <p><b>{{ pheno.num_samples }}</b> samples</p>
         {% endif %}
         {% if pheno.category %}
           <p>Category: <b>{{ pheno.category}}</b></p>
+        {% endif %}
+        {% if sex_stratified %}
+          <div class="pheno-info col-xs-12">
+            {% if 'num_cases_male' in pheno_summary and pheno_summary['num_cases_male'] != "" %}
+              <p><b>{{ pheno_summary.num_cases_male }}</b> male cases, <b>{{ pheno_summary.num_controls_male }}</b> male controls</p>
+            {% elif 'num_samples_male' in pheno_summary %}
+              <p><b>{{ pheno_summary.num_samples_male }}</b> male samples</p>
+            {% endif %}
+            {% if 'num_cases_female' in pheno_summary and pheno_summary['num_cases_female'] != "" %}
+              <p><b>{{ pheno_summary.num_cases_female }}</b> female cases, <b>{{ pheno_summary.num_controls_female }}</b> female controls</p>
+            {% elif 'num_samples_female' in pheno_summary %}
+              <p><b>{{ pheno_summary.num_samples_female }}</b> female samples</p>
+            {% endif %}
+            {% if pheno_summary.category %}
+              <p>Category: <b>{{ pheno_summary.category}}</b></p>
+            {% endif %}
+            {% include "pheno/info.html" %}
+          </div>
         {% endif %}
     </div>
 </div>

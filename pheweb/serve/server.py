@@ -279,10 +279,17 @@ def region_page(phenocode:str, region:str):
         pheno = phenos_unique[phenocode]
     except KeyError:
         die("Sorry, I couldn't find the phewas code {!r}".format(phenocode))
+
+    try:
+        pheno_summary_single = pheno_summary[phenocode]
+    except KeyError:
+        die("Sorry, I couldn't find the phenocode in phenotype summary (generated-by-pheweb/phenotypes.json) : {!r}".format(phenocode))
+
     pheno['phenocode'] = phenocode
     return render_template('region.html',
                            pheno=pheno,
                            region=region,
+                           pheno_summary=pheno_summary_single,
                            sex_stratified=conf.should_show_sex_stratified(),
                            tooltip_lztemplate=parse_utils.tooltip_lztemplate,
     )

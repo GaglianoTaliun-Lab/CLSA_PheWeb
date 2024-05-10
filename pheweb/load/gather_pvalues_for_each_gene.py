@@ -9,6 +9,7 @@ This avoids reading any variant more than once.
 from ..utils import get_padded_gene_tuples
 from ..file_utils import MatrixReader, get_filepath, get_tmp_path
 from .load_utils import Parallelizer
+from .. import conf
 
 import sqlite3, json, traceback, functools
 from pathlib import Path

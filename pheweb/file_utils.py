@@ -52,6 +52,8 @@ _single_filepaths: Dict[str,Callable[[],str]] = {
     'correlations': (lambda: get_generated_path('pheno-correlations.txt')),
     'cpras-rsids-sqlite3': (lambda: get_generated_path('sites/cpras-rsids.sqlite3')),
     'matrix': (lambda: get_generated_path('matrix.tsv.gz')),
+    'matrix_female': (lambda: get_generated_path('matrix_female.tsv.gz')),
+    'matrix_male': (lambda: get_generated_path('matrix_male.tsv.gz')),
     'top-hits': (lambda: get_generated_path('top_hits.json')),
     'top-hits-1k': (lambda: get_generated_path('top_hits_1k.json')),
     'top-hits-tsv': (lambda: get_generated_path('top_hits.tsv')),

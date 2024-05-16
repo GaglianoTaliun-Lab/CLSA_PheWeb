@@ -127,8 +127,53 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
         }
     });
 
+    LocusZoom.Adapters.extend('PheWASLZ', 'PheWebSourceFemale', {
+        getData: function(state, fields, outnames, trans) {
+            // Override all parsing, namespacing, and field extraction mechanisms, and load data embedded within the page
+            trans = trans || [];
+
+            var data = deepcopy(window.variant.phenos_female); //otherwise LZ adds attributes I don't want to the original data.
+            data.forEach(function(d, i) {
+                data[i].x = i;
+                data[i].id = i.toString() = "_female";
+                trans.forEach(function(transformation, t){
+                    if (typeof transformation === "function"){
+                        data[i][outnames[t]] = transformation(data[i][fields[t]]);
+                    }
+                });
+            });
+            return function(chain) {
+                return {header: chain.header || {}, body: data};
+            }.bind(this);
+        }
+    });
+
+    LocusZoom.Adapters.extend('PheWASLZ', 'PheWebSourceMale', {
+        getData: function(state, fields, outnames, trans) {
+            // Override all parsing, namespacing, and field extraction mechanisms, and load data embedded within the page
+            trans = trans || [];
+
+            var data = deepcopy(window.variant.phenos_male); //otherwise LZ adds attributes I don't want to the original data.
+            data.forEach(function(d, i) {
+                data[i].x = i;
+                data[i].id = i.toString() + "male";
+                trans.forEach(function(transformation, t){
+                    if (typeof transformation === "function"){
+                        data[i][outnames[t]] = transformation(data[i][fields[t]]);
+                    }
+                });
+            });
+            return function(chain) {
+                return {header: chain.header || {}, body: data};
+            }.bind(this);
+        }
+    });
+
     var data_sources = new LocusZoom.DataSources()
-      .add("phewas", ["PheWebSource", {url: '/this/is/not/used'}]);
+      .add("phewas", ["PheWebSource", {url: '/this/is/not/used'}])
+      .add("phewas_female", ["PheWebSourceFemale", {url: '/this/is/not/used_female'}]);
+    var data_sources_male = new LocusZoom.DataSources()
+      .add("phewas_male", ["PheWebSourceMale", {url: '/this/is/not/used_male'}]);
 
     var neglog10_significance_threshold = -Math.log10(0.05 / window.variant.phenos.length);
 
@@ -145,7 +190,8 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
         min_height: 400,
         responsive_resize: true,
         mouse_guide: false,
-        panels: [custom_LocusZoom_Layouts_get('panel', 'phewas', {
+        panels: [
+            custom_LocusZoom_Layouts_get('panel', 'phewas', {
             min_width: 640, // feels reasonable to me
             margin: { top: 20, right: 40, bottom: 120, left: 50 },
             data_layers: [
@@ -201,6 +247,7 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
 
                     "behaviors.onclick": [{action:"link", href:window.model.urlprefix+"/pheno/{{phewas_code}}"}],
                 }),
+                
             ],
 
             // Use categories as x ticks.
@@ -214,11 +261,90 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
             }),
 
             "axes.y1.label": "-log\u2081\u2080(p-value)",
-        })]
+        }),
+        custom_LocusZoom_Layouts_get('panel', 'phewas', {
+            min_width: 640, // feels reasonable to me
+            margin: { top: 20, right: 40, bottom: 120, left: 50 },
+            data_layers: [
+                LocusZoom.Layouts.get('data_layer', 'significance', {
+                    unnamespaced: true,
+                    offset: neglog10_significance_threshold,
+                }),
+                custom_LocusZoom_Layouts_get('data_layer', 'phewas_pvalues', {
+                    unnamespaced: true,
+                    id_field: 'idx',
+                    type: 'scatter',
+                    color: {
+                        field: "category_name",
+                        scale_function: "categorical_bin",
+                        parameters: {
+                            categories: window.unique_categories,
+                            values: window.unique_categories.map(function(cat) { return window.color_by_category(cat); }),
+                        },
+                    },
+                    point_shape: [
+                        {
+                            scale_function: 'effect_direction',
+                            parameters: {
+                                '+': 'triangle',
+                                '-': 'triangledown'
+                            }
+                        },
+                        'circle'
+                    ],
+                    "y_axis.field": 'pval|neglog10_handle0',  // handles pval=0 a little better
+                    "y_axis.upper_buffer": 0.1,
+                    "y_axis.min_extent": [0, neglog10_significance_threshold*1.05], // always show sig line
+
+                    "x_axis.min_extent": [-1, window.variant.phenos.length], // a little x-padding so that no points intersect the edge
+
+                    "tooltip.closable": false,
+                    "tooltip.html": ("<div><strong>{{phewas_string}}</strong></div>\n" +
+                                     "<div><strong style='color:{{color}}'>{{category_name}}</strong></div>\n\n" +
+                                     window.model.tooltip_lztemplate),
+
+                    // Show labels that are: in the top 10, and (by neglog10) >=75% of sig threshold, and >=25% of best
+                    "label.text": "{{phewas_string}}",
+                    "label.filters": (function() {
+                        var ret = [
+                            {field:"pval|neglog10_handle0", operator:">", value:neglog10_significance_threshold * 3/4},
+                            {field:"pval|neglog10_handle0", operator:">", value:best_neglog10_pval / 4}
+                        ];
+                        if (window.variant.phenos.length > 10) {
+                            ret.push({field:"pval", operator:"<", value:_.sortBy(window.variant.phenos.map(_.property('pval')))[10]});
+                        }
+                        return ret;
+                    })(),
+
+                    "behaviors.onclick": [{action:"link", href:window.model.urlprefix+"/pheno/{{phewas_code}}"}],
+                }),
+                
+            ],
+
+            // Use categories as x ticks.
+            "axes.x.ticks": window.first_of_each_category.map(function(pheno) {
+                return {
+                    style: {fill: pheno.color, "font-size":"11px", "font-weight":"bold", "text-anchor":"start"},
+                    transform: "translate(15, 0) rotate(50)",
+                    text: pheno.category,
+                    x: pheno.idx
+                };
+            }),
+
+            "axes.y1.label": "-log\u2081\u2080(p-value)",
+        }),
+        ]
     };
 
     $(function() {
         window.debug.plot = LocusZoom.populate("#phewas_plot_container", data_sources, layout);
+        window.debug.plot_male = LocusZoom.populate("#phewas_male_plot_container", data_sources_male, layout);
+        window.debug.plot_female = LocusZoom.populate("#phewas_female_plot_container", data_sources, layout);
+
+        console.log(data_sources)
+        console.log(data_sources_male)
+        console.log(window.debug.plot)
+        console.log(window.debug.plot_male)
     });
 })();
 

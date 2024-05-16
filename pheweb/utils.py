@@ -83,6 +83,12 @@ def get_unique_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[st
             phenolist_unique.append(pheno)
     return phenolist_unique
 
+def get_female_phenolist():
+    return 0
+
+def get_male_phenolist():
+    return 0
+
 def get_phenotype_summary(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.Any]]:
     from .file_utils import get_filepath
     filepath = filepath or get_filepath('phenotypes_summary')

@@ -33,14 +33,67 @@ def get_phenotypes_including_top_variants() -> Iterator[Dict[str,Any]]:
         if isinstance(ret['nearest_genes'], list): ret['nearest_genes'] = ','.join(ret['nearest_genes'])
         yield ret
 
+def get_phenotypes_including_top_variants_sex_stratified_allrows() -> Iterator[Dict[str,Any]]:
+    for pheno in get_phenolist():
+        if (pheno['sex'] == "male" or pheno['sex'] == "female"):
+            phenocode = pheno['phenocode'] + "." + pheno['sex']
+            sex = pheno['sex']
+
+            with open(get_pheno_filepath('qq-sex_stratified', phenocode)) as f:
+                # GC lambda 0.01 isn't set if it was infinite or otherwise broken.
+                gc_lambda_hundred = json.load(f)['overall']['gc_lambda'].get('0.01', None)
+            with open(get_pheno_filepath('manhattan-sex_stratified', phenocode)) as f:
+                variants = json.load(f)['unbinned_variants']
+            top_variant = min(variants, key=lambda v: v['pval'])
+            num_peaks = sum(variant.get('peak',False) and variant['pval']<=5e-8 for variant in variants)
+            ret = {
+                'phenocode': pheno['phenocode'],
+                'pval': top_variant['pval'],
+                'nearest_genes': top_variant['nearest_genes'],
+                'chrom': top_variant['chrom'],
+                'pos': top_variant['pos'],
+                'ref': top_variant['ref'],
+                'alt': top_variant['alt'],
+                'rsids': top_variant['rsids'],
+                'num_peaks': num_peaks,
+                'gc_lambda_hundred': gc_lambda_hundred,  # numbers in keys break streamtable
+                'sex' : sex,
+            }
+            for key in ['num_samples', 'num_controls', 'num_cases', 'category', 'phenostring']:
+                if key in pheno: ret[key] = pheno[key]
+            if isinstance(ret['nearest_genes'], list): ret['nearest_genes'] = ','.join(ret['nearest_genes'])
+        else:
+            with open(get_pheno_filepath('qq', pheno['phenocode'])) as f:
+                # GC lambda 0.01 isn't set if it was infinite or otherwise broken.
+                gc_lambda_hundred = json.load(f)['overall']['gc_lambda'].get('0.01', None)
+            with open(get_pheno_filepath('manhattan', pheno['phenocode'])) as f:
+                variants = json.load(f)['unbinned_variants']
+            top_variant = min(variants, key=lambda v: v['pval'])
+            num_peaks = sum(variant.get('peak',False) and variant['pval']<=5e-8 for variant in variants)
+            ret = {
+                'phenocode': pheno['phenocode'],
+                'pval': top_variant['pval'],
+                'nearest_genes': top_variant['nearest_genes'],
+                'chrom': top_variant['chrom'],
+                'pos': top_variant['pos'],
+                'ref': top_variant['ref'],
+                'alt': top_variant['alt'],
+                'rsids': top_variant['rsids'],
+                'num_peaks': num_peaks,
+                'gc_lambda_hundred': gc_lambda_hundred,  # numbers in keys break streamtable
+                'sex' : "combined",
+            }
+            for key in ['num_samples', 'num_controls', 'num_cases', 'category', 'phenostring']:
+                if key in pheno: ret[key] = pheno[key]
+            if isinstance(ret['nearest_genes'], list): ret['nearest_genes'] = ','.join(ret['nearest_genes'])
+        yield ret
+
 def get_phenotypes_including_top_variants_sex_stratified() -> Iterator[Dict[str,Any]]:
     phenolist = get_phenolist()
     for pheno in phenolist:
 
         # for UNIQUE pheno in phenolist() (meaning only the combined pheno and not the male/female)
         if (pheno['sex'] != "male" and pheno['sex'] != 'female'):
-
-            #TODO: need to check if it's the female and male are actually there. If not, then NA.
 
             #check phenolist again for male and female instances of the same phenocode.
             pheno_female = None
@@ -87,9 +140,6 @@ def get_phenotypes_including_top_variants_sex_stratified() -> Iterator[Dict[str,
             top_variant = min(top_variants, key=lambda v: v['pval'])
 
             top_variant_group_num = top_variants.index(top_variant)
-
-            print(top_variant)
-            print(top_variant_group_num)
             
             if(top_variant_group_num == 0):
                 top_variant_group = "Combined"
@@ -147,11 +197,13 @@ def run(argv:List[str]) -> None:
         print('Already up-to-date!')
         return
 
+    data = sorted(get_phenotypes_including_top_variants_sex_stratified_allrows(), key=lambda p: p['pval'])
+
     #if sex-stratified...
-    if conf.should_show_sex_stratified():
-        data = sorted(get_phenotypes_including_top_variants_sex_stratified(), key=lambda p: p['pval'])
-    else:
-        data = sorted(get_phenotypes_including_top_variants(), key=lambda p: p['pval'])
+    # if conf.should_show_sex_stratified():
+    #     data = sorted(get_phenotypes_including_top_variants_sex_stratified(), key=lambda p: p['pval'])
+    # else:
+    #     data = sorted(get_phenotypes_including_top_variants(), key=lambda p: p['pval'])
 
     out_filepath = get_filepath('phenotypes_summary', must_exist=False)
     write_json(filepath=out_filepath, data=data)

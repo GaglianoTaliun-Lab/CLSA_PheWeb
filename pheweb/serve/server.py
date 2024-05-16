@@ -119,11 +119,13 @@ def api_variant(query:str):
 @check_auth
 def variant_page(query:str):
     try:
+        # TODO: improve get_variant to include information for combined, male, female if present.
         variant = get_variant(query)
         if variant is None:
             die("Sorry, I couldn't find the variant {}".format(query))
         return render_template('variant.html',
                                variant=variant,
+                               sex_stratified=conf.should_show_sex_stratified(),
                                tooltip_lztemplate=parse_utils.tooltip_lztemplate,
         )
     except Exception as exc:
@@ -202,7 +204,8 @@ def download_top_hits():
 @bp.route('/phenotypes')
 @check_auth
 def phenotypes_page():
-    return render_template('phenotypes.html')
+    return render_template('phenotypes.html',
+                            sex_stratified=conf.should_show_sex_stratified())
     
 @bp.route('/api/phenotypes.json')
 @check_auth
@@ -245,7 +248,6 @@ def pheno_page(phenocode:str):
     except KeyError:
         die("Sorry, I couldn't find the phenocode in phenotype summary (generated-by-pheweb/phenotypes.json) : {!r}".format(phenocode))
 
-    #TODO: if sex stratified -> send pheno_female and pheno_male to page to give proper stats of case controls, num_samples, etc..
     return render_template('pheno.html',
                            show_correlations=conf.should_show_correlations(),
                            pheno_correlations_pvalue_threshold=conf.get_pheno_correlations_pvalue_threshold(),

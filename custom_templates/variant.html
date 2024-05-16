@@ -18,12 +18,11 @@
 .variant-info > p {
   margin-bottom: 0;
 }
-#phewas_plot_container {
+#phewas_plot_container #phewas_female_plot_container #phewas_male_plot_container {
   min-width: 700px;
 }
 </style>
 {% endblock %}
-
 
 {% block contained %}
 <div class="row">
@@ -57,6 +56,12 @@
         </p>
         <div id="phewas_plot_container">
         </div>
+        {% if sex_stratified %}
+          <div id="phewas_male_plot_container">
+          </div>
+          <div id="phewas_female_plot_container">
+          </div>
+        {% endif %}
     </div>
 </div>
 

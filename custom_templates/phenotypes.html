@@ -8,7 +8,9 @@
   $.getJSON(window.model.urlprefix + "/api/phenotypes.json").done(function(data) {
       window.debug = window.debug || {};
       window.debug.phenotypes = data;
+      window.data = data;
       populate_streamtable(data);
+
   });
 </script>
 <style type="text/css">
@@ -21,6 +23,23 @@
 .nearest_genes_col {
   max-width: 15em;
 }
+.checkbox-container {
+    display: flex;
+    justify-content: space-between;
+    width: 400px; 
+    margin:0;
+    padding-top:7px;
+}
+
+input[type="checkbox"] {
+    margin: 0;
+}
+
+label {
+  margin: 0;
+  padding-right: 15px;
+}
+
 </style>
 {% endblock %}
 
@@ -42,6 +61,17 @@
   <div class="col-xs-12 col-sm-8 col-md-6">
         <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
   </div>
+  <div class="checkbox-container">
+      <input type="checkbox" id="check_combined" checked>
+      <label for="check_combined"> Show combined </label>
+      {% if sex_stratified %}
+      <input type="checkbox" id="check_male" checked>
+      <label for="check_male"> Show male </label>
+
+      <input type="checkbox" id="check_female" checked>
+      <label for="check_female"> Show female </label>
+      {% endif %}
+  </div>
   <div class="col-xs-12 col-sm-4 col-md-6">
     <h5 class="pull-right"><div id="streamtable-found" class="label label-primary"></div></h5>
   </div>
@@ -53,12 +83,9 @@
         <tr>
           <th>Category</th>
           <th>Phenotype</th>
+          <th>Sex</th>
           <th># Samples</th>
-          <th># Samples (F)</th>
-          <th># Samples (M)</th>
           <th># Loci&lt;5e-8</th>
-          <th># Loci&lt;5e-8 (F)</th>
-          <th># Loci&lt;5e-8 (M)</th>
           <th>Top Variant</th>
           <th>P-value</th>
           <th class="nearest_genes_col">Nearest Gene(s)</th>
@@ -76,6 +103,7 @@
     <td><a style="color:black" href="{{ url_for('.pheno_page', phenocode='').rstrip('/') }}/<%= h.phenocode %>">
         <%= h.phenostring || h.phenocode %>
     </a></td>
+    <td><%= h.sex %> </td>
     <td>
       <% if (h.num_cases && h.num_controls) { %>
         <%= h.num_cases.toLocaleString() %> + <%= h.num_controls.toLocaleString() %>
@@ -83,26 +111,10 @@
         <%= h.num_samples.toLocaleString() %>
       <% } %>
       </td>
-    <td>
-      <% if (h.num_cases_female && h.num_controls_female) { %>
-        <%= h.num_cases_female.toLocaleString() %> + <%= h.num_controls_female.toLocaleString() %>
-      <% } else if (h.num_samples_female) { %>
-        <%= h.num_samples_female.toLocaleString() %>
-      <% } %>
-    </td>
-    <td>
-      <% if (h.num_cases_male && h.num_controls_male) { %>
-        <%= h.num_cases_male.toLocaleString() %> + <%= h.num_controls_male.toLocaleString() %>
-      <% } else if (h.num_samples_male) { %>
-        <%= h.num_samples_male.toLocaleString() %>
-      <% } %>
-    </td>    
     <td><%= h.num_peaks %></td>
-    <td><%= h.num_peaks_female %></td>
-    <td><%= h.num_peaks_male %></td>
     <td><a style="color:black" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= h.chrom %>-<%= h.pos %>-<%= h.ref %>-<%= h.alt %>">
         <%= h.chrom %>:<%= h.pos.toLocaleString() %> <%= h.ref %> / <%= h.alt %>
-        <% if (h.rsids) { %>(<%= h.rsids.replace(/,/g, ', ') %>)<% } %>,
+        <% if (h.rsids) { %>(<%= h.rsids.replace(/,/g, ', ') %>)<% } %>
         <%= h.top_variant_group %>
     </a></td>
     <td><%= (h.pval == 0) ? '≤1e-320' : h.pval.toExponential(1) %></td>

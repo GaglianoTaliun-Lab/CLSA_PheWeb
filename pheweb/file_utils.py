@@ -197,6 +197,7 @@ def IndexedVariantFileReader(phenocode:str):
     colidxs = {field: idx for idx, field in enumerate(fields)}
     with pysam.TabixFile(filepath, parser=None) as tabix_file:
         yield _ivfr(tabix_file, colidxs)
+
 class _ivfr:
     def __init__(self, _tabix_file:pysam.TabixFile, _colidxs:Dict[str,int]):
         self._tabix_file=_tabix_file
@@ -227,6 +228,7 @@ class _ivfr:
         # I do not understand why I need to use `pos-1`.
         # The pysam docs talk about being zero-based or one-based. Is this what they're referring to?
         # Doesn't make much sense to me.  There must be a reason that I don't understand.
+
         try:
             tabix_iter = self._tabix_file.fetch(chrom, start-1, end-1, parser=None)
         except Exception as exc:
@@ -250,8 +252,9 @@ class MatrixReader:
     def __init__(self):
         self._filepath = get_generated_path('matrix.tsv.gz')
 
-        phenos:List[Dict[str,Any]] = get_phenolist()
+        phenos:List[Dict[str,Any]] = get_unique_phenolist()
         phenocodes:List[str] = [pheno['phenocode'] for pheno in phenos]
+
         self._info_for_pheno = {
             pheno['phenocode']: {k: v for k,v in pheno.items() if k != 'assoc_files'}
             for pheno in phenos
@@ -285,6 +288,95 @@ class MatrixReader:
     def context(self):
         with pysam.TabixFile(self._filepath, parser=None) as tabix_file:
             yield _mr(tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno)
+
+class FemaleMatrixReader:
+    def __init__(self):
+        self._filepath = get_generated_path('matrix_female.tsv.gz')
+
+        phenos:List[Dict[str,Any]] = get_phenolist()
+
+        #Filter so that phenolist is only the females
+        phenos = [pheno for pheno in phenos if pheno['sex'] == "female"]
+
+        phenocodes:List[str] = [pheno['phenocode']+".female" for pheno in phenos]
+        self._info_for_pheno = {
+            pheno['phenocode'] + ".female": {k: v for k,v in pheno.items() if k != 'assoc_files'}
+            for pheno in phenos
+        }
+
+        with read_gzip(self._filepath) as f:
+            reader = csv.reader(f, dialect='pheweb-internal-dialect')
+            colnames = next(reader)
+        assert colnames[0].startswith('#'), colnames
+        colnames[0] = colnames[0][1:]
+
+        self._colidxs:Dict[str,int] = {} # maps field -> column_index
+        self._colidxs_for_pheno:Dict[str,Dict[str,int]] = {} # maps phenocode -> field -> column_index
+        for colnum, colname in enumerate(colnames):
+            if '@' in colname:
+                x = colname.split('@')
+                assert len(x) == 2, x
+                field, phenocode = x
+                assert field in parse_utils.fields, field
+                assert phenocode in phenocodes, phenocode
+                self._colidxs_for_pheno.setdefault(phenocode, {})[field] = colnum
+            else:
+                field = colname
+                assert field in parse_utils.fields, (field)
+                self._colidxs[field] = colnum
+
+    def get_phenocodes(self) -> List[str]:
+        return list(self._colidxs_for_pheno)
+
+    @contextmanager
+    def context(self):
+        with pysam.TabixFile(self._filepath, parser=None) as tabix_file:
+            yield _mr(tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno)
+
+class MaleMatrixReader:
+    def __init__(self):
+        self._filepath = get_generated_path('matrix_male.tsv.gz')
+
+        phenos:List[Dict[str,Any]] = get_phenolist()
+        #Filter so that phenolist is only the males
+        phenos = [pheno for pheno in phenos if pheno['sex'] == "male"]
+        phenocodes:List[str] = [pheno['phenocode'] + ".male" for pheno in phenos]
+
+        self._info_for_pheno = {
+            pheno['phenocode']+".male": {k: v for k,v in pheno.items() if k != 'assoc_files'}
+            for pheno in phenos
+        }
+
+        with read_gzip(self._filepath) as f:
+            reader = csv.reader(f, dialect='pheweb-internal-dialect')
+            colnames = next(reader)
+        assert colnames[0].startswith('#'), colnames
+        colnames[0] = colnames[0][1:]
+
+        self._colidxs:Dict[str,int] = {} # maps field -> column_index
+        self._colidxs_for_pheno:Dict[str,Dict[str,int]] = {} # maps phenocode -> field -> column_index
+        for colnum, colname in enumerate(colnames):
+            if '@' in colname:
+                x = colname.split('@')
+                assert len(x) == 2, x
+                field, phenocode = x
+                assert field in parse_utils.fields, field
+                assert phenocode in phenocodes, phenocode
+                self._colidxs_for_pheno.setdefault(phenocode, {})[field] = colnum
+            else:
+                field = colname
+                assert field in parse_utils.fields, (field)
+                self._colidxs[field] = colnum
+
+    def get_phenocodes(self) -> List[str]:
+        return list(self._colidxs_for_pheno)
+
+    @contextmanager
+    def context(self):
+        with pysam.TabixFile(self._filepath, parser=None) as tabix_file:
+            yield _mr(tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno)
+
+
 class _mr(_ivfr):
     def __init__(self, _tabix_file:pysam.TabixFile, _colidxs:Dict[str,int], _colidxs_for_pheno:Dict[str,Dict[str,int]], _info_for_pheno:Dict[str,Dict[str,Any]]):
         self._tabix_file=_tabix_file

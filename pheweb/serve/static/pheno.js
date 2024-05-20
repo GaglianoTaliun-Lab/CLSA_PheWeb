@@ -258,7 +258,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, container = '#manhatt
 
         function get_link_to_LZ(variant) {
             return fmt(window.model.urlprefix + '/region/{0}/{1}:{2}-{3}',
-                       window.pheno,
+                       window.phenocode,
                        variant.chrom,
                        Math.max(0, variant.pos - 200*1000),
                        variant.pos + 200*1000);
@@ -752,10 +752,16 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
             .offset([-6,0]);
         miami_svg.call(point_tooltip);
 
-        //TODO: add functionality for miami plot click vs manhattan plot click.
-        function get_link_to_LZ(variant) {
+        function get_link_to_LZ_male(variant) {
             return fmt(window.model.urlprefix + '/region/{0}/{1}:{2}-{3}',
-                        window.pheno,
+                        window.phenocode_male,
+                        variant.chrom,
+                        Math.max(0, variant.pos - 200*1000),
+                        variant.pos + 200*1000);
+        }
+        function get_link_to_LZ_female(variant) {
+            return fmt(window.model.urlprefix + '/region/{0}/{1}:{2}-{3}',
+                        window.phenocode_female,
                         variant.chrom,
                         Math.max(0, variant.pos - 200*1000),
                         variant.pos + 200*1000);
@@ -823,7 +829,7 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
                     .enter()
                     .append('a')
                     .attr('class', 'variant_hover_ring')
-                    .attr('xlink:href', get_link_to_LZ)
+                    .attr('xlink:href', get_link_to_LZ_female)
                     .append('circle')
                     .attr('cx', function(d) {
                         return x_scale(get_genomic_position(d));
@@ -848,7 +854,7 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
                     .enter()
                     .append('a')
                     .attr('class', 'variant_hover_ring')
-                    .attr('xlink:href', get_link_to_LZ)
+                    .attr('xlink:href', get_link_to_LZ_male)
                     .append('circle')
                     .attr('cx', function(d) {
                         return x_scale(get_genomic_position(d));
@@ -881,7 +887,7 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
                 .enter()
                 .append('a')
                 .attr('class', 'variant_point')
-                .attr('xlink:href', get_link_to_LZ)
+                .attr('xlink:href', get_link_to_LZ_female)
                 .append('circle')
                 .attr('id', function(d) {
                     return fmt('variant-point-{0}-{1}-{2}-{3}', d.chrom, d.pos, d.ref, d.alt);
@@ -909,7 +915,7 @@ function create_miami_plot(male_variant_bins, male_unbinned_variants, female_var
                 .enter()
                 .append('a')
                 .attr('class', 'variant_point')
-                .attr('xlink:href', get_link_to_LZ)
+                .attr('xlink:href', get_link_to_LZ_male)
                 .append('circle')
                 .attr('id', function(d) {
                     return fmt('variant-point-{0}-{1}-{2}-{3}', d.chrom, d.pos, d.ref, d.alt);

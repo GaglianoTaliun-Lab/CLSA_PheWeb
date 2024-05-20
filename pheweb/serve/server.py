@@ -289,6 +289,8 @@ def pheno_filter_page(phenocode):
 @bp.route('/region/<phenocode>/<region>')
 @check_auth
 def region_page(phenocode:str, region:str):
+    print(phenos_unique)
+    print(phenocode)
     try:
         pheno = phenos_unique[phenocode]
     except KeyError:

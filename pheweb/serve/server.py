@@ -46,6 +46,8 @@ if conf.get_custom_templates_dir():
     jinja_searchpath.insert(0, conf.get_custom_templates_dir())
 
 phenos = {pheno['phenocode']: pheno for pheno in get_phenolist()}
+phenos_male = {pheno['phenocode']: pheno for pheno in get_phenolist() if pheno['sex'] == 'male'}
+phenos_female = {pheno['phenocode']: pheno for pheno in get_phenolist() if pheno['sex'] == 'female'}
 phenos_unique = {pheno['phenocode']: pheno for pheno in get_unique_phenolist()}
 pheno_summary = {pheno['phenocode']: pheno for pheno in get_phenotype_summary()}
 
@@ -240,13 +242,22 @@ def random_page():
 def pheno_page(phenocode:str):
     try:
         pheno = phenos_unique[phenocode]
+        print(pheno)
     except KeyError:
         die("Sorry, I couldn't find the pheno code in your pheno-list.json: {!r}".format(phenocode))
 
-    try:
-        pheno_summary_single = pheno_summary[phenocode]
-    except KeyError:
-        die("Sorry, I couldn't find the phenocode in phenotype summary (generated-by-pheweb/phenotypes.json) : {!r}".format(phenocode))
+    if conf.should_show_sex_stratified():
+        try:
+            pheno_female = phenos_female[phenocode]
+        except KeyError:
+            pheno_female = None
+        print(pheno_female)
+
+        try:
+            pheno_male = phenos_male[phenocode]
+        except KeyError:
+            pheno_male = None
+        print(pheno_male)
 
     return render_template('pheno.html',
                            show_correlations=conf.should_show_correlations(),
@@ -255,7 +266,8 @@ def pheno_page(phenocode:str):
                            sex_stratified=conf.should_show_sex_stratified(),
                            phenocode=phenocode,
                            pheno=pheno,
-                           pheno_summary=pheno_summary_single,
+                           pheno_male=pheno_male,
+                           pheno_female=pheno_female,
                            tooltip_underscoretemplate=parse_utils.tooltip_underscoretemplate
     )
 
@@ -431,8 +443,8 @@ if conf.is_secret_download_pheno_sumstats():
             die("Sorry, that file doesn't exist.", exception=exc)
     
     @bp.route('/download/<phenocode>/<sex>/<token>')
-    def download_pheno_sex_stratified(phenocode:str, token:str, sex:str):
-        phenocode_label = phenocode + "_" + sex
+    def download_pheno_sex_stratified(phenocode:str, sex:str, token:str):
+        phenocode_label = phenocode + "." + sex
         if phenocode not in phenos:
             die("Sorry, that phenocode doesn't exist")
         if not Hasher.check_hash(token, phenocode):
@@ -467,8 +479,8 @@ else:
     
     @bp.route('/download/<phenocode>/<sex>')
     def download_pheno_sex_stratified(phenocode:str, sex:str):
-        phenocode_label = phenocode + "_" + sex
-        if phenocode_label not in phenos:
+        phenocode_label = phenocode + "." + sex
+        if phenocode not in phenos:
             die("Sorry, that phenocode doesn't exist")
         return send_from_directory(get_filepath('pheno_gz-sex_stratified'), '{}.gz'.format(phenocode_label),
                                    as_attachment=True,

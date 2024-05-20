@@ -13,16 +13,18 @@
 
 <script type="text/javascript">
   window.model.tooltip_underscoretemplate = {{ tooltip_underscoretemplate|tojson }};
-  window.pheno = {{ phenocode|tojson|safe }};
-  window.pheno_male = {{ phenocode|tojson|safe }} + ".male";
-  window.pheno_female = {{ phenocode|tojson|safe }} + ".female";
-  window.pheno_summary = {{ pheno_summary|tojson|safe}}
+  window.phenocode = {{ phenocode|tojson|safe }};
+  window.phenocode_male = {{ phenocode|tojson|safe }} + ".male";
+  window.phenocode_female = {{ phenocode|tojson|safe }} + ".female";
+  window.pheno_male = {{ pheno_male | tojson }};
+  window.pheno_female = {{ pheno_female | tojson }};
   window.model.sex_stratified = {{ sex_stratified | tojson }};
   window.model.show_correlations = {{ show_correlations | tojson }};
   window.model.correlations_url = {{ url_for('.api_pheno_correlations', phenocode=pheno['phenocode'] ) | tojson }};
   window.model.pheno_correlations_pvalue_threshold = {{ pheno_correlations_pvalue_threshold | tojson }};
-
-  $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.pheno + ".json")
+  
+  console.log(window.model.sex_stratified)
+  $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json")
   .done(function(data) {
       window.debug.manhattan = data;
       create_gwas_plot(data.variant_bins, data.unbinned_variants);
@@ -32,10 +34,11 @@
     console.log("Manhattan XHR failed");
   });
 
-  if (window.model.sex_stratified){
+  if (window.model.sex_stratified && window.pheno_male != null && window.pheno_female != null){
+
     $.when(
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.pheno_male + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.pheno_female + ".json")
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json")
     ).done(function(data_male, data_female) {
         window.debug.miami = {
           male: data_male[0],
@@ -49,15 +52,48 @@
         // populate_streamtable(data_male.unbinned_variants);
     })
     .fail(function() {
-      console.log("Miami XHR failed");
+      console.log("Miami (with male and female) XHR failed");
     });
   }
 
-  if (window.model.sex_stratified){
+  else if (window.model.sex_stratified && window.pheno_female == null && window.pheno_male != null){
     $.when(
-      $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno_male + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.pheno_female + ".json")
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
+    ).done(function(data_male) {
+        window.debug.miami = {
+          male: data_male,
+          female: null
+        };
+        create_gwas_plot(data_male.variant_bins, data_male.unbinned_variants, "#miami_plot_container");
+        // we won't worry about this for now.
+        // populate_streamtable(data_male.unbinned_variants);
+    })
+    .fail(function() {
+      console.log("Miami (with male) XHR failed");
+    });
+  }
+  else if (window.model.sex_stratified && window.pheno_male == null && window.pheno_female != null){
+    $.when(
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json"),
+    ).done(function(data_female) {
+        window.debug.miami = {
+          male: data_female,
+          female: null
+        };
+        create_gwas_plot(data_female.variant_bins, data_female.unbinned_variants, "#miami_plot_container");
+        // we won't worry about this for now.
+        // populate_streamtable(data_male.unbinned_variants);
+    })
+    .fail(function() {
+      console.log("Miami (with female) XHR failed");
+    });
+  }
+
+  if (window.model.sex_stratified && window.pheno_male != null && window.pheno_female != null){
+    $.when(
+      $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_male + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_female + ".json")
     ).done(function(data1, data2, data3) {
       qq_combined = data1[0]
       qq_male = data2[0]
@@ -82,7 +118,7 @@
       });
 
       //return the max height and width to use based off the max of each .json
-      var dimensions = calculate_qq_dimension(qq_combined, qq_male, qq_female);
+      var dimensions = calculate_qq_dimension(qq_combined, male_data = qq_male, female_data = qq_female);
 
       if (qq_combined.by_maf){
         create_qq_plot(qq_combined.by_maf, qq_combined.ci, dimensions[0], dimensions[1]);
@@ -96,27 +132,99 @@
       }
       })
       .fail(function() {
-        console.log("Sex stratified QQ XHR failed");
+        console.log("QQ (with male and female) XHR failed");
       });
-  } else {
-    $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.pheno + ".json")
-    .done(function(data) {
-    window.debug.qq = data;
-    _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-      var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-      if (i === 0) { text = '<b>' + text + '</b>'; }
-      text = '<br>' + text;
-      $('.gc-control_both').append(text);
-    });
-    if (data.by_maf)
-      create_qq_plot(data.by_maf, data.ci, null, null);
-    else
-      create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1]);
-    })
-    .fail(function() {
-      console.log("QQ XHR failed");
-    });
-  }
+    }
+    else if (window.model.sex_stratified && window.pheno_female == null && window.pheno_male != null){
+      $.when(
+        $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json"),
+        $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_male + ".json"),
+      ).done(function(data1, data2) {
+        qq_combined = data1[0]
+        qq_male = data2[0]
+        _.sortBy(_.pairs(qq_combined.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+          if (i === 0) { text = '<b>' + text + '</b>'; }
+          text = '<br>' + text;
+          $('.gc-control_both').append(text);
+        });
+        _.sortBy(_.pairs(qq_male.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+          if (i === 0) { text = '<b>' + text + '</b>'; }
+          text = '<br>' + text;
+          $('.gc-control_male').append(text);
+        });
+
+        //return the max height and width to use based off the max of each .json
+        var dimensions = calculate_qq_dimension(qq_combined, male_data = qq_male);
+
+        if (qq_combined.by_maf){
+          create_qq_plot(qq_combined.by_maf, qq_combined.ci, dimensions[0], dimensions[1]);
+          create_qq_plot(qq_male.by_maf, qq_male.ci, dimensions[0], dimensions[1], "male");
+        }
+        else {
+          create_qq_plot([{maf_range:[0,0.5], qq:qq_combined.overall.qq, count:qq_combined.overall.count}], qq_combined.ci, dimensions[0], dimensions[1]);
+          create_qq_plot([{maf_range:[0,0.5], qq:qq_male.overall.qq, count:qq_male.overall.count}], qq_male.ci, dimensions[0], dimensions[1], "male");
+        }
+        })
+        .fail(function() {
+          console.log("QQ (with male) XHR failed");
+        });
+    }
+    else if (window.model.sex_stratified && window.pheno_male == null && window.pheno_female != null){
+      $.when(
+        $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json"),
+        $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_female + ".json"),
+      ).done(function(data1, data2) {
+        qq_combined = data1[0]
+        qq_female = data2[0]
+        _.sortBy(_.pairs(qq_combined.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+          if (i === 0) { text = '<b>' + text + '</b>'; }
+          text = '<br>' + text;
+          $('.gc-control_both').append(text);
+        });
+        _.sortBy(_.pairs(qq_female.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+          if (i === 0) { text = '<b>' + text + '</b>'; }
+          text = '<br>' + text;
+          $('.gc-control_female').append(text);
+        });
+
+        //return the max height and width to use based off the max of each .json
+        var dimensions = calculate_qq_dimension(qq_combined, female_data = qq_female);
+
+        if (qq_combined.by_maf){
+          create_qq_plot(qq_combined.by_maf, qq_combined.ci, dimensions[0], dimensions[1]);
+          create_qq_plot(qq_female.by_maf, qq_female.ci, dimensions[0], dimensions[1], "female");
+        }
+        else {
+          create_qq_plot([{maf_range:[0,0.5], qq:qq_combined.overall.qq, count:qq_combined.overall.count}], qq_combined.ci, dimensions[0], dimensions[1]);
+          create_qq_plot([{maf_range:[0,0.5], qq:qq_female.overall.qq, count:qq_female.overall.count}], qq_female.ci, dimensions[0], dimensions[1], "female");
+        }
+        })
+        .fail(function() {
+          console.log("QQ (with female) XHR failed");
+        });
+    } else {
+      $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json")
+      .done(function(data) {
+      window.debug.qq = data;
+      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
+        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
+        if (i === 0) { text = '<b>' + text + '</b>'; }
+        text = '<br>' + text;
+        $('.gc-control_both').append(text);
+      });
+      if (data.by_maf)
+        create_qq_plot(data.by_maf, data.ci, null, null);
+      else
+        create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1]);
+      })
+      .fail(function() {
+        console.log("QQ XHR failed");
+      });
+    }
 
 </script>
 <style type="text/css">
@@ -266,8 +374,10 @@
       <span class="pull-right">
         <a class="btn btn-default" href="{{ url_for('.download_pheno', phenocode=phenocode) }}">Download summary statistics</a>
         {% if sex_stratified %}
-          <a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='male') }}">Download male summary statistics</a>
-          <a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='female') }}">Download female summary statistics</a>
+          {% if pheno_male != None %}<a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='male') }}">Download male summary statistics</a>
+          {% endif %}
+          {% if pheno_female != None %}<a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='female') }}">Download female summary statistics</a>
+          {% endif %}
         {% endif %}
       </span>
         
@@ -298,18 +408,22 @@
 
 {% if sex_stratified %}
   <div class="pheno-info col-xs-12 col-sm-8">
-    {% if 'num_cases_male' in pheno_summary and pheno_summary['num_cases_male'] != "" %}
-      <p><b>{{ pheno_summary.num_cases_male }}</b> male cases, <b>{{ pheno_summary.num_controls_male }}</b> male controls</p>
-    {% elif 'num_samples_male' in pheno_summary %}
-      <p><b>{{ pheno_summary.num_samples_male }}</b> male samples</p>
+    {% if pheno_male != None %}
+      {% if 'num_cases' in pheno_male and pheno_male['num_cases'] != "" %}
+      <p><b>{{ pheno_male.num_cases }}</b> male cases, <b>{{ pheno_male.num_controls }}</b> male controls</p>
+      {% elif 'num_samples' in pheno_male %}
+      <p><b>{{ pheno_male.num_samples }}</b> male samples</p>
+      {% endif %}
     {% endif %}
-    {% if 'num_cases_female' in pheno_summary and pheno_summary['num_cases_female'] != "" %}
-      <p><b>{{ pheno_summary.num_cases_female }}</b> female cases, <b>{{ pheno_summary.num_controls_female }}</b> female controls</p>
-    {% elif 'num_samples_female' in pheno_summary %}
-      <p><b>{{ pheno_summary.num_samples_female }}</b> female samples</p>
+    {% if pheno_female != None %}
+      {% if 'num_cases' in pheno_female and pheno_female['num_cases'] != "" %}
+        <p><b>{{ pheno_female.num_cases }}</b> female cases, <b>{{ pheno_female.num_controls }}</b> female controls</p>
+      {% elif 'num_samples' in pheno_female %}
+        <p><b>{{ pheno_female.num_samples }}</b> female samples</p>
+      {% endif %}
     {% endif %}
-    {% if pheno_summary.category %}
-      <p>Category: <b>{{ pheno_summary.category}}</b></p>
+    {% if pheno.category %}
+      <p>Category: <b>{{ pheno.category}}</b></p>
     {% endif %}
     {% include "pheno/info.html" %}
   </div>
@@ -362,14 +476,18 @@
         <p class="gc-control_both"></p>
     </div>
     {% if sex_stratified %}
-    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-      <div id="qq_plot_container_male">Male</div>
-      <p class="gc-control_male"></p>
-    </div>
-    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-      <div id="qq_plot_container_female">Female</div>
-      <p class="gc-control_female"></p>
-    </div>
+      {% if pheno_male != None %}
+        <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
+          <div id="qq_plot_container_male">Male</div>
+          <p class="gc-control_male"></p>
+        </div>
+      {% endif %}
+      {% if pheno_female != None %}
+        <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
+          <div id="qq_plot_container_female">Female</div>
+          <p class="gc-control_female"></p>
+        </div>
+      {% endif %}
     {% endif %}
 </div>
 <i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>

@@ -135,9 +135,9 @@ def check_that_all_phenotypes_have_assoc_files(phenolist):
 def check_that_num_samples_controls_cases_agree(phenolist):
     for pheno in phenolist:
         if all(key in pheno for key in ['num_samples', 'num_cases', 'num_controls']):
-            if (pheno['num_cases'] != "" and pheno[num_controls] != ""):
-                total_samples = pheno['num_cases'] + pheno['num_controls']
-                if pheno['num_samples'] != total_samples:
+            if (pheno['num_cases'] != "" and pheno['num_controls'] != ""):
+                total_samples = int(pheno['num_cases']) + int(pheno['num_controls'])
+                if int(pheno['num_samples']) != total_samples:
                     raise PheWebError("The pheno {} has num_samples={} but num_cases+num_controls={}: {}".format(pheno['phenocode'], pheno['num_samples'], total_samples, pheno))
 
 def extract_info_from_assoc_files(phenolist):

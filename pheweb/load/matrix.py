@@ -72,14 +72,16 @@ def should_run() -> bool:
         return True
     
     if(conf.should_show_sex_stratified()):
-        infilepaths = [get_pheno_filepath('pheno_gz-sex_stratified', phenocode+".female") for phenocode in cur_phenocodes] + [sites_filepath]
+        cur_phenocodes_female = set(pheno['phenocode'] for pheno in get_phenolist() if pheno['sex'] == "female")
+        infilepaths = [get_pheno_filepath('pheno_gz-sex_stratified', phenocode+".female") for phenocode in cur_phenocodes_female] + [sites_filepath]
         infile_modtime = max(mtime(filepath) for filepath in infilepaths)
-        if infile_modtime > mtime(matrix_gz_filepath):
+        if infile_modtime > mtime(get_filepath('matrix_female', must_exist=False)):
             print('rerunning because some input files are newer than matrix.tsv.gz')
             return True
-        infilepaths = [get_pheno_filepath('pheno_gz-sex_stratified', phenocode+".male") for phenocode in cur_phenocodes] + [sites_filepath]
+        cur_phenocodes_male = set(pheno['phenocode'] for pheno in get_phenolist() if pheno['sex'] == "male")
+        infilepaths = [get_pheno_filepath('pheno_gz-sex_stratified', phenocode+".male") for phenocode in cur_phenocodes_male] + [sites_filepath]
         infile_modtime = max(mtime(filepath) for filepath in infilepaths)
-        if infile_modtime > mtime(matrix_gz_filepath):
+        if infile_modtime > mtime(get_filepath('matrix_male', must_exist=False)):
             print('rerunning because some input files are newer than matrix.tsv.gz')
             return True
 

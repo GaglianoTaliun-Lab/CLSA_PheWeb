@@ -23,7 +23,6 @@
   window.model.correlations_url = {{ url_for('.api_pheno_correlations', phenocode=pheno['phenocode'] ) | tojson }};
   window.model.pheno_correlations_pvalue_threshold = {{ pheno_correlations_pvalue_threshold | tojson }};
   
-  console.log(window.model.sex_stratified)
   $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json")
   .done(function(data) {
       window.debug.manhattan = data;
@@ -44,10 +43,10 @@
           male: data_male[0],
           female: data_female[0]
         };
-        create_miami_plot(
-          data_male[0].variant_bins, data_male[0].unbinned_variants,
-          data_female[0].variant_bins, data_female[0].unbinned_variants
-        );
+        create_miami_plot({
+          male_variant_bins : data_male[0].variant_bins, male_unbinned_variants : data_male[0].unbinned_variants,
+          female_variant_bins :data_female[0].variant_bins, female_unbinned_variants : data_female[0].unbinned_variants
+        });
         // we won't worry about this for now.
         // populate_streamtable(data_male.unbinned_variants);
     })
@@ -64,12 +63,12 @@
           male: data_male,
           female: null
         };
-        create_gwas_plot(data_male.variant_bins, data_male.unbinned_variants, "#miami_plot_container");
+        create_miami_plot({male_variant_bins : data_male.variant_bins, male_unbinned_variants : data_male.unbinned_variants});
         // we won't worry about this for now.
         // populate_streamtable(data_male.unbinned_variants);
     })
     .fail(function() {
-      console.log("Miami (with male) XHR failed");
+      console.log("Miami (with male only) XHR failed");
     });
   }
   else if (window.model.sex_stratified && window.pheno_male == null && window.pheno_female != null){
@@ -77,15 +76,15 @@
       $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json"),
     ).done(function(data_female) {
         window.debug.miami = {
-          male: data_female,
-          female: null
+          female: data_female,
+          male: null
         };
-        create_gwas_plot(data_female.variant_bins, data_female.unbinned_variants, "#miami_plot_container");
+        create_miami_plot({female_variant_bins: data_female.variant_bins, female_unbinned_variants: data_female.unbinned_variants});
         // we won't worry about this for now.
         // populate_streamtable(data_male.unbinned_variants);
     })
     .fail(function() {
-      console.log("Miami (with female) XHR failed");
+      console.log("Miami (with female only) XHR failed");
     });
   }
 

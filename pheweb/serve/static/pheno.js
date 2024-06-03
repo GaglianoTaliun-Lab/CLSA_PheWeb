@@ -1390,44 +1390,81 @@ function create_qq_plot(maf_ranges, qq_ci, height = null, width = null, type = "
   });
 }
 
+var allData = [];
+var pagination = {
+    span: 5,
+    next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
+    prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
+    per_page_select: false,
+    per_page: 10,
+}
 
-function populate_streamtable(variants) {
+function populate_streamtable(variants, sortby_value = 'pval', direction = 'asc', add_data = true) {
     $(function() {
-        // This is mostly copied from <https://michigangenomics.org/health_data.html>.
-        var data = _.sortBy(_.where(variants, {peak: true}), _.property('pval'));
-        var template = _.template($('#streamtable-template').html());
-        var view = function(variant) {
-            return template({v: variant});
-        };
-        var $found = $('#streamtable-found');
-        $found.text(data.length + " total variants");
+  
+      if (add_data){
+          if (direction == 'asc'){
+              allData = _.sortBy(allData.concat(_.where(variants, { peak: true })), _.property(sortby_value));
+          } else if (direction == 'desc'){
+              allData = _.sortBy(allData.concat(_.where(variants, { peak: true })), _.property(sortby_value)).reverse();
+          }
+      } else if (!add_data) {
+          if (direction == 'asc'){
+              allData = _.sortBy(_.where(allData, { peak: true }), _.property(sortby_value));
+          } else if (direction == 'desc'){
+              allData = _.sortBy(_.where(allData, { peak: true }), _.property(sortby_value)).reverse();
+          }
+      }
+  
+      var template = _.template($('#streamtable-template').html());
+  
+      var $found = $('#streamtable-found');
+      $found.text(allData.length + " total variants");
+  
+      // Restore pagination state
+      var options = {
+          view: function(variant) {
+              return template({ v: variant });
+          },
+          search_box: '#search',
+          callbacks: {
+              pagination: function(summary){
+                  if ($.trim($('#search').val()).length > 0){
+                      $found.text(summary.total + " matching variants");
+                  } else {
+                      $found.text(allData.length + " total variants");
+                  }
 
-        var callbacks = {
-            pagination: function(summary){
-                if ($.trim($('#search').val()).length > 0){
-                    $found.text(summary.total + " matching variants");
-                } else {
-                    $found.text(data.length + " total variants");
+                  $('#stream_table tbody tr').each(function() {
+                    var sex = $(this).find('td:eq(5)').text(); // Assuming 'sex' column is the sixth column
+        
+                    // Check if the row should be hidden based on checkbox state and 'sex' column value
+                    if ($('#check_combined').prop('checked') && sex.trim() === 'Combined'){
+                        $(this).show(); // Show the row
+                    } else if (!$('#check_combined').prop('checked') && sex.trim() === 'Combined'){
+                        $(this).hide(); // Hide the row
+                    } else if ($('#check_male').prop('checked') && sex.trim() === 'Male'){
+                        $(this).show(); // Show the row
+                    } else if (!$('#check_male').prop('checked') && sex.trim() === 'Male'){
+                        $(this).hide(); // Hide the row
+                    } else if ($('#check_female').prop('checked') && sex.trim() === 'Female'){
+                        $(this).show(); // Show the row
+                    } else if (!$('#check_female').prop('checked') && sex.trim() === 'Female'){
+                        $(this).hide(); // Hide the row
+                    } 
+                });
+                var pagination = {
+                    span: 5,
+                    next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
+                    prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
+                    per_page_select: false,
+                    per_page: 10,
                 }
             }
-        }
-
-        var options = {
-            view: view,
-            search_box: '#search',
-            per_page: 20,
-            callbacks: callbacks,
-            pagination: {
-                span: 5,
-                next_text: 'Next <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>',
-                prev_text: '<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Previous',
-                per_page_select: false,
-                per_page: 10
-            }
-        }
-
-        $('#stream_table').stream_table(options, data);
-
+          }
+      }
+      $('#stream_table').stream_table(options, allData);
+  
     });
 }
 
@@ -1481,5 +1518,126 @@ $(document).ready(function () {
             }
         });
     }
+
+    $('#check_combined').change(function() {
+        var hideCombined = !$(this).prop('checked'); // Get the inverse of checkbox state
+
+        // Iterate through each row in the stream table
+        $('#stream_table tbody tr').each(function() {
+            var sex = $(this).find('td:eq(5)').text(); // Assuming 'sex' column is the sixth column
+
+            // Check if the row should be hidden based on checkbox state and 'sex' column value
+            if(sex.trim() === 'Combined'){
+                if (hideCombined) {
+                    $(this).hide(); // Hide the row
+                } else {
+                    $(this).show(); // Show the row
+                }
+            }
+        });
+    });
+
+    $('#check_male').change(function() {
+        var hideMale = !$(this).prop('checked'); // Get the inverse of checkbox state
+
+        // Iterate through each row in the stream table
+        $('#stream_table tbody tr').each(function() {
+            var sex = $(this).find('td:eq(5)').text(); // Assuming 'sex' column is the sixth column
+
+            // Check if the row should be hidden based on checkbox state and 'sex' column value
+            if(sex.trim() === 'Male'){
+                if (hideMale) {
+                    $(this).hide(); // Hide the row
+                } else {
+                    $(this).show(); // Show the row
+                }
+            }
+        });
+    });
+
+    $('#check_female').change(function() {
+        var hideFemale = !$(this).prop('checked'); // Get the inverse of checkbox state
+
+        // Iterate through each row in the stream table
+        $('#stream_table tbody tr').each(function() {
+            var sex = $(this).find('td:eq(5)').text(); // Assuming 'sex' column is the sixth column
+
+            // Check if the row should be hidden based on checkbox state and 'sex' column value
+            if(sex.trim() === 'Female'){
+                if (hideFemale) {
+                    $(this).hide(); // Hide the row
+                } else {
+                    $(this).show(); // Show the row
+                }
+            }
+        });
+    });
 });
 
+var DIR = 'asc';
+var LAST_N = 3;
+function sortTable(n) {
+    console.log("sortTable with n =" + n)
+    var table = document.getElementById("stream_table");
+
+    resetArrows();
+
+    if (LAST_N == n && DIR === 'asc'){
+        DIR = "desc";
+    } else {
+        DIR = "asc";
+    }
+
+    // Determine the column name for sorting based on index n
+    if (DIR == "desc") {
+        table.getElementsByTagName('th')[n].getElementsByClassName('arrow-down')[0].style.borderColor = "grey";
+        table.getElementsByTagName('th')[n].getElementsByClassName('arrow-up')[0].style.borderColor = "black";
+    } else if (DIR == "asc") {
+        table.getElementsByTagName('th')[n].getElementsByClassName('arrow-up')[0].style.borderColor = "grey";
+        table.getElementsByTagName('th')[n].getElementsByClassName('arrow-down')[0].style.borderColor = "black";
+    }
+    LAST_N = n;
+}
+
+function resetArrows() {
+    var table = document.getElementById("stream_table");
+    for (let i = 2; i <= 4; i++) {
+        table.getElementsByTagName('th')[i].getElementsByClassName('arrow-up')[0].style.borderColor = "grey";
+        table.getElementsByTagName('th')[i].getElementsByClassName('arrow-down')[0].style.borderColor = "grey";
+    }
+}
+
+function getColumnFromIndex(index) {
+    switch(index) {
+        case 2:
+            return 'af'; // replace with your actual column name
+        case 3:
+            return 'pval'; // replace with your actual column name
+        case 4:
+            return 'beta'; // replace with your actual column name
+        default:
+            return 'pval'; // default column name
+    }
+}
+
+function isNumber(str) {
+    try {
+        const result = new Function(`return ${str}`)();
+        return typeof result === 'number' && isFinite(result);
+    } catch (e) {
+        return false;
+    }
+}
+
+function evaluateToNumber(str) {
+    try {
+        const result = new Function(`return ${str}`)();
+        if (typeof result === 'number' && isFinite(result)) {
+            return result;
+        } else {
+            return null;
+        }
+    } catch (e) {
+        return null;
+    }
+}

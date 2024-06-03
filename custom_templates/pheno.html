@@ -23,11 +23,78 @@
   window.model.correlations_url = {{ url_for('.api_pheno_correlations', phenocode=pheno['phenocode'] ) | tojson }};
   window.model.pheno_correlations_pvalue_threshold = {{ pheno_correlations_pvalue_threshold | tojson }};
   
+  var stream_table_data = [];
+  //TODO: populate streamtable in seperate api calls.
+  if (!window.model.sex_stratified){
+    $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json")
+    .done(function (data){
+      data.unbinned_variants.forEach(function(variant) {
+        variant['sex'] = 'Combined';
+      });
+    })
+    populate_streamtable(data.unbinned_variants);
+  } else if ( window.model.sex_stratified && window.pheno_male != null && window.pheno_female != null) {
+    $.when(
+      $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json")
+    ).done(function(data_combined, data_male, data_female) {
+        data_combined[0].unbinned_variants.forEach(function(variant){
+          variant['sex'] = 'Combined';
+        });
+        data_male[0].unbinned_variants.forEach(function(variant) {
+          variant['sex'] = 'Male';
+        });
+
+        data_female[0].unbinned_variants.forEach(function(variant) {
+          variant['sex'] = 'Female';
+        });
+
+        var combined_data = data_male[0].unbinned_variants.concat(data_combined[0].unbinned_variants.concat(data_female[0].unbinned_variants))
+        populate_streamtable(combined_data);
+    });
+  } else if (  window.model.sex_stratified && window_pheno_male != null){
+    $.when(
+      $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
+    ).done(function(data_combined, data_male, data_female) {
+        data_combined[0].unbinned_variants.forEach(function(variant){
+          variant['sex'] = 'Combined';
+        });
+        data_male[0].unbinned_variants.forEach(function(variant) {
+          variant['sex'] = 'Male';
+        });
+
+        var combined_data = data_male[0].unbinned_variants.concat(data_combined[0].unbinned_variants)
+        populate_streamtable(combined_data);
+    });
+  } else if (  window.model.sex_stratified && window_pheno_female != null){
+    $.when(
+      $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json"),
+      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json")
+    ).done(function(data_combined, data_male, data_female) {
+        data_combined[0].unbinned_variants.forEach(function(variant){
+          variant['sex'] = 'Combined';
+        });
+
+        data_female[0].unbinned_variants.forEach(function(variant) {
+          variant['sex'] = 'Female';
+        });
+
+        var combined_data = data_combined[0].unbinned_variants.concat(data_female[0].unbinned_variants)
+        populate_streamtable(combined_data);
+    });
+  }
+  
+  //manhattan plot generation
   $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json")
   .done(function(data) {
       window.debug.manhattan = data;
       create_gwas_plot(data.variant_bins, data.unbinned_variants);
-      populate_streamtable(data.unbinned_variants);
+
+      data.unbinned_variants.forEach(function(variant) {
+        variant['sex'] = 'Combined';
+      });
   })
   .fail(function() {
     console.log("Manhattan XHR failed");
@@ -45,10 +112,8 @@
         };
         create_miami_plot({
           male_variant_bins : data_male[0].variant_bins, male_unbinned_variants : data_male[0].unbinned_variants,
-          female_variant_bins :data_female[0].variant_bins, female_unbinned_variants : data_female[0].unbinned_variants
+          female_variant_bins : data_female[0].variant_bins, female_unbinned_variants : data_female[0].unbinned_variants
         });
-        // we won't worry about this for now.
-        // populate_streamtable(data_male.unbinned_variants);
     })
     .fail(function() {
       console.log("Miami (with male and female) XHR failed");
@@ -64,8 +129,6 @@
           female: null
         };
         create_miami_plot({male_variant_bins : data_male.variant_bins, male_unbinned_variants : data_male.unbinned_variants});
-        // we won't worry about this for now.
-        // populate_streamtable(data_male.unbinned_variants);
     })
     .fail(function() {
       console.log("Miami (with male only) XHR failed");
@@ -80,8 +143,6 @@
           male: null
         };
         create_miami_plot({female_variant_bins: data_female.variant_bins, female_unbinned_variants: data_female.unbinned_variants});
-        // we won't worry about this for now.
-        // populate_streamtable(data_male.unbinned_variants);
     })
     .fail(function() {
       console.log("Miami (with female only) XHR failed");
@@ -224,7 +285,6 @@
         console.log("QQ XHR failed");
       });
     }
-
 </script>
 <style type="text/css">
 .d3-tip {
@@ -334,6 +394,54 @@
 
 .inline-block-child {
   display: inline-block;
+}
+.checkbox-container {
+    display: flex;
+    justify-content: space-between;
+    width: 400px; 
+    margin:0;
+    padding-top:7px;
+}
+
+input[type="checkbox"] {
+    margin: 0;
+}
+
+label {
+  margin: 0;
+  padding-right: 15px;
+}
+
+.arrow-container {
+  float: left;
+  margin-right: 10px; /* Adjust spacing as needed */
+  margin-bottom: 0px;
+}
+
+.arrow-up, .arrow-down {
+  display: block;
+  padding: 3px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.arrow-up {
+  border: solid grey;
+  border-width: 0px 2px 2px 0px;
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.arrow-down {
+  border: solid grey;
+  border-width: 0px 2px 2px 0px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.arrow-container:hover {
+  cursor: pointer;
+  background-color: lightgrey;
 }
 
 </style>
@@ -446,6 +554,17 @@
   <div class="col-xs-12 col-sm-8 col-md-6">
     <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
   </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="check_combined" checked>
+    <label for="check_combined"> Show combined </label>
+    {% if sex_stratified %}
+    <input type="checkbox" id="check_male" checked>
+    <label for="check_male"> Show male </label>
+
+    <input type="checkbox" id="check_female" checked>
+    <label for="check_female"> Show female </label>
+    {% endif %}
+  </div>
   <div class="col-xs-12 col-sm-4 col-sm-6">
     <h5 class="pull-right"><div id="streamtable-found" class="label label-primary"></div></h5>
   </div>
@@ -457,9 +576,11 @@
         <tr>
           <th>Variant</th>
           <th>Nearest Gene(s)</th>
-          <th>MAF</th>
-          <th>P-value</th>
-          <th>Effect Size (se)</th>
+          <th><span class="arrow-container" data-sort="af:asc:number"onclick="sortTable(2)"><span class="arrow-up"></span><span class="arrow-down"></span></span> MAF</th>
+          <th><span class="arrow-container" data-sort="pval:desc:number" onclick="sortTable(3)"><span class="arrow-up" ></span><span class="arrow-down" style="border-color:black"></span></span> P-value</th>
+          <th><span class="arrow-container" data-sort="beta:asc:number" onclick="sortTable(4)"><span class="arrow-up"></span><span class="arrow-down"></span></span> Effect Size (se)</th>
+          <th>Sex</th>
+          <th>T2, metaQ</th>
         </tr>
       </thead>
       <tbody>
@@ -512,9 +633,11 @@
     <% if (v.rsids) { %>(<%= v.rsids.replace(/,/g, ', ') %>)<% } %>
 </a></td>
 <td><i><%= v.nearest_genes.replace(/,/g, ', ') %></i></td>
-<td><%= (v.maf)? v.maf.toPrecision(2) : (v.af)? Math.min(v.af, 1-v.af).toPrecision(2) : (v.ac)? v.ac : "" %></td>
+<td><%= (v.maf)? v.maf.toPrecision(2) : (v.af)? v.af.toPrecision(2):  (v.ac)? v.ac : "" %></td>
 <td><%= (v.pval==0) ? '≤1e-320' : v.pval.toExponential(1) %></td>
 <td><%= (v.beta) ? v.beta.toPrecision(2) : "" %><%= (v.sebeta) ? " ("+v.sebeta.toPrecision(2)+")" : "" %></td>
+<td><%= (v.sex) %></td>
+<td>NA</td>
 </tr>
 </script>
 {% endblock %}

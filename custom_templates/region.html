@@ -32,7 +32,7 @@
   </div>
 </div>
 <div class="row">
-    <div class="pheno-info col-xs-12">
+    <div class="pheno-info col-xs-12 col-sm-8">
         {% if 'num_cases' in pheno and pheno['num_cases'] != "" %}
           <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls.</p>
         {% elif 'num_samples' in pheno %}

@@ -700,4 +700,19 @@ $(document).ready(function () {
             }
         });
     }
+
+    // If datapreview portal is reachable, then we will add a link to the phenotype's page.
+    $.ajax({
+        url: "https://datapreview.clsa-elcv.ca/mica/variable/com%3A"+pheno+"%3ACollected#/",
+        type: 'GET',
+        success: function() {
+            // If the request succeeds, append the HTML content to the target div
+            var htmlContent = '<u><b><a href="https://datapreview.clsa-elcv.ca/mica/variable/com%3A{{ pheno["phenocode"] }}%3ACollected#/" target="_blank">CLSA Data Preview Portal'
+            $('#data-portal').append(htmlContent);
+        },
+        error: function() {
+            // If the request fails, handle the error (optional)
+            console.log('Webpage is not reachable.');
+        }
+    });
 });

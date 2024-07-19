@@ -6,8 +6,8 @@ This avoids reading any variant more than once.
  The total number of bases in the padded genes (without double-counting overlaps) is 2100Mbases (40%) (in 16k intervals)
 '''
 
-from ..utils import get_padded_gene_tuples
-from ..file_utils import MatrixReader, get_filepath, get_tmp_path
+from ..utils import get_padded_gene_tuples, get_stratification_paths, get_phenolist
+from ..file_utils import MatrixReader, get_filepath, get_tmp_path, get_pheno_filepath
 from .load_utils import Parallelizer
 from .. import conf
 
@@ -23,41 +23,55 @@ def run(argv:List[str]) -> None:
 
     # Check whether we're already up-to-date.
     out_filepath = Path(get_filepath('best-phenos-by-gene-sqlite3', must_exist=False))
-    matrix_filepath = Path(get_filepath('matrix'))
-    if out_filepath.exists() and matrix_filepath.stat().st_mtime < out_filepath.stat().st_mtime:
-        print('{} is up-to-date!'.format(str(out_filepath)))
-        return
-
-    # Import data from a previous version of pheweb if it's around.
-    old_filepath = Path(get_filepath('best-phenos-by-gene-old-json', must_exist=False))
-    if old_filepath.exists() and matrix_filepath.stat().st_mtime < old_filepath.stat().st_mtime:
-        print('Migrating old {} to new {}'.format(str(old_filepath), str(out_filepath)))
-        with open(old_filepath) as f:
-            data = json.load(f)
-
+    
+    #TODO: if stratified, perform all functions below in a for loop
+    if conf.stratified():
+        matrix_filepaths = []
+        stratification_paths = set(get_stratification_paths(get_phenolist()))
+        for stratification_path in stratification_paths:
+            matrix_filepaths.append(Path(get_pheno_filepath('matrix-stratified', stratification_path)))
     else:
-        regions_on_chrom = get_regions_on_chrom()
-        regions: List[Tuple[str,int,int]] = [(chrom,start,end) for chrom,regions in regions_on_chrom.items() for (start,end) in regions]
-        task_results = Parallelizer().run_multiple_tasks(
-            tasks = regions,
-            do_multiple_tasks = process_regions,
-            cmd = 'gather-pvalues-for-each-gene'
-        )
-        best_phenos_for_gene: Dict[str,List[Dict[str,Any]]] = {}
-        for task_result in task_results:
-            assert task_result['type'] == 'result'
-            partial_best_phenos_for_gene = task_result['value']
-            for genename, best_phenos in partial_best_phenos_for_gene.items():
-                assert genename not in best_phenos_for_gene
-                best_phenos_for_gene[genename] = best_phenos
-        data = best_phenos_for_gene
+        matrix_filepaths = [Path(get_filepath('matrix'))]
 
+            
     out_tmp_filepath = Path(get_tmp_path(out_filepath))
-    db = sqlite3.connect(str(out_tmp_filepath))
-    with db:
-        db.execute('CREATE TABLE best_phenos_for_each_gene (gene TEXT PRIMARY KEY, json TEXT)')
-        db.executemany('INSERT INTO best_phenos_for_each_gene (gene, json) VALUES (?,?)', ((k,json.dumps(v)) for k,v in data.items()))
-    out_tmp_filepath.replace(out_filepath)
+    
+    for matrix_filepath in matrix_filepaths:
+        if out_filepath.exists() and matrix_filepath.stat().st_mtime < out_filepath.stat().st_mtime:
+            print('{} is up-to-date!'.format(str(out_filepath)))
+            return
+
+        # Import data from a previous version of pheweb if it's around.
+        old_filepath = Path(get_filepath('best-phenos-by-gene-old-json', must_exist=False))
+        if old_filepath.exists() and matrix_filepath.stat().st_mtime < old_filepath.stat().st_mtime:
+            print('Migrating old {} to new {}'.format(str(old_filepath), str(out_filepath)))
+            with open(old_filepath) as f:
+                data = json.load(f)
+
+        else:
+            regions_on_chrom = get_regions_on_chrom()
+            regions: List[Tuple[str,int,int]] = [(chrom,start,end) for chrom,regions in regions_on_chrom.items() for (start,end) in regions]
+            task_results = Parallelizer().run_multiple_tasks(
+                tasks = regions,
+                do_multiple_tasks = process_regions,
+                cmd = 'gather-pvalues-for-each-gene',
+                matrix_filepath=matrix_filepath
+            )
+            best_phenos_for_gene: Dict[str,List[Dict[str,Any]]] = {}
+            for task_result in task_results:
+                assert task_result['type'] == 'result'
+                partial_best_phenos_for_gene = task_result['value']
+                for genename, best_phenos in partial_best_phenos_for_gene.items():
+                    assert genename not in best_phenos_for_gene
+                    best_phenos_for_gene[genename] = best_phenos
+            data = best_phenos_for_gene
+
+        out_tmp_filepath = Path(get_tmp_path(out_filepath))
+        db = sqlite3.connect(str(out_tmp_filepath))
+        with db:
+            db.execute('CREATE TABLE IF NOT EXISTS best_phenos_for_each_gene (gene TEXT PRIMARY KEY, json TEXT)')
+            db.executemany('INSERT INTO best_phenos_for_each_gene (gene, json) VALUES (?,?)', ((k,json.dumps(v)) for k,v in data.items()))
+        out_tmp_filepath.replace(out_filepath)
     print('Done making best-pheno-for-each-gene at {}'.format(str(out_filepath)))
 
 def get_regions_on_chrom() -> Dict[str,List[Tuple[int,int]]]:
@@ -76,8 +90,7 @@ def merged_intervals(intervals:List[Tuple[int,int]]) -> List[Tuple[int,int]]:
     return ret
 assert merged_intervals([(1,2),(2,4),(5,7)]) == [(1,4),(5,7)]
 
-
-def process_regions(taskq, retq, parent_overrides) -> None:
+def process_regions(taskq, retq, parent_overrides, matrix_filepath) -> None:
     try:
         from .. import conf
         assert not conf.overrides or conf.overrides == parent_overrides, (conf.overrides, parent_overrides)
@@ -86,7 +99,9 @@ def process_regions(taskq, retq, parent_overrides) -> None:
         retq.put({'type':'exception', 'task':None, 'exception_str':str(exc), 'exception_tb':traceback.format_exc()})
         raise
     tree_for_chrom = get_gene_intervaltree_for_chrom()
-    with MatrixReader().context() as matrix_reader:
+    
+    # TODO: fix this
+    with MatrixReader(matrix_filepath=matrix_filepath).context() as matrix_reader:
         f = functools.partial(get_region_info, matrix_reader, tree_for_chrom)
         Parallelizer._make_multiple_tasks_doer(f)(taskq, retq, parent_overrides)
 

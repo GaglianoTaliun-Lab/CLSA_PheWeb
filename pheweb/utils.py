@@ -45,7 +45,6 @@ assert fmt_seconds(9) == '9 seconds'
 assert fmt_seconds(900) == '15 minutes'
 assert fmt_seconds(90000) == '25 hours'
 
-
 def get_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.Any]]:
     # TODO: should this be memoized?
     from .file_utils import get_filepath
@@ -62,32 +61,6 @@ def get_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.An
     for pheno in phenolist:
         pheno['phenocode'] = urllib.parse.quote_plus(pheno['phenocode'])
     return phenolist
-
-def get_unique_phenolist(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.Any]]:
-    # TODO: should this be memoized?
-    from .file_utils import get_filepath
-    filepath = filepath or get_filepath('phenolist')  # Allow override for unit testing
-    try:
-        with open(os.path.join(filepath)) as f:
-            phenolist = json.load(f)
-    except (FileNotFoundError, PermissionError):
-        raise PheWebError(
-            "You need a file to define your phenotypes at '{}'.\n".format(filepath) +
-            "For more information on how to make one, see <https://github.com/statgen/pheweb#3-make-a-list-of-your-phenotypes>")
-    except json.JSONDecodeError as exc:
-        raise PheWebError("Your file at '{}' contains invalid json.\n".format(filepath)) from exc
-    phenolist_unique =[]
-    for pheno in phenolist:
-        pheno['phenocode'] = urllib.parse.quote_plus(pheno['phenocode'])
-        if pheno['sex'] != "female" and pheno['sex'] != 'male':
-            phenolist_unique.append(pheno)
-    return phenolist_unique
-
-def get_female_phenolist():
-    return 0
-
-def get_male_phenolist():
-    return 0
 
 def get_phenotype_summary(filepath:ty.Optional[str] = None) -> ty.List[ty.Dict[str,ty.Any]]:
     from .file_utils import get_filepath
@@ -142,6 +115,37 @@ def get_padded_gene_tuples() -> ty.Iterator[ty.Tuple[str,int,int,str]]:
     for chrom,start,end,genename,ensg in get_gene_tuples_with_ensg():
         start,end = pad_gene(start,end)
         yield (chrom,start,end,genename)
+        
+def get_phenocode_with_stratifications(pheno:dict) -> str:
+    phenocode = pheno['phenocode']
+    for stratification in pheno['stratification']:
+        phenocode += "."+pheno['stratification'][stratification]
+    return phenocode
+
+def get_stratification_paths(phenos:list) -> [str]:
+    stratification_paths = []
+    for pheno in phenos:
+        stratification_path = ""
+        for stratification in pheno['stratification']:
+            stratification_path += "."+pheno['stratification'][stratification]
+        stratification_paths.append(stratification_path)
+    return stratification_paths
+
+def get_stratifications(phenos:list) -> ty.Dict[str,ty.Any]:
+
+    stratification_list = []
+    for pheno in phenos:
+        pheno['phenocode'] = urllib.parse.quote_plus(pheno['phenocode'])
+        stratification_list.append(pheno['stratification'])
+            
+    unique_values = {}
+    for item in stratification_list:
+        for key, value in item.items(): 
+            if key not in unique_values:
+                unique_values[key] = set()
+            unique_values[key].add(value)
+    
+    return unique_values
 
 
 # From <https://m.ensembl.org/info/genome/variation/prediction/predicted_data.html>

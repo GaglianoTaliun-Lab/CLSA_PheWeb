@@ -1,5 +1,5 @@
 
-from ..utils import get_phenolist, PheWebError
+from ..utils import get_phenolist, PheWebError, get_phenocode_with_stratifications
 from .. import conf
 from ..file_utils import VariantFileWriter, write_json, get_generated_path, get_filepath, get_pheno_filepath
 from .read_input_file import PhenoReader
@@ -16,6 +16,13 @@ def run(argv:List[str]) -> None:
     args = parser.parse_args(argv)
 
     phenos = get_phenos_subset(args.phenos) if args.phenos else get_phenolist()
+    
+    # For each pheno in phenos, we need to update the phenocode if stratified.
+    if conf.stratified():
+        for i, pheno in enumerate(phenos):
+            phenos[i]['phenocode'] = get_phenocode_with_stratifications(pheno)
+            
+    print(f"phenos to parallelize per pheno: {phenos}")
 
     results_by_phenocode = parallelize_per_pheno(
         get_input_filepaths = get_input_filepaths,
@@ -51,11 +58,7 @@ def run(argv:List[str]) -> None:
             )
 
 def get_input_filepaths(pheno:dict) -> List[str]: return pheno['assoc_files']
-def get_output_filepaths(pheno:dict)-> List[str]: 
-    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
-        return [get_pheno_filepath('parsed-sex_stratified', pheno['phenocode']+"."+pheno['sex'], must_exist=False)]
-    else:
-        return [get_pheno_filepath('parsed', pheno['phenocode'], must_exist=False)]
+def get_output_filepaths(pheno:dict)-> List[str]: return [get_pheno_filepath('parsed', pheno['phenocode'], must_exist=False)]
 
 def write_failures(filepath:str, failed_results:Dict[str,Any]):
     with open(filepath, 'w') as f:
@@ -66,20 +69,16 @@ def write_failures(filepath:str, failed_results:Dict[str,Any]):
 def convert(pheno:Dict[str,Any]) -> Iterator[Dict[str,Any]]:
     # suppress Exceptions so that we can report back on which phenotypes succeeded and which didn't.
     try:
-        if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
-            with VariantFileWriter(get_pheno_filepath('parsed-sex_stratified', pheno['phenocode']+"."+pheno['sex'], must_exist=False)) as writer:
-                pheno_reader = PhenoReader(pheno, minimum_maf=conf.get_assoc_min_maf())
-                variants = pheno_reader.get_variants()
-                debugging_limit_num_variants = conf.get_debugging_limit_num_variants()
-                if debugging_limit_num_variants: variants = itertools.islice(variants, 0, debugging_limit_num_variants)
-                writer.write_all(variants)
-        else: 
-            with VariantFileWriter(get_pheno_filepath('parsed', pheno['phenocode'], must_exist=False)) as writer:
-                pheno_reader = PhenoReader(pheno, minimum_maf=conf.get_assoc_min_maf())
-                variants = pheno_reader.get_variants()
-                debugging_limit_num_variants = conf.get_debugging_limit_num_variants()
-                if debugging_limit_num_variants: variants = itertools.islice(variants, 0, debugging_limit_num_variants)
-                writer.write_all(variants)
+        # if conf.stratified():
+        #     pheno['phenocode'] = get_phenocode_with_stratifications(pheno)
+            
+        with VariantFileWriter(get_pheno_filepath('parsed', pheno['phenocode'], must_exist=False)) as writer:
+            pheno_reader = PhenoReader(pheno, minimum_maf=conf.get_assoc_min_maf())
+            variants = pheno_reader.get_variants()
+            debugging_limit_num_variants = conf.get_debugging_limit_num_variants()
+            if debugging_limit_num_variants: variants = itertools.islice(variants, 0, debugging_limit_num_variants)
+            writer.write_all(variants)
+
 
     except Exception as exc:
         import traceback

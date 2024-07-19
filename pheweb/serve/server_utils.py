@@ -1,7 +1,7 @@
 
 from flask import url_for, Response, redirect
 
-from ..file_utils import MatrixReader, FemaleMatrixReader, MaleMatrixReader, IndexedVariantFileReader, get_filepath
+from ..file_utils import MatrixReader, IndexedVariantFileReader, get_filepath
 
 import random
 import re
@@ -71,22 +71,12 @@ class _GetVariant:
         assert None not in [chrom, pos, ref, alt]
         if not hasattr(self, '_matrix_reader'):
             self._matrix_reader = MatrixReader()
-        if not hasattr(self, '_female_matrix_reader'):
-            self._female_matrix_reader = FemaleMatrixReader()
-        if not hasattr(self, '_male_matrix_reader'):
-            self._male_matrix_reader = MaleMatrixReader()
 
         with self._matrix_reader.context() as mr:
             v = mr.get_variant(chrom, pos, ref, alt)
-        with self._female_matrix_reader.context() as fmr:
-            fv = fmr.get_variant(chrom, pos, ref, alt)
-        with self._male_matrix_reader.context() as mmr:
-            mv = mmr.get_variant(chrom, pos, ref, alt)
 
         if v is None: return None
         v['phenos'] = list(v['phenos'].values())
-        v['phenos_female'] = list(fv['phenos'].values())
-        v['phenos_male'] = list(mv['phenos'].values())
         v['variant_name'] = '{} : {:,} {} / {}'.format(chrom, pos, ref, alt)
         return v
 get_variant = _GetVariant().get_variant

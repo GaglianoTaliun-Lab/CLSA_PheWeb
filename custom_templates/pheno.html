@@ -14,277 +14,13 @@
 <script type="text/javascript">
   window.model.tooltip_underscoretemplate = {{ tooltip_underscoretemplate|tojson }};
   window.phenocode = {{ phenocode|tojson|safe }};
-  window.phenocode_male = {{ phenocode|tojson|safe }} + ".male";
-  window.phenocode_female = {{ phenocode|tojson|safe }} + ".female";
-  window.pheno_male = {{ pheno_male | tojson }};
-  window.pheno_female = {{ pheno_female | tojson }};
-  window.model.sex_stratified = {{ sex_stratified | tojson }};
+  window.pheno_list = {{ pheno_list | tojson | safe}};
+  window.phenocode_list = {{ phenocode_list | tojson | safe}};
+  window.download_url = {{ download_url | tojson }}
+  window.model.stratified = {{ stratified | tojson }};
   window.model.show_correlations = {{ show_correlations | tojson }};
   window.model.correlations_url = {{ url_for('.api_pheno_correlations', phenocode=pheno['phenocode'] ) | tojson }};
   window.model.pheno_correlations_pvalue_threshold = {{ pheno_correlations_pvalue_threshold | tojson }};
-  
-  var stream_table_data = [];
-  //TODO: populate streamtable in seperate api calls.
-  if (!window.model.sex_stratified){
-    $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json")
-    .done(function (data){
-      data.unbinned_variants.forEach(function(variant) {
-        variant['sex'] = 'Combined';
-      });
-    })
-    populate_streamtable(data.unbinned_variants);
-  } else if ( window.model.sex_stratified && window.pheno_male != null && window.pheno_female != null) {
-    $.when(
-      $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json")
-    ).done(function(data_combined, data_male, data_female) {
-        data_combined[0].unbinned_variants.forEach(function(variant){
-          variant['sex'] = 'Combined';
-        });
-        data_male[0].unbinned_variants.forEach(function(variant) {
-          variant['sex'] = 'Male';
-        });
-
-        data_female[0].unbinned_variants.forEach(function(variant) {
-          variant['sex'] = 'Female';
-        });
-
-        var combined_data = data_male[0].unbinned_variants.concat(data_combined[0].unbinned_variants.concat(data_female[0].unbinned_variants))
-        populate_streamtable(combined_data);
-    });
-  } else if (  window.model.sex_stratified && window_pheno_male != null){
-    $.when(
-      $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
-    ).done(function(data_combined, data_male, data_female) {
-        data_combined[0].unbinned_variants.forEach(function(variant){
-          variant['sex'] = 'Combined';
-        });
-        data_male[0].unbinned_variants.forEach(function(variant) {
-          variant['sex'] = 'Male';
-        });
-
-        var combined_data = data_male[0].unbinned_variants.concat(data_combined[0].unbinned_variants)
-        populate_streamtable(combined_data);
-    });
-  } else if (  window.model.sex_stratified && window_pheno_female != null){
-    $.when(
-      $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json")
-    ).done(function(data_combined, data_male, data_female) {
-        data_combined[0].unbinned_variants.forEach(function(variant){
-          variant['sex'] = 'Combined';
-        });
-
-        data_female[0].unbinned_variants.forEach(function(variant) {
-          variant['sex'] = 'Female';
-        });
-
-        var combined_data = data_combined[0].unbinned_variants.concat(data_female[0].unbinned_variants)
-        populate_streamtable(combined_data);
-    });
-  }
-  
-  //manhattan plot generation
-  $.getJSON(window.model.urlprefix + "/api/manhattan/pheno/" + window.phenocode + ".json")
-  .done(function(data) {
-      window.debug.manhattan = data;
-      create_gwas_plot(data.variant_bins, data.unbinned_variants);
-
-      data.unbinned_variants.forEach(function(variant) {
-        variant['sex'] = 'Combined';
-      });
-  })
-  .fail(function() {
-    console.log("Manhattan XHR failed");
-  });
-
-  if (window.model.sex_stratified && window.pheno_male != null && window.pheno_female != null){
-
-    $.when(
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json")
-    ).done(function(data_male, data_female) {
-        window.debug.miami = {
-          male: data_male[0],
-          female: data_female[0]
-        };
-        create_miami_plot({
-          male_variant_bins : data_male[0].variant_bins, male_unbinned_variants : data_male[0].unbinned_variants,
-          female_variant_bins : data_female[0].variant_bins, female_unbinned_variants : data_female[0].unbinned_variants
-        });
-    })
-    .fail(function() {
-      console.log("Miami (with male and female) XHR failed");
-    });
-  }
-
-  else if (window.model.sex_stratified && window.pheno_female == null && window.pheno_male != null){
-    $.when(
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_male + ".json"),
-    ).done(function(data_male) {
-        window.debug.miami = {
-          male: data_male,
-          female: null
-        };
-        create_miami_plot({male_variant_bins : data_male.variant_bins, male_unbinned_variants : data_male.unbinned_variants});
-    })
-    .fail(function() {
-      console.log("Miami (with male only) XHR failed");
-    });
-  }
-  else if (window.model.sex_stratified && window.pheno_male == null && window.pheno_female != null){
-    $.when(
-      $.getJSON(window.model.urlprefix + "/api/miami/pheno/" + window.phenocode_female + ".json"),
-    ).done(function(data_female) {
-        window.debug.miami = {
-          female: data_female,
-          male: null
-        };
-        create_miami_plot({female_variant_bins: data_female.variant_bins, female_unbinned_variants: data_female.unbinned_variants});
-    })
-    .fail(function() {
-      console.log("Miami (with female only) XHR failed");
-    });
-  }
-
-  if (window.model.sex_stratified && window.pheno_male != null && window.pheno_female != null){
-    $.when(
-      $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_male + ".json"),
-      $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_female + ".json")
-    ).done(function(data1, data2, data3) {
-      qq_combined = data1[0]
-      qq_male = data2[0]
-      qq_female = data3[0]
-      _.sortBy(_.pairs(qq_combined.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-        if (i === 0) { text = '<b>' + text + '</b>'; }
-        text = '<br>' + text;
-        $('.gc-control_both').append(text);
-      });
-      _.sortBy(_.pairs(qq_male.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-        if (i === 0) { text = '<b>' + text + '</b>'; }
-        text = '<br>' + text;
-        $('.gc-control_male').append(text);
-      });
-      _.sortBy(_.pairs(qq_female.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-        if (i === 0) { text = '<b>' + text + '</b>'; }
-        text = '<br>' + text;
-        $('.gc-control_female').append(text);
-      });
-
-      //return the max height and width to use based off the max of each .json
-      var dimensions = calculate_qq_dimension(qq_combined, male_data = qq_male, female_data = qq_female);
-
-      if (qq_combined.by_maf){
-        create_qq_plot(qq_combined.by_maf, qq_combined.ci, dimensions[0], dimensions[1]);
-        create_qq_plot(qq_male.by_maf, qq_male.ci, dimensions[0], dimensions[1], "male");
-        create_qq_plot(qq_female.by_maf, qq_female.ci, dimensions[0], dimensions[1], "female");
-      }
-      else {
-        create_qq_plot([{maf_range:[0,0.5], qq:qq_combined.overall.qq, count:qq_combined.overall.count}], qq_combined.ci, dimensions[0], dimensions[1]);
-        create_qq_plot([{maf_range:[0,0.5], qq:qq_male.overall.qq, count:qq_male.overall.count}], qq_male.ci, dimensions[0], dimensions[1], "male");
-        create_qq_plot([{maf_range:[0,0.5], qq:qq_female.overall.qq, count:qq_female.overall.count}], qq_female.ci, dimensions[0], dimensions[1], "female");
-      }
-      })
-      .fail(function() {
-        console.log("QQ (with male and female) XHR failed");
-      });
-    }
-    else if (window.model.sex_stratified && window.pheno_female == null && window.pheno_male != null){
-      $.when(
-        $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json"),
-        $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_male + ".json"),
-      ).done(function(data1, data2) {
-        qq_combined = data1[0]
-        qq_male = data2[0]
-        _.sortBy(_.pairs(qq_combined.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-          if (i === 0) { text = '<b>' + text + '</b>'; }
-          text = '<br>' + text;
-          $('.gc-control_both').append(text);
-        });
-        _.sortBy(_.pairs(qq_male.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-          if (i === 0) { text = '<b>' + text + '</b>'; }
-          text = '<br>' + text;
-          $('.gc-control_male').append(text);
-        });
-
-        //return the max height and width to use based off the max of each .json
-        var dimensions = calculate_qq_dimension(qq_combined, male_data = qq_male);
-
-        if (qq_combined.by_maf){
-          create_qq_plot(qq_combined.by_maf, qq_combined.ci, dimensions[0], dimensions[1]);
-          create_qq_plot(qq_male.by_maf, qq_male.ci, dimensions[0], dimensions[1], "male");
-        }
-        else {
-          create_qq_plot([{maf_range:[0,0.5], qq:qq_combined.overall.qq, count:qq_combined.overall.count}], qq_combined.ci, dimensions[0], dimensions[1]);
-          create_qq_plot([{maf_range:[0,0.5], qq:qq_male.overall.qq, count:qq_male.overall.count}], qq_male.ci, dimensions[0], dimensions[1], "male");
-        }
-        })
-        .fail(function() {
-          console.log("QQ (with male) XHR failed");
-        });
-    }
-    else if (window.model.sex_stratified && window.pheno_male == null && window.pheno_female != null){
-      $.when(
-        $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json"),
-        $.getJSON(window.model.urlprefix + "/api/qq/miami/pheno/" + window.phenocode_female + ".json"),
-      ).done(function(data1, data2) {
-        qq_combined = data1[0]
-        qq_female = data2[0]
-        _.sortBy(_.pairs(qq_combined.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-          if (i === 0) { text = '<b>' + text + '</b>'; }
-          text = '<br>' + text;
-          $('.gc-control_both').append(text);
-        });
-        _.sortBy(_.pairs(qq_female.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-          var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-          if (i === 0) { text = '<b>' + text + '</b>'; }
-          text = '<br>' + text;
-          $('.gc-control_female').append(text);
-        });
-
-        //return the max height and width to use based off the max of each .json
-        var dimensions = calculate_qq_dimension(qq_combined, female_data = qq_female);
-
-        if (qq_combined.by_maf){
-          create_qq_plot(qq_combined.by_maf, qq_combined.ci, dimensions[0], dimensions[1]);
-          create_qq_plot(qq_female.by_maf, qq_female.ci, dimensions[0], dimensions[1], "female");
-        }
-        else {
-          create_qq_plot([{maf_range:[0,0.5], qq:qq_combined.overall.qq, count:qq_combined.overall.count}], qq_combined.ci, dimensions[0], dimensions[1]);
-          create_qq_plot([{maf_range:[0,0.5], qq:qq_female.overall.qq, count:qq_female.overall.count}], qq_female.ci, dimensions[0], dimensions[1], "female");
-        }
-        })
-        .fail(function() {
-          console.log("QQ (with female) XHR failed");
-        });
-    } else {
-      $.getJSON(window.model.urlprefix + "/api/qq/pheno/" + window.phenocode + ".json")
-      .done(function(data) {
-      window.debug.qq = data;
-      _.sortBy(_.pairs(data.overall.gc_lambda), function(d) {return -d[0];}).forEach(function(d, i) {
-        var text = 'GC lambda ' + d[0] + ': ' + d[1].toFixed(3);
-        if (i === 0) { text = '<b>' + text + '</b>'; }
-        text = '<br>' + text;
-        $('.gc-control_both').append(text);
-      });
-      if (data.by_maf)
-        create_qq_plot(data.by_maf, data.ci, null, null);
-      else
-        create_qq_plot([{maf_range:[0,0.5], qq:data.overall.qq, count:data.overall.count}], data.ci, dimension[0], dimension[1]);
-      })
-      .fail(function() {
-        console.log("QQ XHR failed");
-      });
-    }
 </script>
 <style type="text/css">
 .d3-tip {
@@ -326,44 +62,12 @@
   stroke: #666;
 }
 
-#miami_plot_container {
-  min-width: 700px;
-}
-#miami_plot_container .axis > path.domain {
-  stroke-width: 2px;
-  stroke: #666;
-  fill: none;
-}
-#miami_plot_container .axis g.tick line {
-  stroke: #666;
-}
-
-#qq_plot_container_both .axis path.domain {
+.qq_plot_container .axis path.domain {
   stroke: black;
   fill: none;
   text-align: center;
 }
-#qq_plot_container_both g.tick line {
-  stroke: #666;
-  opacity: 0.3;
-}
-
-#qq_plot_container_male .axis path.domain {
-  stroke: black;
-  fill: none;
-  text-align: center;
-}
-#qq_plot_container_male g.tick line {
-  stroke: #666;
-  opacity: 0.3;
-}
-
-#qq_plot_container_female .axis path.domain {
-  stroke: black;
-  fill: none;
-  text-align: center;
-}
-#qq_plot_container_female g.tick line {
+.qq_plot_container g.tick line {
   stroke: #666;
   opacity: 0.3;
 }
@@ -382,31 +86,6 @@
   color: white;
 }
 
-.parent {
-  background: mediumpurple;
-  padding: 1rem
-}
-
-.child {
-  border: 1px solid indigo;
-  padding: 1rem
-}
-
-.inline-block-child {
-  display: inline-block;
-}
-.checkbox-container {
-    display: flex;
-    justify-content: space-between;
-    width: 400px; 
-    margin:0;
-    padding-top:7px;
-}
-
-input[type="checkbox"] {
-    margin: 0;
-}
-
 label {
   margin: 0;
   padding-right: 15px;
@@ -416,6 +95,7 @@ label {
   float: left;
   margin-right: 10px; /* Adjust spacing as needed */
   margin-bottom: 0px;
+  padding-top:3px
 }
 
 .arrow-up, .arrow-down {
@@ -444,6 +124,61 @@ label {
   background-color: lightgrey;
 }
 
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown-content-right {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+  text-align: right; /* Align text to the right */
+  right: 0; /* Align dropdown to the right side of the button */
+}
+
+/* Show the dropdown menu when the user clicks on the dropdown button */
+.dropdown-content label {
+  display: block;
+}
+
+.dropdown-content-right a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-weight:bold;
+}
+
+/* Show the dropdown menu when the user hovers over the dropdown button */
+.dropdown:hover .dropdown-content {
+  display: block;
+} 
+
+.dropdown:hover .dropdown-content-right {
+  display: block;
+}
+
+.dropdown-content-right a:hover {
+  background-color: #ddd;
+} 
+
 </style>
 {% endblock %}
 
@@ -465,85 +200,52 @@ label {
     </div>
 </div>
 <div class="row">
-    <div class="pheno-info col-xs-12 col-sm-8">
-        {% if 'num_cases' in pheno and pheno['num_cases'] != "" %}
-          <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls</p>
-        {% elif 'num_samples' in pheno %}
-          <p><b>{{ pheno.num_samples }}</b> samples</p>
-        {% endif %}
-        {% if pheno.category %}
-          <p>Category: <b>{{ pheno.category}}</b></p>
-        {% endif %}
-        {% include "pheno/info.html" %}
-    </div>
-    <div class="pheno-info col-xs-12 col-sm-4">
-      {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
-      <span class="pull-right">
-        <a class="btn btn-default" href="{{ url_for('.download_pheno', phenocode=phenocode) }}">Download summary statistics</a>
-        {% if sex_stratified %}
-          {% if pheno_male != None %}<a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='male') }}">Download male summary statistics</a>
+    <div class="pheno-info col-xs-12">
+        <div id="cases-controls-samples">
+          {% if 'num_cases' in pheno and pheno['num_cases'] != "" %}
+            <p><b>{{ pheno.num_cases }}</b> cases, <b>{{ pheno.num_controls }}</b> controls</p>
+          {% elif 'num_samples' in pheno and pheno['num_samples'] != "" %}
+            <p><b>{{ pheno.num_samples }}</b> samples</p>
           {% endif %}
-          {% if pheno_female != None %}<a class="btn btn-default" href="{{ url_for('.download_pheno_sex_stratified', phenocode=phenocode, sex='female') }}">Download female summary statistics</a>
+          {% if pheno.category %}
+            <p>Category: <b>{{ pheno.category}}</b></p>
           {% endif %}
-        {% endif %}
-      </span>
-        
-      {% endif %}
+          {% include "pheno/info.html" %}
+        </div>
+
+      <div class="dropdown" id="dropdown-data1">
+        <button class="btn btn-drop" id="button-data1">Select Data 1<span class="arrow-container"><span class="arrow-down"></span></span></button>
+        <div class="dropdown-content" id="dropdown-content-data1">
+        </div>
+      </div>
+      <div class="dropdown" id="dropdown-data2">
+        <button class="btn btn-drop" id="button-data2">Select Data 2<span class="arrow-container"><span class="arrow-down"></span></span></button>
+        <div class="dropdown-content" id="dropdown-content-data2">
+        </div>
+      </div>
       {% if show_manhattan_filter_button %}
       <span class="pull-right" style="margin-left:1em;margin-right:1em">
         <a class="btn btn-default" href="{{ url_for('.pheno_filter_page', phenocode=phenocode) }}">Filter Variants</a>
       </span>
       {% endif %}
-    </div>
+      {% if config.DOWNLOAD_PHENO_SUMSTATS_BUTTON %}
+      <div class="dropdown pull-right" id="dropdown-sumstats">
+        <button class="btn btn-drop">  Download Summary Statistics  <span class="arrow-container"><span class="arrow-down"></span></span></button>
+        <div class="dropdown-content-right" id="dropdown-content-sumstats">
+          <button class="btn btn-default" style="width:100%" id="download-all-button">Download All</button>
+          <button class="btn btn-default" style="width:100%" id="download-current-button">Download Current Selection</button>
+        </div>
+      </div>
+      {% endif %}
+
 </div>
-<div class="row">
-  <div class="col-xs-12">
-    <ul>
-      <li class="section-link"><a href="#manhattan">Manhattan</a></li>
-      {% if sex_stratified %}<li class="section-link"><a href="#miami">Miami</a></li>{% endif %}
-      <li class="section-link"><a href="#qq">QQ</a></li>
-      {% if show_correlations %}<li class="section-link"><a href="#correlations">Correlated phenotypes</a></li>{% endif %}
-    </ul>
-  </div>
-</div>
+
 <div class="row">
     <div class="col-xs-12" id="manhattan">
         <div id="manhattan_plot_container">
         </div>
     </div>
 </div>
-
-{% if sex_stratified %}
-  <div class="pheno-info col-xs-12 col-sm-8">
-    {% if pheno_male != None %}
-      {% if 'num_cases' in pheno_male and pheno_male['num_cases'] != "" %}
-      <p><b>{{ pheno_male.num_cases }}</b> male cases, <b>{{ pheno_male.num_controls }}</b> male controls</p>
-      {% elif 'num_samples' in pheno_male %}
-      <p><b>{{ pheno_male.num_samples }}</b> male samples</p>
-      {% endif %}
-    {% endif %}
-    {% if pheno_female != None %}
-      {% if 'num_cases' in pheno_female and pheno_female['num_cases'] != "" %}
-        <p><b>{{ pheno_female.num_cases }}</b> female cases, <b>{{ pheno_female.num_controls }}</b> female controls</p>
-      {% elif 'num_samples' in pheno_female %}
-        <p><b>{{ pheno_female.num_samples }}</b> female samples</p>
-      {% endif %}
-    {% endif %}
-    {% if pheno.category %}
-      <p>Category: <b>{{ pheno.category}}</b></p>
-    {% endif %}
-    {% include "pheno/info.html" %}
-  </div>
-{% endif %}
-
-{% if sex_stratified %}
-<div class="row" >
-    <div class="col-xs-12" id="miami" >
-        <div id="miami_plot_container">
-        </div>
-    </div>
-</div>
-{% endif %}
 
 <div class="row">
   <div class="col-xs-12 col-md-8">
@@ -553,17 +255,6 @@ label {
 <div class="row">
   <div class="col-xs-12 col-sm-8 col-md-6">
     <input type="text" class="form-control" id="search" placeholder="Search... &quot;TCF7L2&quot;, &quot;rs1861867&quot;, etc.">
-  </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="check_combined" checked>
-    <label for="check_combined"> Show combined </label>
-    {% if sex_stratified %}
-    <input type="checkbox" id="check_male" checked>
-    <label for="check_male"> Show male </label>
-
-    <input type="checkbox" id="check_female" checked>
-    <label for="check_female"> Show female </label>
-    {% endif %}
   </div>
   <div class="col-xs-12 col-sm-4 col-sm-6">
     <h5 class="pull-right"><div id="streamtable-found" class="label label-primary"></div></h5>
@@ -579,8 +270,7 @@ label {
           <th><span class="arrow-container" data-sort="af:asc:number"onclick="sortTable(2)"><span class="arrow-up"></span><span class="arrow-down"></span></span> MAF</th>
           <th><span class="arrow-container" data-sort="pval:desc:number" onclick="sortTable(3)"><span class="arrow-up" ></span><span class="arrow-down" style="border-color:black"></span></span> P-value</th>
           <th><span class="arrow-container" data-sort="beta:asc:number" onclick="sortTable(4)"><span class="arrow-up"></span><span class="arrow-down"></span></span> Effect Size (se)</th>
-          <th>Sex</th>
-          <th>T2, metaQ</th>
+          <th>Interaction Term</th>
         </tr>
       </thead>
       <tbody>
@@ -589,26 +279,8 @@ label {
   </div>
 </div>
 
-<div class="row">
+<div class="row" id="qq_container">
   <h3 id="qq">QQ plot:</h3>
-    <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-        <div id="qq_plot_container_both">All</div>
-        <p class="gc-control_both"></p>
-    </div>
-    {% if sex_stratified %}
-      {% if pheno_male != None %}
-        <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-          <div id="qq_plot_container_male">Male</div>
-          <p class="gc-control_male"></p>
-        </div>
-      {% endif %}
-      {% if pheno_female != None %}
-        <div class="pheno-info col-xs-12 col-sm-4 col-md-3 col-lg-3">
-          <div id="qq_plot_container_female">Female</div>
-          <p class="gc-control_female"></p>
-        </div>
-      {% endif %}
-    {% endif %}
 </div>
 <i>(Genomic Control lambda calculated based on the 50th percentile (median), 10th percentile, 1st percentile, and 1/10th of a percentile)</i>
 
@@ -624,20 +296,4 @@ label {
     </div>
   </div>
 {% endif %}
-
-
-<script type="text/template" id="streamtable-template">
-<tr>
-<td><a style="color:black" href="{{ url_for('.variant_page', query='').rstrip('/') }}/<%= v.chrom %>-<%= v.pos %>-<%= v.ref %>-<%= v.alt %>">
-    <%= v.chrom %>:<%= v.pos.toLocaleString() %> <%= v.ref %> / <%= v.alt %>
-    <% if (v.rsids) { %>(<%= v.rsids.replace(/,/g, ', ') %>)<% } %>
-</a></td>
-<td><i><%= v.nearest_genes.replace(/,/g, ', ') %></i></td>
-<td><%= (v.maf)? v.maf.toPrecision(2) : (v.af)? v.af.toPrecision(2):  (v.ac)? v.ac : "" %></td>
-<td><%= (v.pval==0) ? '≤1e-320' : v.pval.toExponential(1) %></td>
-<td><%= (v.beta) ? v.beta.toPrecision(2) : "" %><%= (v.sebeta) ? " ("+v.sebeta.toPrecision(2)+")" : "" %></td>
-<td><%= (v.sex) %></td>
-<td>NA</td>
-</tr>
-</script>
 {% endblock %}

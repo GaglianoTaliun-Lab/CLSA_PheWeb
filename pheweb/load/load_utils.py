@@ -1,5 +1,5 @@
 
-from ..utils import round_sig, get_phenolist, PheWebError, fmt_seconds
+from ..utils import round_sig, get_phenolist, PheWebError, fmt_seconds, get_phenocode_with_stratifications
 from .. import conf
 from .. import parse_utils
 from ..file_utils import get_dated_tmp_path
@@ -154,7 +154,7 @@ class MaxPriorityQueue:
 
 
 class Parallelizer:
-    def run_multiple_tasks(self, tasks, do_multiple_tasks, cmd=None):
+    def run_multiple_tasks(self, tasks, do_multiple_tasks, matrix_filepath=None, cmd=None ):
         '''
         Make a task queue and a return queue.
         Spawn child processes `do_multiple_tasks(taskq, retq, overrides)` to pop taskq and push retq.
@@ -168,7 +168,13 @@ class Parallelizer:
         for task in tasks: taskq.put(task)
         for _ in range(n_procs): taskq.put({"exit":True})
         retq = multiprocessing.Queue()
-        procs = [multiprocessing.Process(target=do_multiple_tasks, args=(taskq, retq, conf.overrides), daemon=True) for _ in range(n_procs)]
+        
+        args = (taskq, retq, conf.overrides)
+        
+        if matrix_filepath is not None:
+            args = (taskq, retq, conf.overrides, matrix_filepath)
+        
+        procs = [multiprocessing.Process(target=do_multiple_tasks, args=args, daemon=True) for _ in range(n_procs)]
         for p in procs: p.start()
         with ProgressBar() as progressbar:
             n_tasks_complete = 0
@@ -227,7 +233,7 @@ class Parallelizer:
         # See <https://stackoverflow.com/a/14550773/1166306> for more info.
         return functools.partial(Parallelizer._partialable_multiple_tasks_doer, do_single_task)
     @staticmethod
-    def _partialable_multiple_tasks_doer(do_single_task, taskq, retq, parent_overrides):
+    def _partialable_multiple_tasks_doer(do_single_task, taskq, retq, parent_overrides, matrix_filepath = None):
         if conf.overrides and conf.overrides != parent_overrides:
             err = 'Tried to pass parent_overrides {!r} down to child process that already had overrides {!r}'.format(parent_overrides, conf.overrides)
             retq.put({'type': 'exception', 'task': None, 'exception_str': err, 'exception_tb': err})
@@ -235,7 +241,10 @@ class Parallelizer:
         conf.overrides.update(parent_overrides)
         for task in iter(taskq.get, {'exit':True}):
             try:
-                x = do_single_task(task)
+                if matrix_filepath is None:
+                    x = do_single_task(task)
+                else:
+                    x = do_single_task(task, matrix_filepath)
                 for ret in (x if isinstance(x, GeneratorType) else [x]): # if it returns None (rather than a generator), assume it has no results
                     retq.put({
                         "type": "result",
@@ -259,7 +268,11 @@ class Parallelizer:
 class PerPhenoParallelizer(Parallelizer):
     def run_on_each_pheno(self, get_input_filepaths, get_output_filepaths, convert, *, cmd=None, phenos=None):
         if phenos is None: phenos = get_phenolist()
+        
         tasks = [pheno for pheno in phenos if self.should_process_pheno(pheno, get_input_filepaths, get_output_filepaths)]
+        
+        print(f"Tasks : {tasks}")
+             
         if not tasks:
             print("Output files are all newer than input files, so there's nothing to do.")
             return {}
@@ -269,17 +282,11 @@ class PerPhenoParallelizer(Parallelizer):
             print("Processing {} phenos ({} already done)".format(len(tasks), len(phenos)-len(tasks)))
         pheno_results = {}
         for ret in self.run_single_tasks(tasks, convert, cmd=cmd):
-            print(f"ret {ret}")
-            if (conf.should_show_sex_stratified and (ret['task']['sex'] != '')):
-                pc = ret['task']['phenocode'] + "." + ret['task']['sex']
-            else:
-                pc = ret['task']['phenocode']
+            pc = ret['task']['phenocode']
             v = ret['value']
             if isinstance(v, dict) and v.get('type', '') == 'warning':
                 continue # TODO: self._progressbar.prepend_message(ret['message'])
-            print(f"pc : {pc}")
-            print(f"v : {v}")
-            print(f"pheno results : {pheno_results}")
+            print(f"asserting {pc} not in {pheno_results}")
             assert pc not in pheno_results
             pheno_results[pc] = v
         return pheno_results
@@ -288,6 +295,7 @@ class PerPhenoParallelizer(Parallelizer):
         output_filepaths = get_output_filepaths(pheno)
         if isinstance(input_filepaths, str): input_filepaths = [input_filepaths]
         if isinstance(output_filepaths, str): output_filepaths = [output_filepaths]
+        
         for fp in input_filepaths:
             if not os.path.exists(fp):
                 raise PheWebError("Cannot make {} because {} does not exist".format(' or '.join(output_filepaths), fp))

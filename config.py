@@ -1,6 +1,6 @@
 hg_build_number=38
 
-sex_stratified=True
+stratified=True
 
 field_aliases = {'CHROM': 'chrom',
                 'GENPOS': 'pos',

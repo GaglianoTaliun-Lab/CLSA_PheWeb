@@ -1,5 +1,5 @@
 
-from .utils import PheWebError, get_phenolist, get_unique_phenolist, chrom_order
+from .utils import PheWebError, get_phenolist, chrom_order, get_phenocode_with_stratifications
 from . import conf
 from . import parse_utils
 
@@ -52,8 +52,6 @@ _single_filepaths: Dict[str,Callable[[],str]] = {
     'correlations': (lambda: get_generated_path('pheno-correlations.txt')),
     'cpras-rsids-sqlite3': (lambda: get_generated_path('sites/cpras-rsids.sqlite3')),
     'matrix': (lambda: get_generated_path('matrix.tsv.gz')),
-    'matrix_female': (lambda: get_generated_path('matrix_female.tsv.gz')),
-    'matrix_male': (lambda: get_generated_path('matrix_male.tsv.gz')),
     'top-hits': (lambda: get_generated_path('top_hits.json')),
     'top-hits-1k': (lambda: get_generated_path('top_hits_1k.json')),
     'top-hits-tsv': (lambda: get_generated_path('top_hits.tsv')),
@@ -63,15 +61,11 @@ _single_filepaths: Dict[str,Callable[[],str]] = {
     'phenotypes_summary_tsv': (lambda: get_generated_path('phenotypes.tsv')),
     # directories for pheno filepaths:
     'parsed': (lambda: get_generated_path('parsed')),
-    'parsed-sex_stratified': (lambda: get_generated_path('parsed/sex_stratified')),
     'pheno_gz': (lambda: get_generated_path('pheno_gz')),
-    'pheno_gz-sex_stratified': (lambda: get_generated_path('pheno_gz/sex_stratified')),
     'best_of_pheno': (lambda: get_generated_path('best_of_pheno')),
-    'best_of_pheno-sex_stratified': (lambda: get_generated_path('best_of_pheno/sex_stratified')),
     'manhattan': (lambda: get_generated_path('manhattan')),
-    'manhattan-sex_stratified': (lambda: get_generated_path('manhattan/sex_stratified')),
     'qq': (lambda: get_generated_path('qq')),
-    'qq-sex_stratified': (lambda: get_generated_path('qq/sex_stratified')),
+    'matrix-stratified': (lambda: get_generated_path('matrix')),
 }
 
 def get_pheno_filepath(kind:str, phenocode:str, *, must_exist:bool = True) -> str:
@@ -82,22 +76,18 @@ def get_pheno_filepath(kind:str, phenocode:str, *, must_exist:bool = True) -> st
     return filepath
 _pheno_filepaths: Dict[str,Callable[[str],str]] = {
     'parsed': (lambda phenocode: get_generated_path('parsed', phenocode)),
-    'parsed-sex_stratified': (lambda phenocode: get_generated_path('parsed/sex_stratified', phenocode)),
     'pheno_gz': (lambda phenocode: get_generated_path('pheno_gz', '{}.gz'.format(phenocode))),
-    'pheno_gz-sex_stratified': (lambda phenocode: get_generated_path('pheno_gz/sex_stratified', '{}.gz'.format(phenocode))),
     'pheno_gz_tbi': (lambda phenocode: get_generated_path('pheno_gz', '{}.gz.tbi'.format(phenocode))),
-    'pheno_gz_tbi-sex_stratified': (lambda phenocode: get_generated_path('pheno_gz/sex_stratified', '{}.gz.tbi'.format(phenocode))),
     'best_of_pheno': (lambda phenocode: get_generated_path('best_of_pheno', phenocode)),
-    'best_of_pheno-sex_stratified': (lambda: get_generated_path('best_of_pheno/sex_stratified', phenocode)),
     'manhattan': (lambda phenocode: get_generated_path('manhattan', '{}.json'.format(phenocode))),
-    'manhattan-sex_stratified': (lambda phenocode: get_generated_path('manhattan/sex_stratified', '{}.json'.format(phenocode))),
     'qq': (lambda phenocode: get_generated_path('qq', '{}.json'.format(phenocode))),
-    'qq-sex_stratified': (lambda phenocode: get_generated_path('qq/sex_stratified', '{}.json'.format(phenocode))),
+    'matrix-stratified': (lambda phenocode: get_generated_path('matrix-stratified', 'matrix{}.tsv.gz'.format(phenocode))),
 }
 
 
 def make_basedir(path:Union[str,Path]) -> None:
     mkdir_p(os.path.dirname(path))
+
 
 def get_tmp_path(arg:Union[Path,str]) -> str:
     if isinstance(arg, Path): arg = str(arg)
@@ -247,16 +237,19 @@ class _ivfr:
                 return variant
         return None
 
-
+#TODO: subclass that is for stratifications
 class MatrixReader:
-    def __init__(self):
-        self._filepath = get_generated_path('matrix.tsv.gz')
+    def __init__(self, matrix_filepath:Optional[str] = None):
+        self._filepath = get_generated_path('matrix.tsv.gz') if matrix_filepath is None else matrix_filepath
 
-        phenos:List[Dict[str,Any]] = get_unique_phenolist()
+        phenos:List[Dict[str,Any]] = get_phenolist()
         phenocodes:List[str] = [pheno['phenocode'] for pheno in phenos]
+        
+        if conf.stratified():
+            phenocodes:List[str] = [get_phenocode_with_stratifications(pheno) for pheno in phenos]
 
         self._info_for_pheno = {
-            pheno['phenocode']: {k: v for k,v in pheno.items() if k != 'assoc_files'}
+            get_phenocode_with_stratifications(pheno): {k: v for k,v in pheno.items() if k != 'assoc_files'}
             for pheno in phenos
         }
 
@@ -286,94 +279,7 @@ class MatrixReader:
 
     @contextmanager
     def context(self):
-        with pysam.TabixFile(self._filepath, parser=None) as tabix_file:
-            yield _mr(tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno)
-
-class FemaleMatrixReader:
-    def __init__(self):
-        self._filepath = get_generated_path('matrix_female.tsv.gz')
-
-        phenos:List[Dict[str,Any]] = get_phenolist()
-
-        #Filter so that phenolist is only the females
-        phenos = [pheno for pheno in phenos if pheno['sex'] == "female"]
-
-        phenocodes:List[str] = [pheno['phenocode']+".female" for pheno in phenos]
-        self._info_for_pheno = {
-            pheno['phenocode'] + ".female": {k: v for k,v in pheno.items() if k != 'assoc_files'}
-            for pheno in phenos
-        }
-
-        with read_gzip(self._filepath) as f:
-            reader = csv.reader(f, dialect='pheweb-internal-dialect')
-            colnames = next(reader)
-        assert colnames[0].startswith('#'), colnames
-        colnames[0] = colnames[0][1:]
-
-        self._colidxs:Dict[str,int] = {} # maps field -> column_index
-        self._colidxs_for_pheno:Dict[str,Dict[str,int]] = {} # maps phenocode -> field -> column_index
-        for colnum, colname in enumerate(colnames):
-            if '@' in colname:
-                x = colname.split('@')
-                assert len(x) == 2, x
-                field, phenocode = x
-                assert field in parse_utils.fields, field
-                assert phenocode in phenocodes, phenocode
-                self._colidxs_for_pheno.setdefault(phenocode, {})[field] = colnum
-            else:
-                field = colname
-                assert field in parse_utils.fields, (field)
-                self._colidxs[field] = colnum
-
-    def get_phenocodes(self) -> List[str]:
-        return list(self._colidxs_for_pheno)
-
-    @contextmanager
-    def context(self):
-        with pysam.TabixFile(self._filepath, parser=None) as tabix_file:
-            yield _mr(tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno)
-
-class MaleMatrixReader:
-    def __init__(self):
-        self._filepath = get_generated_path('matrix_male.tsv.gz')
-
-        phenos:List[Dict[str,Any]] = get_phenolist()
-        #Filter so that phenolist is only the males
-        phenos = [pheno for pheno in phenos if pheno['sex'] == "male"]
-        phenocodes:List[str] = [pheno['phenocode'] + ".male" for pheno in phenos]
-
-        self._info_for_pheno = {
-            pheno['phenocode']+".male": {k: v for k,v in pheno.items() if k != 'assoc_files'}
-            for pheno in phenos
-        }
-
-        with read_gzip(self._filepath) as f:
-            reader = csv.reader(f, dialect='pheweb-internal-dialect')
-            colnames = next(reader)
-        assert colnames[0].startswith('#'), colnames
-        colnames[0] = colnames[0][1:]
-
-        self._colidxs:Dict[str,int] = {} # maps field -> column_index
-        self._colidxs_for_pheno:Dict[str,Dict[str,int]] = {} # maps phenocode -> field -> column_index
-        for colnum, colname in enumerate(colnames):
-            if '@' in colname:
-                x = colname.split('@')
-                assert len(x) == 2, x
-                field, phenocode = x
-                assert field in parse_utils.fields, field
-                assert phenocode in phenocodes, phenocode
-                self._colidxs_for_pheno.setdefault(phenocode, {})[field] = colnum
-            else:
-                field = colname
-                assert field in parse_utils.fields, (field)
-                self._colidxs[field] = colnum
-
-    def get_phenocodes(self) -> List[str]:
-        return list(self._colidxs_for_pheno)
-
-    @contextmanager
-    def context(self):
-        with pysam.TabixFile(self._filepath, parser=None) as tabix_file:
+        with pysam.TabixFile(str(self._filepath), parser=None) as tabix_file:
             yield _mr(tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno)
 
 
@@ -437,8 +343,6 @@ def read_maybe_gzip(filepath:Union[str,Path]):
         with open(filepath, 'rt', buffering=2**18) as f: # 256KB buffer
             yield f
 
-
-
 ## Writers
 
 @contextmanager
@@ -488,6 +392,7 @@ def write_heterogenous_variantfile(filepath:str, assocs:List[Dict[str,Any]], use
     if len(assocs) == 0:
         raise PheWebError("ERROR: tried to write file {!r} but didn't supply any variants")
     assocs[0] = {field:assocs[0].get(field,'') for field in set(itertools.chain.from_iterable(assocs))}
+
     with VariantFileWriter(filepath, allow_extra_fields=True, use_gzip=use_gzip) as vfw:
         vfw.write_all(assocs)
 

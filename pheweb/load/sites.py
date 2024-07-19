@@ -1,5 +1,5 @@
 
-from ..utils import chrom_order, get_phenolist, PheWebError
+from ..utils import chrom_order, get_phenolist, PheWebError, get_phenocode_with_stratifications
 from .. import conf
 from ..file_utils import VariantFileReader, VariantFileWriter, get_filepath, get_pheno_filepath, make_basedir, get_dated_tmp_path, get_tmp_path
 from .load_utils import get_maf, mtime, indent, ProgressBar
@@ -77,7 +77,10 @@ class MergeManager:
     def __init__(self):
         self.n_procs = conf.get_num_procs(cmd='sites')
         self.files = []
+
         for pheno in get_phenolist():
+            if conf.stratified():
+                pheno['phenocode'] = get_phenocode_with_stratifications(pheno) 
             filepath = get_pheno_filepath('parsed', pheno['phenocode'])
             self.files.append({
                 'type': 'input',

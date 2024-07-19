@@ -405,10 +405,11 @@ int make_matrix(const char *sites_filepath, const char *augmented_pheno_glob, co
 
     std::vector<std::string> aug_filepaths = glob(augmented_pheno_glob);
     size_t N_phenos = aug_filepaths.size();
+    std::cout << "N_phenos = " << N_phenos << std::endl;
     std::vector<LineReader> aug_readers(N_phenos);
     std::vector<std::string> aug_phenocodes(N_phenos);
     std::vector<unsigned> aug_n_per_assoc_fields(N_phenos); // initialized to 0s.
-    set_ulimit_num_files(N_phenos + 100); // are python files still open?
+    // set_ulimit_num_files(N_phenos + 100); // are python files still open?
     for (size_t i = 0; i < N_phenos; i++) {
         aug_readers[i].attach(aug_filepaths[i]);
         aug_phenocodes[i] = aug_filepaths[i];

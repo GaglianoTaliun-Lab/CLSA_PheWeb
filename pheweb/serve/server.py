@@ -1,6 +1,6 @@
 
 from ..load.load_utils import get_maf
-from ..utils import get_phenolist, get_unique_phenolist, get_phenotype_summary, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
+from ..utils import get_phenolist, get_phenocode_with_stratifications, get_phenotype_summary, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
 from .. import conf
 from .. import parse_utils
 from ..file_utils import get_filepath, get_pheno_filepath, VariantFileReader
@@ -46,9 +46,7 @@ if conf.get_custom_templates_dir():
     jinja_searchpath.insert(0, conf.get_custom_templates_dir())
 
 phenos = {pheno['phenocode']: pheno for pheno in get_phenolist()}
-phenos_male = {pheno['phenocode']: pheno for pheno in get_phenolist() if pheno['sex'] == 'male'}
-phenos_female = {pheno['phenocode']: pheno for pheno in get_phenolist() if pheno['sex'] == 'female'}
-phenos_unique = {pheno['phenocode']: pheno for pheno in get_unique_phenolist()}
+all_phenos = get_phenolist()
 pheno_summary = {pheno['phenocode']: pheno for pheno in get_phenotype_summary()}
 
 def email_is_allowed(user_email:Optional[str] = None) -> bool:
@@ -127,7 +125,7 @@ def variant_page(query:str):
             die("Sorry, I couldn't find the variant {}".format(query))
         return render_template('variant.html',
                                variant=variant,
-                               sex_stratified=conf.should_show_sex_stratified(),
+                               sex_stratified=conf.stratified(),
                                tooltip_lztemplate=parse_utils.tooltip_lztemplate,
         )
     except Exception as exc:
@@ -137,11 +135,6 @@ def variant_page(query:str):
 @check_auth
 def api_pheno(phenocode:str):
     return send_from_directory(get_filepath('manhattan'), '{}.json'.format(phenocode))
-
-@bp.route('/api/miami/pheno/<phenocode>.json')
-@check_auth
-def api_pheno_miami(phenocode:str):
-    return send_from_directory(get_filepath('manhattan-sex_stratified'), '{}.json'.format(phenocode))
 
 @bp.route('/api/manhattan-filtered/pheno/<phenocode>.json')
 @check_auth
@@ -207,7 +200,10 @@ def download_top_hits():
 @check_auth
 def phenotypes_page():
     return render_template('phenotypes.html',
-                            sex_stratified=conf.should_show_sex_stratified())
+                            stratified=conf.stratified(),
+                            pheno_url=url_for('.pheno_page', phenocode='').rstrip('/'),
+                            variant_url=url_for('.variant_page', query='').rstrip('/'),
+                            region_url=url_for('.region_page', phenocode='', region='').rstrip('/'))
     
 @bp.route('/api/phenotypes.json')
 @check_auth
@@ -224,10 +220,6 @@ def download_phenotypes():
 def api_pheno_qq(phenocode:str):
     return send_from_directory(get_filepath('qq'), '{}.json'.format(phenocode))
 
-@bp.route('/api/qq/miami/pheno/<phenocode>.json')
-@check_auth
-def api_pheno_qq_miami(phenocode:str):
-    return send_from_directory(get_filepath('qq-sex_stratified'), '{}.json'.format(phenocode))
 
 @bp.route('/random')
 @check_auth
@@ -241,33 +233,29 @@ def random_page():
 @check_auth
 def pheno_page(phenocode:str):
     try:
-        pheno = phenos_unique[phenocode]
-        print(pheno)
+        pheno = phenos[phenocode]
     except KeyError:
         die("Sorry, I couldn't find the pheno code in your pheno-list.json: {!r}".format(phenocode))
-
-    if conf.should_show_sex_stratified():
-        try:
-            pheno_female = phenos_female[phenocode]
-        except KeyError:
-            pheno_female = None
-        print(pheno_female)
-
-        try:
-            pheno_male = phenos_male[phenocode]
-        except KeyError:
-            pheno_male = None
-        print(pheno_male)
+    
+    #pass through a list that helps identify which phenos should be called (generated)
+    phenocode_list = []
+    pheno_list = []
+    if conf.stratified():
+        for pheno_dict in all_phenos:
+            if pheno_dict['phenocode'] == phenocode:
+                pheno_list.append({get_phenocode_with_stratifications(pheno_dict): pheno_dict})
+                phenocode_list.append(get_phenocode_with_stratifications(pheno_dict))
 
     return render_template('pheno.html',
                            show_correlations=conf.should_show_correlations(),
                            pheno_correlations_pvalue_threshold=conf.get_pheno_correlations_pvalue_threshold(),
                            show_manhattan_filter_button=conf.should_show_manhattan_filter_button(),
-                           sex_stratified=conf.should_show_sex_stratified(),
+                           stratified=conf.stratified(),
                            phenocode=phenocode,
+                           phenocode_list=phenocode_list,
                            pheno=pheno,
-                           pheno_male=pheno_male,
-                           pheno_female=pheno_female,
+                           pheno_list=pheno_list,
+                           download_url= url_for('.download_pheno',phenocode='PHENOCODE_PLACEHOLDER').rstrip('/'),
                            tooltip_underscoretemplate=parse_utils.tooltip_underscoretemplate
     )
 
@@ -289,10 +277,9 @@ def pheno_filter_page(phenocode):
 @bp.route('/region/<phenocode>/<region>')
 @check_auth
 def region_page(phenocode:str, region:str):
-    print(phenos_unique)
-    print(phenocode)
+
     try:
-        pheno = phenos_unique[phenocode]
+        pheno = phenos[phenocode]
     except KeyError:
         die("Sorry, I couldn't find the phewas code {!r}".format(phenocode))
 
@@ -302,11 +289,12 @@ def region_page(phenocode:str, region:str):
         die("Sorry, I couldn't find the phenocode in phenotype summary (generated-by-pheweb/phenotypes.json) : {!r}".format(phenocode))
 
     pheno['phenocode'] = phenocode
+    
     return render_template('region.html',
                            pheno=pheno,
                            region=region,
                            pheno_summary=pheno_summary_single,
-                           sex_stratified=conf.should_show_sex_stratified(),
+                           sex_stratified=conf.stratified(),
                            tooltip_lztemplate=parse_utils.tooltip_lztemplate,
     )
 
@@ -321,6 +309,20 @@ def api_region(phenocode:str):
     else:
         chrom, pos_start, pos_end = m.group(1), int(m.group(2)), int(m.group(3))
         return jsonify(get_pheno_region(phenocode, chrom, pos_start, pos_end))
+
+@bp.route('/api/region/<phenocode>/lz-female-results/') # This API is easier on the LZ side.
+@check_auth
+def api_region_female(phenocode:str):
+
+    filter_param = request.args.get('filter')
+    if not isinstance(filter_param, str): abort(404)
+    m = re.match(r".*chromosome in +'(.+?)' and position ge ([0-9]+) and position le ([0-9]+)", filter_param)
+    if not m:
+        abort(404)
+    else:
+        chrom, pos_start, pos_end = m.group(1), int(m.group(2)), int(m.group(3))
+        #get pheno region of female stratification
+        return jsonify(get_pheno_region(phenocode, chrom, pos_start, pos_end, "female"))
 
 
 @bp.route('/api/pheno/<phenocode>/correlations/')
@@ -443,17 +445,6 @@ if conf.is_secret_download_pheno_sumstats():
                                        attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
         except Exception as exc:
             die("Sorry, that file doesn't exist.", exception=exc)
-    
-    @bp.route('/download/<phenocode>/<sex>/<token>')
-    def download_pheno_sex_stratified(phenocode:str, sex:str, token:str):
-        phenocode_label = phenocode + "." + sex
-        if phenocode not in phenos:
-            die("Sorry, that phenocode doesn't exist")
-        if not Hasher.check_hash(token, phenocode):
-            die("Sorry, that token is incorrect")
-        return send_from_directory(get_filepath('pheno_gz-sex_stratified'), '{}.gz'.format(phenocode_label),
-                                   as_attachment=True,
-                                   attachment_filename='phenocode-{}.tsv.gz'.format(phenocode_label))
 
     download_list_secret_token = Hasher.get_hash('|'.join(sorted(phenos.keys()))) # Shouldn't change when we restart the server.
     print('download page:', '/download-list/{}'.format(download_list_secret_token))
@@ -473,20 +464,12 @@ else:
     app.config['DOWNLOAD_PHENO_SUMSTATS_BUTTON'] = True
     @bp.route('/download/<phenocode>')
     def download_pheno(phenocode:str):
-        if phenocode not in phenos:
-            die("Sorry, that phenocode doesn't exist")
+        # if phenocode not in phenos:
+        #     die("Sorry, that phenocode doesn't exist")
         return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode),
                                    as_attachment=True,
                                    attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
-    
-    @bp.route('/download/<phenocode>/<sex>')
-    def download_pheno_sex_stratified(phenocode:str, sex:str):
-        phenocode_label = phenocode + "." + sex
-        if phenocode not in phenos:
-            die("Sorry, that phenocode doesn't exist")
-        return send_from_directory(get_filepath('pheno_gz-sex_stratified'), '{}.gz'.format(phenocode_label),
-                                   as_attachment=True,
-                                   attachment_filename='phenocode-{}.tsv.gz'.format(phenocode_label))
+        
 @bp.route('/')
 def homepage():
     return render_template('index.html')

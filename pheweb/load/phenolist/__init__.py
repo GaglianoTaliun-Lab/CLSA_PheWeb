@@ -2,7 +2,7 @@
 from ...utils import PheWebError
 from ...file_utils import get_generated_path, make_basedir, get_filepath, read_maybe_gzip
 from ..read_input_file import PhenoReader
-from ...conf import should_show_sex_stratified
+from ...conf import stratified
 
 import os
 import string
@@ -91,23 +91,21 @@ def check_that_columns_are_present(phenolist, columns):
     if error_message: raise PheWebError(error_message)
 
 def check_that_phenocode_is_unique(phenolist):
-    #if sex stratified is True, then sex that non-unique phenos have different "sex" values in column.
-    #TODO: create a sex that the sex column exists with correct naming first.
-    if(should_show_sex_stratified):
-        phenocodes_sex = [[pheno['phenocode'], pheno['sex']] for pheno in phenolist]
-        seen = set()
+    #if stratified is True, then verify that the same stratifications are not present for the non-unique phenocode
+    if(stratified):
+        phenocodes_stratifications = [[pheno['phenocode'], pheno['stratification']] for pheno in phenolist]
+        seen = []
         duplicates = []
-        for sublist in phenocodes_sex:
-            sublist_tuple = tuple(sublist)
-            if sublist_tuple in seen:
-                duplicates.append(sublist)
+        for stratification in phenocodes_stratifications:
+            if stratification in seen:
+                duplicates.append(stratification)
             else:
-                seen.add(sublist_tuple)
+                seen.append(stratification)
         
         # Print the duplicates (if any)
         if duplicates:
             raise PheWebError(
-            "ERROR: At least one phenocode + sex combination is used by multiple phenotypes.\n" +
+            "ERROR: At least one phenocode + stratification combination is used multiple times.\n" +
             "Here are some repeated phenocodes: {!r}\n".format(duplicates[:5])) 
         
     else:
@@ -211,7 +209,29 @@ def _import_phenolist_csv(f, has_header):
         assert len(set(fieldnames)) == len(fieldnames)
     else:
         fieldnames = list(range(num_cols))
-    return [{fieldnames[i]: row[i] for i in range(num_cols)} for row in rows]
+        
+    # if conf.stratified == True, build stratified column as a sub dictionary
+    if (stratified):
+        col_stratification = fieldnames.index('stratification')
+        stratification_list = [value[col_stratification].split(';') for value in rows]
+        stratifications_list = []
+        for stratifications in stratification_list:
+            stratification_dict = {}
+            for stratification in stratifications:
+                stratification_dict[stratification.split(":")[0]] = stratification.split(":")[1]
+            stratifications_list.append(stratification_dict)
+        
+        json_file = []
+        for index,row in enumerate(rows):
+            json_object = {}
+            for i in range(num_cols):
+                if (i != col_stratification):
+                    json_object[fieldnames[i]] = row[i]
+            json_object['stratification'] = stratifications_list[index]
+            json_file.append(json_object)
+    else:
+        json_file = [{fieldnames[i]: row[i] for i in range(num_cols)} for row in rows]
+    return json_file
 
 def interpret_json(phenolist):
     for pheno in phenolist:
@@ -296,13 +316,6 @@ def keep_only_columns(phenolist, good_keys):
         for key in list(pheno):
             if key not in good_keys:
                 del pheno[key]
-    return phenolist
-
-#take the value from the sex column and append it to the phenocode.
-def append_sex(phenolist):
-    print(phenolist)
-    for pheno in phenolist:
-        print(pheno)
     return phenolist
 
 class _hashabledict(dict):

@@ -13,7 +13,7 @@ LocusZoom.Adapters.extend("AssociationLZ", "AssociationPheWeb", {
         // We're not actually trying to request a field by that name.
         var has_all = fields.indexOf("all");
         if (has_all !== -1) {
-            fields.splice(has_all, 1);
+            fields.splice(has_all, 1);F
             outnames.splice(has_all, 1);
             trans.splice(has_all, 1);
         }
@@ -69,7 +69,7 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
             .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
     } else {
         var localBase = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + "/lz-";
-        var localBaseFemale = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + ".female/lz-";
+        var localBaseFemale = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + ".female/lz-feamle";
         var localBaseMale = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + ".male/lz-";
         var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
         var data_sources = new LocusZoom.DataSources()

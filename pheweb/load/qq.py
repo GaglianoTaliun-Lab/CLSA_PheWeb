@@ -13,7 +13,7 @@ This script creates json files which can be used to render QQ plots.
 
 # NOTE: `qval` means `-log10(pvalue)`
 
-from ..utils import round_sig, approx_equal, get_phenolist, PheWebError
+from ..utils import round_sig, approx_equal, get_phenolist, PheWebError, get_phenocode_with_stratifications
 from .. import conf
 from ..file_utils import VariantFileReader, write_json, get_pheno_filepath
 from .load_utils import get_maf, parallelize_per_pheno, get_phenos_subset
@@ -35,6 +35,11 @@ def run(argv:List[str]) -> None:
     args = parser.parse_args(argv)
 
     phenos = get_phenos_subset(args.phenos) if args.phenos else get_phenolist()
+    
+    # For each pheno in phenos, we need to update the phenocode if stratified.
+    if conf.stratified():
+        for i, pheno in enumerate(phenos):
+            phenos[i]['phenocode'] = get_phenocode_with_stratifications(pheno)
 
     parallelize_per_pheno(
         get_input_filepaths = get_input_filepaths,
@@ -43,32 +48,19 @@ def run(argv:List[str]) -> None:
         cmd = 'qq',
         phenos = phenos,
     )
-
+    
 def get_input_filepaths(pheno:dict) -> List[str]:
-    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
-        return [get_pheno_filepath('pheno_gz-sex_stratified', pheno['phenocode'] + "." + pheno['sex'])]
-    else:
-        return [get_pheno_filepath('pheno_gz', pheno['phenocode'])]
+    return [get_pheno_filepath('pheno_gz', pheno['phenocode'])]
 
 def get_output_filepaths(pheno:dict) -> List[str]:
-    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
-        return [get_pheno_filepath('qq-sex_stratified', pheno['phenocode'] + "." + pheno['sex'], must_exist = False)]
-    else:
-        return [get_pheno_filepath('qq', pheno['phenocode'], must_exist=False)]
+    return [get_pheno_filepath('qq', pheno['phenocode'], must_exist=False)]
 
-def make_json_file(pheno:Dict[str,Any]) -> None:
-    if conf.should_show_sex_stratified() and (pheno['sex'] == 'male' or pheno['sex'] == 'female'):
-        make_json_file_explicit(
-            get_pheno_filepath('pheno_gz-sex_stratified', pheno['phenocode'] + "." + pheno['sex']),
-            get_pheno_filepath('qq-sex_stratified', pheno['phenocode'] + "." + pheno['sex'], must_exist=False),
-            pheno
-        )
-    else:
-        make_json_file_explicit(
-            get_pheno_filepath('pheno_gz', pheno['phenocode']),
-            get_pheno_filepath('qq', pheno['phenocode'], must_exist=False),
-            pheno
-        )
+def make_json_file(pheno:Dict[str,Any], ignore = None) -> None:
+    make_json_file_explicit(
+        get_pheno_filepath('pheno_gz', pheno['phenocode']),
+        get_pheno_filepath('qq', pheno['phenocode'], must_exist=False),
+        pheno
+    )
 
 def make_json_file_explicit(in_filepath:str, out_filepath:str, pheno:Dict[str,Any]) -> None:
     # Store all variants in a dataframe with columns (qval, maf) or just (qval)

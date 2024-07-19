@@ -1,7 +1,7 @@
 
 from ..utils import get_phenolist
 from .. import conf
-from ..file_utils import write_json, write_heterogenous_variantfile, get_filepath, get_pheno_filepath
+from ..file_utils import write_json, write_heterogenous_variantfile, get_filepath, get_pheno_filepath, get_phenocode_with_stratifications
 
 import json
 from pathlib import Path
@@ -12,6 +12,10 @@ from typing import Dict,Any,List,Iterator
 
 
 def get_hits(pheno:Dict[str,Any]) -> Iterator[Dict[str,Any]]:
+    
+    if conf.stratified():
+        pheno['phenocode'] = get_phenocode_with_stratifications(pheno)
+        
     with open(get_pheno_filepath('manhattan', pheno['phenocode'])) as f:
         variants = json.load(f)['unbinned_variants']
 

@@ -1,5 +1,3 @@
-
-
 # TODO: color lines with ==> using `colorama`
 # TODO: add a step to verify that the genome build is correct using detect_ref (once on first 10k of each input file, and again on `sites`)
 

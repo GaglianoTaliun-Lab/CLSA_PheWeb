@@ -13,7 +13,7 @@ LocusZoom.Adapters.extend("AssociationLZ", "AssociationPheWeb", {
         // We're not actually trying to request a field by that name.
         var has_all = fields.indexOf("all");
         if (has_all !== -1) {
-            fields.splice(has_all, 1);F
+            fields.splice(has_all, 1);
             outnames.splice(has_all, 1);
             trans.splice(has_all, 1);
         }
@@ -54,245 +54,68 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
 
 (function() {
     // Define LocusZoom Data Sources object
-    console.log(window.model.sex_stratified)
-    console.log(window.pheno)
-    if (!window.model.sex_stratified){
-        var localBase = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + "/lz-";
-        var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
-        var data_sources = new LocusZoom.DataSources()
-            .add("assoc", ["AssociationPheWeb", {url: localBase }])
-            .add("catalog", ["GwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/', params: { build: "GRCh"+window.model.grch_build_number }}])
-            .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
-                params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
-            }])
-            .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
-            .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
-    } else {
-        var localBase = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + "/lz-";
-        var localBaseFemale = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + ".female/lz-feamle";
-        var localBaseMale = window.model.urlprefix + "/api/region/" + window.pheno.phenocode + ".male/lz-";
-        var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
-        var data_sources = new LocusZoom.DataSources()
-            .add("assoc", ["AssociationPheWeb", {url: localBase }])
-            .add("assoc_female", ["AssociationPheWeb", {url: localBaseFemale}])
-            .add("assoc_male", ["AssociationPheWeb", {url: localBaseMale}])
-            .add("catalog", ["GwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/', params: { build: "GRCh"+window.model.grch_build_number }}])
-            .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
-                params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
-            }])
-            .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
-            .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
-    }
+    var remoteBase = "https://portaldev.sph.umich.edu/api/v1/";
 
+    var data_sources_new = new LocusZoom.DataSources()
+        .add("catalog", ["GwasCatalogLZ", {url: remoteBase + 'annotation/gwascatalog/results/', params: { build: "GRCh"+window.model.grch_build_number }}])
+        .add("ld", ["LDServer", { url: "https://portaldev.sph.umich.edu/ld/",
+            params: { source: '1000G', build: 'GRCh'+window.model.grch_build_number, population: 'ALL' }
+        }])
+        .add("gene", ["GeneLZ", { url: remoteBase + "annotation/genes/", params: {build: 'GRCh'+window.model.grch_build_number} }])
+        .add("recomb", ["RecombLZ", { url: remoteBase + "annotation/recomb/results/", params: {build:'GRCh'+window.model.grch_build_number} }]);
 
-    LocusZoom.TransformationFunctions.add("neglog10_or_323", function(x) {
-        if (x === 0) return 323;
-        return -Math.log(x) / Math.LN10;
+    window.phenocode_list.forEach( function (phenocode, i){
+        data_sources_new.add(fmt("assoc_study{0}",i+1), ["AssociationPheWeb", {url: window.model.urlprefix + "/api/region/" + phenocode + "/lz-", source: i+1}])
     });
 
-    // Toolbar Widgets
-    function add_toolbar_button(name, click_handler) {
-        LocusZoom.Widgets.extend('BaseWidget', name, {
-            update() {
-                if (this.button)
-                    return this;
-                this.button = new (LocusZoom.Widgets.get('_Button'))(this)
-                    .setColor(this.layout.color)
-                    .setHtml(this.layout.text)
-                    .setTitle(this.layout.title)
-                    .setOnclick(click_handler.bind(this));
-                this.button.show();
-                return this.update();
-            }
-        });
-    }
+    var all_panels = []
 
-    add_toolbar_button('link', function() {
-        window.location.href = this.layout.url;
-    });
-
-    add_toolbar_button('move', function() {
-        // FIXME: Replace with the LocusZoom widget`shift_region` (after adding a stepsize mode for relative region widths)
-        var start = this.parent_plot.state.start;
-        var end = this.parent_plot.state.end;
-        var shift = Math.floor(end - start) * this.layout.direction;
-        this.parent_plot.applyState({
-            chr: this.parent_plot.state.chr,
-            start: start + shift,
-            end: end + shift
-        });
-    });
-
-    // Define the layout, then fetch it via the LZ machinery responsible for namespacing
-    var layout = LocusZoom.Layouts.get("plot", "association_catalog", {
-        unnamespaced: true,
-        width: 800,
-        // height: 550,
-        responsive_resize: true,
-        max_region_scale: 500e3,
-        toolbar: {
-            widgets: [{
-                type: 'link',
-                title: 'Go to Manhattan Plot',
-                text:' Manhattan Plot',
-                url: window.model.urlprefix + '/pheno/' + window.pheno.phenocode,
-                position: 'left',
-            }, {
-                type: 'move',
-                text: '<<',
-                title: 'Shift view 1/4 to the left',
-                direction: -0.75,
-                group_position: "start"
-            }, {
-                type: 'move',
-                text: '<',
-                title: 'Shift view 1/4 to the left',
-                direction: -0.25,
-                group_position: "middle"
-            }, {
-                type: 'zoom_region',
-                button_html: 'z+',
-                title: 'zoom in 2x',
-                step: -0.5,
-                group_position: "middle"
-            }, {
-                type: 'zoom_region',
-                button_html: 'z-',
-                title: 'zoom out 2x',
-                step: 1,
-                group_position: "middle"
-            }, {
-                type: 'move',
-                text: '>',
-                title: 'Shift view 1/4 to the right',
-                direction: 0.25,
-                group_position: "middle"
-            }, {
-                type: 'move',
-                text: '>>',
-                title: 'Shift view 3/4 to the right',
-                direction: 0.75,
-                group_position: "end"
-            },
-            {
-                type: "display_options",
-                position: 'right',
-                layer_name: 'association_pvalues_catalog',
-                button_html: 'Sex Stratified Options',
-                button_title : 'Choose which LocusZoom plot to display by sex',
-                // options: [{
-                //     display_name: "Combined",
-                //     display: ""
-                // },
-                // {
-                //     display_name: "Male",
-                //     display: ""
-                // },
-                // {
-                //     display_name: "Female",
-                //     display: ""
-                // }]
-            }, 
-            {
-                type: 'download',
-                position: 'right',
-            }, {
-                type: 'download_png',
-                position: 'right',
-            }, LocusZoom.Layouts.get('toolbar_widgets', 'ldlz2_pop_selector')]
-        },
-        panels: [
+    all_panels.push(
             function() {
-                if (window.model.sex_stratified){
-                    var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
-                        unnamespaced: true,
-                        height: 52, min_height: 52,
-                        margin: { top: 30, bottom: 13 },
-                        toolbar: { widgets: [] },
-                        axes: {
-                            // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
-                            x: { render: false, extent: 'state' }
-                        },
-                        title: {
-                            text: 'Hits in GWAS Catalog',
-                            style: {'font-size': '14px'},
-                            x: 50,
-                        },
-                    });
-                    var anno_layer = base.data_layers[0];
-                    anno_layer.id_field = "{{namespace[assoc]}}id";
-                    anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
-                        "{{namespace[assoc]}}id",
-                        "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position",
-                        "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
-                    ];
-                    anno_layer.hit_area_width = 50;
-                    return base;
-                } else {
-                    var base = [
-                        (LocusZoom.Layouts.get("panel", "annotation_catalog", {
-                        namespace: {assoc: 'assoc'},
-                        height: 52, min_height: 52,
-                        margin: { top: 30, bottom: 13 },
-                        toolbar: { widgets: [] },
-                        axes: {
-                            // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
-                            x: { render: false, extent: 'state' }
-                        },
-                        title: {
-                            text: 'Hits in GWAS Catalog',
-                            style: {'font-size': '14px'},
-                            x: 50,
-                        },
-                        })),
-                        LocusZoom.Layouts.get("panel", "annotation_catalog",{
-                            namespace: {assoc: 'assoc_male'},
-                            height: 52, min_height: 52,
-                            margin: { top: 30, bottom: 13 },
-                            toolbar: { widgets: [] },
-                            axes: {
-                                // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
-                                x: { render: false, extent: 'state' }
-                            },
-                            title: {
-                                text: 'Hits in GWAS Catalog',
-                                style: {'font-size': '14px'},
-                                x: 50,
-                            },
-                        }),
-                        LocusZoom.Layouts.get("panel", "annotation_catalog",{
-                            namespace: {assoc: 'assoc_female'},
-                            height: 52, min_height: 52,
-                            margin: { top: 30, bottom: 13 },
-                            toolbar: { widgets: [] },
-                            axes: {
-                                // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
-                                x: { render: false, extent: 'state' }
-                            },
-                            title: {
-                                text: 'Hits in GWAS Catalog',
-                                style: {'font-size': '14px'},
-                                x: 50,
-                            },
-                        })
-                    ];
-                    var anno_layer = base[0].data_layers[0];
-                    anno_layer.id_field = "{{namespace[assoc]}}id";
-                    anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
-                        "{{namespace[assoc]}}id",
-                        "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position",
-                        "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
-                    ];
-                    anno_layer.hit_area_width = 50;
-                    return base;
-                }
-            }(),
+                var base = LocusZoom.Layouts.get("panel", "annotation_catalog", {
+                    namespace: { assoc: 'assoc_study1'},
+                    height: 52, min_height: 52,
+                    margin: { top: 30, bottom: 13 },
+                    toolbar: { widgets: [] },
+                    axes: {
+                        // FIXME: Can be removed after 0.13.1 bugfix release (render: false was missing)
+                        x: { render: false, extent: 'state' }
+                    },
+                    title: {
+                        text: 'Hits in GWAS Catalog',
+                        style: {'font-size': '14px'},
+                        x: 50,
+                    },
+                });
+                var anno_layer = base.data_layers[0];
+                anno_layer.id_field = "{{namespace[assoc]}}id";
+                anno_layer.fields = [  // Tell annotation track the field names as used by PheWeb
+                    "{{namespace[assoc]}}id",
+                    "{{namespace[assoc]}}chr", "{{namespace[assoc]}}position",
+                    "{{namespace[catalog]}}variant", "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                ];
+                anno_layer.hit_area_width = 50;
+                return base;
+            }()
+    );
+
+
+    window.phenocode_list.forEach( function (phenocode, i){
+        
+        let dynamicPart = fmt("assoc_study{0}", i + 1);
+
+        var template = window.model.tooltip_lztemplate.replace(/{{/g, `{{${dynamicPart}:`)
+                            .replace(new RegExp(`{{${dynamicPart}:#if `, 'g'), `{{#if ${dynamicPart}:`)
+                            .replace(new RegExp(`{{${dynamicPart}:\\/if}}`, 'g'), "{{/if}}");
+
+        all_panels.push(
             function() {
-                // FIXME: The only customization here is to make the legend button green and hide the "move panel" buttons; displayn options doesn't need to be copy-pasted
                 var base = LocusZoom.Layouts.get("panel", "association_catalog", {
-                    unnamespaced: true,
+                    namespace: { assoc: dynamicPart },
                     height: 200, min_height: 200,
                     margin: { top: 10 },
+                    id: dynamicPart,
+                    title: { text: phenocode.split('.').slice(1).join(', ') },
                     toolbar: {
                         widgets: [
                             {
@@ -360,48 +183,42 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                     data_layers: [
                         LocusZoom.Layouts.get("data_layer", "significance", { unnamespaced: true }),
                         LocusZoom.Layouts.get("data_layer", "recomb_rate", { unnamespaced: true }),
-                        //TODO: need to find a way to switch the data layer below using a button for combined, males females (dependent of what's available)
                         function() {
-                            if (window.model.sex_stratified){
-                                var l = LocusZoom.Layouts.get("data_layer", "association_pvalues_catalog", {
-                                    unnamespaced: true,
-                                    fields: [
-                                        "{{namespace[assoc]}}all", // special mock value for the custom source
-                                        "{{namespace[assoc]}}id",
-                                        "{{namespace[assoc]}}position",
-                                        "{{namespace[assoc]}}pvalue|neglog10_or_323",
-                                        "{{namespace[ld]}}state", "{{namespace[ld]}}isrefvar",
-                                        "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
-                                    ],
-                                    id_field: "{{namespace[assoc]}}id",
-                                    tooltip: {
-                                        closable: true,
-                                        show: {
-                                            "or": ["highlighted", "selected"]
-                                        },
-                                        hide: {
-                                            "and": ["unhighlighted", "unselected"]
-                                        },
-                                        html: "<strong>{{{{namespace[assoc]}}id}}</strong><br><br>" +
-                                            window.model.tooltip_lztemplate.replace(/{{/g, "{{assoc:").replace(/{{assoc:#if /g, "{{#if assoc:").replace(/{{assoc:\/if}}/g, "{{/if}}") +
-                                            "<br>" +
-                                            "<a href=\"" + window.model.urlprefix+ "/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}\"" + ">Go to PheWAS</a>" +
-                                            "{{#if {{namespace[catalog]}}rsid}}<br><a href=\"https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}\" target=\"_new\">See hits in GWAS catalog</a>{{/if}}" +
-                                            "<br>{{#if {{namespace[ld]}}isrefvar}}<strong>LD Reference Variant</strong>{{#else}}<a href=\"javascript:void(0);\" onclick=\"var data = this.parentNode.__data__;data.getDataLayer().makeLDReference(data);\">Make LD Reference</a>{{/if}}<br>"
+                            var l = LocusZoom.Layouts.get("data_layer", "association_pvalues_catalog", {
+                                unnamespaced: true,
+                                fields: [
+                                    "{{namespace[assoc]}}all", // special mock value for the custom source
+                                    "{{namespace[assoc]}}id",
+                                    "{{namespace[assoc]}}position",
+                                    "{{namespace[assoc]}}pvalue|neglog10_or_323",
+                                    "{{namespace[ld]}}state", "{{namespace[ld]}}isrefvar",
+                                    "{{namespace[catalog]}}rsid", "{{namespace[catalog]}}trait", "{{namespace[catalog]}}log_pvalue"
+                                ],
+                                id_field: "{{namespace[assoc]}}id",
+                                tooltip: {
+                                    closable: true,
+                                    show: {
+                                        "or": ["highlighted", "selected"]
                                     },
-                                    x_axis: { field: "{{namespace[assoc]}}position" },
-                                    y_axis: {
-                                        axis: 1,
-                                        field: "{{namespace[assoc]}}pvalue|neglog10_or_323",
-                                        floor: 0,
-                                        upper_buffer: 0.1,
-                                        min_extent: [0, 10]
-                                    }
-                                });
-                            } else {
-
-                            }
-
+                                    hide: {
+                                        "and": ["unhighlighted", "unselected"]
+                                    },
+                                    html: "<strong>{{{{namespace[assoc]}}id}}</strong><br><br>" +
+                                        template +
+                                        "<br>" +
+                                        "<a href=\"" + window.model.urlprefix+ "/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}\"" + ">Go to PheWAS</a>" +
+                                        "{{#if {{namespace[catalog]}}rsid}}<br><a href=\"https://www.ebi.ac.uk/gwas/search?query={{{{namespace[catalog]}}rsid}}\" target=\"_new\">See hits in GWAS catalog</a>{{/if}}" +
+                                        "<br>{{#if {{namespace[ld]}}isrefvar}}<strong>LD Reference Variant</strong>{{#else}}<a href=\"javascript:void(0);\" onclick=\"var data = this.parentNode.__data__;data.getDataLayer().makeLDReference(data);\">Make LD Reference</a>{{/if}}<br>"
+                                },
+                                x_axis: { field: "{{namespace[assoc]}}position" },
+                                y_axis: {
+                                    axis: 1,
+                                    field: "{{namespace[assoc]}}pvalue|neglog10_or_323",
+                                    floor: 0,
+                                    upper_buffer: 0.1,
+                                    min_extent: [0, 10]
+                                }
+                            });
                             l.behaviors.onctrlclick = [{
                                 action: "link",
                                 href: window.model.urlprefix+"/variant/{{{{namespace[assoc]}}chr}}-{{{{namespace[assoc]}}position}}-{{{{namespace[assoc]}}ref}}-{{{{namespace[assoc]}}alt}}"
@@ -413,55 +230,163 @@ LocusZoom.TransformationFunctions.add("percent", function(x) {
                 base.legend.origin.y = 15;
                 return base;
             }(),
-            LocusZoom.Layouts.get("panel", "genes", {
-                unnamespaced: true,
-                // proportional_height: 0.5,
-                toolbar: {
-                    widgets: [{
-                        type: "resize_to_data",
-                        position: "right",
-                        color: "blue"
-                    }, LocusZoom.Layouts.get('toolbar_widgets', 'gene_selector_menu')]
-                },
-                data_layers: [
-                    LocusZoom.Layouts.get("data_layer", "genes_filtered", {
-                        unnamespaced: true,
-                        fields: ["{{namespace[gene]}}all"],
-                        tooltip: {
-                            html: ("<h4><strong><i>{{gene_name}}</i></strong></h4>" +
-                                   "<div>Gene ID: <strong>{{gene_id}}</strong></div>" +
-                                   "<div>Transcript ID: <strong>{{transcript_id}}</strong></div>" +
-                                   "<div style=\"clear: both;\"></div>" +
-                                   "<table width=\"100%\"><tr><td style=\"text-align: right;\"><a href=\"http://gnomad.broadinstitute.org/gene/{{gene_id}}\" target=\"_new\">More data on gnomAD/ExAC</a> and <a href=\"http://bravo.sph.umich.edu/freeze5/hg38/gene/{{gene_id}}\" target=\"_new\">Bravo</a></td></tr></table>")
-                        },
-
-                    })
-                ],
-            })
-        ]
+        )
     });
-    LocusZoom.Layouts.add("plot", "pheweb_association", layout);
-    layout = LocusZoom.Layouts.get("plot", "pheweb_association");
+
+    all_panels.push(
+        LocusZoom.Layouts.get("panel", "genes", {
+            unnamespaced: true,
+            // proportional_height: 0.5,
+            toolbar: {
+                widgets: [{
+                    type: "resize_to_data",
+                    position: "right",
+                    color: "blue"
+                }, LocusZoom.Layouts.get('toolbar_widgets', 'gene_selector_menu')]
+            },
+            data_layers: [
+                LocusZoom.Layouts.get("data_layer", "genes_filtered", {
+                    unnamespaced: true,
+                    fields: ["{{namespace[gene]}}all"],
+                    tooltip: {
+                        html: ("<h4><strong><i>{{gene_name}}</i></strong></h4>" +
+                                "<div>Gene ID: <strong>{{gene_id}}</strong></div>" +
+                                "<div>Transcript ID: <strong>{{transcript_id}}</strong></div>" +
+                                "<div style=\"clear: both;\"></div>" +
+                                "<table width=\"100%\"><tr><td style=\"text-align: right;\"><a href=\"http://gnomad.broadinstitute.org/gene/{{gene_id}}\" target=\"_new\">More data on gnomAD/ExAC</a> and <a href=\"http://bravo.sph.umich.edu/freeze5/hg38/gene/{{gene_id}}\" target=\"_new\">Bravo</a></td></tr></table>")
+                    },
+
+                })
+            ],
+        })
+    )
+
+    // This outer call to Layouts.get() will ensure that namespaces are applied, and the returned result is a concrete 
+    //   layout ready for use in drawing a plot with specific data sets. 
+    var layout_new = LocusZoom.Layouts.get('plot', 'association_catalog', { // Override select fields of a pre-made layout 
+        namespace: { assoc: 'assoc_study1'},
+        width: 800,
+        // height: 550,
+        responsive_resize: true,
+        max_region_scale: 500e3,
+        toolbar: {
+            widgets: [{
+                type: 'link',
+                title: 'Go to Pheno Page',
+                text:' Miami / Manhattan Plot',
+                url: window.model.urlprefix + '/pheno/' + window.pheno.phenocode,
+                position: 'left',
+            }, {
+                type: 'move',
+                text: '<<',
+                title: 'Shift view 1/4 to the left',
+                direction: -0.75,
+                group_position: "start"
+            }, {
+                type: 'move',
+                text: '<',
+                title: 'Shift view 1/4 to the left',
+                direction: -0.25,
+                group_position: "middle"
+            }, {
+                type: 'zoom_region',
+                button_html: 'z+',
+                title: 'zoom in 2x',
+                step: -0.5,
+                group_position: "middle"
+            }, {
+                type: 'zoom_region',
+                button_html: 'z-',
+                title: 'zoom out 2x',
+                step: 1,
+                group_position: "middle"
+            }, {
+                type: 'move',
+                text: '>',
+                title: 'Shift view 1/4 to the right',
+                direction: 0.25,
+                group_position: "middle"
+            }, {
+                type: 'move',
+                text: '>>',
+                title: 'Shift view 3/4 to the right',
+                direction: 0.75,
+                group_position: "end"
+            }, {
+                type: 'download',
+                position: 'right',
+            }, {
+                type: 'download_png',
+                position: 'right',
+            }, LocusZoom.Layouts.get('toolbar_widgets', 'ldlz2_pop_selector')]
+        },
+        panels: all_panels, 
+    });
+
+    LocusZoom.TransformationFunctions.add("neglog10_or_323", function(x) {
+        if (x === 0) return 323;
+        return -Math.log(x) / Math.LN10;
+    });
+
+    // Toolbar Widgets
+    function add_toolbar_button(name, click_handler) {
+        LocusZoom.Widgets.extend('BaseWidget', name, {
+            update() {
+                if (this.button)
+                    return this;
+                this.button = new (LocusZoom.Widgets.get('_Button'))(this)
+                    .setColor(this.layout.color)
+                    .setHtml(this.layout.text)
+                    .setTitle(this.layout.title)
+                    .setOnclick(click_handler.bind(this));
+                this.button.show();
+                return this.update();
+            }
+        });
+    }
+
+    add_toolbar_button('link', function() {
+        window.location.href = this.layout.url;
+    });
+
+    add_toolbar_button('move', function() {
+        // FIXME: Replace with the LocusZoom widget`shift_region` (after adding a stepsize mode for relative region widths)
+        var start = this.parent_plot.state.start;
+        var end = this.parent_plot.state.end;
+        var shift = Math.floor(end - start) * this.layout.direction;
+        this.parent_plot.applyState({
+            chr: this.parent_plot.state.chr,
+            start: start + shift,
+            end: end + shift
+        });
+    });
 
     $(function() {
         // Populate the div with a LocusZoom plot using the default layout
-        window.plot = LocusZoom.populate("#lz-1", data_sources, layout);
+        window.plot = LocusZoom.populate("#lz-2", data_sources_new, layout_new);
+
         window.plot.state.genome_build = 'GRCh'+window.model.grch_build_number;
 
         // Handle double-click on a variant point
         (function() {
             var doubleclick_delay_ms = 400;
             var previous_data, previous_milliseconds = 0;
-            window.plot.panels.associationcatalog.on('element_clicked', function(obj) {
-                var data = obj.data, milliseconds = Date.now();
-                if ((data === previous_data) && (milliseconds - previous_milliseconds < doubleclick_delay_ms)) {
-                    window.location.href = (window.model.urlprefix + "/variant/" +
-                                            data["assoc:chr"] + "-" + data["assoc:position"] + "-" +
-                                            data["assoc:ref"] + "-" + data["assoc:alt"]);
+            Object.keys(window.plot.panels).forEach(function(key, i) {
+                //all but first and last panel
+                if (i != 0 && i != Object.keys(window.plot.panels).length - 1) {
+                    window.plot.panels[key].on('element_clicked', function(obj) {
+                        var data = obj.data, milliseconds = Date.now();
+                        if ((data === previous_data) && (milliseconds - previous_milliseconds < doubleclick_delay_ms)) {
+                            window.location.href = (window.model.urlprefix + "/variant/" +
+                                                    data["assoc:chr"] + "-" + data["assoc:position"] + "-" +
+                                                    data["assoc:ref"] + "-" + data["assoc:alt"]);
+                        }
+                        previous_data = data;
+                        previous_milliseconds = milliseconds;
+                    });
                 }
-                previous_data = data;
-                previous_milliseconds = milliseconds;
-            });
+            })
         })();
+
     });
 })();

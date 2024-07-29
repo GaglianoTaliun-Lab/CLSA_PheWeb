@@ -122,12 +122,12 @@ def get_phenocode_with_stratifications(pheno:dict) -> str:
         phenocode += "."+pheno['stratification'][stratification]
     return phenocode
 
-def get_stratification_paths(phenos:list) -> [str]:
+def get_stratification_paths(phenos:dict) -> [str]:
     stratification_paths = []
     for pheno in phenos:
         stratification_path = ""
-        for stratification in pheno['stratification']:
-            stratification_path += "."+pheno['stratification'][stratification]
+        for stratification in phenos[pheno]['stratification']:
+            stratification_path += "."+phenos[pheno]['stratification'][stratification]
         stratification_paths.append(stratification_path)
     return stratification_paths
 

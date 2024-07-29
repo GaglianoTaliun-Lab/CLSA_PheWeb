@@ -176,6 +176,7 @@ class _vfr_only_per_variant_fields:
 
 @contextmanager
 def IndexedVariantFileReader(phenocode:str):
+    print("PHENOCODE", phenocode)
     filepath = get_pheno_filepath('pheno_gz', phenocode)
     with read_gzip(filepath) as f:
         reader:Iterator[List[str]] = csv.reader(f, dialect='pheweb-internal-dialect')
@@ -185,6 +186,7 @@ def IndexedVariantFileReader(phenocode:str):
     for field in fields:
         assert field in parse_utils.per_variant_fields or field in parse_utils.per_assoc_fields, field
     colidxs = {field: idx for idx, field in enumerate(fields)}
+    print(f"FILEPATH: {filepath}")
     with pysam.TabixFile(filepath, parser=None) as tabix_file:
         yield _ivfr(tabix_file, colidxs)
 
@@ -192,6 +194,7 @@ class _ivfr:
     def __init__(self, _tabix_file:pysam.TabixFile, _colidxs:Dict[str,int]):
         self._tabix_file=_tabix_file
         self._colidxs=_colidxs
+        
 
     def _parse_variant_row(self, variant_row:List[str]) -> Dict[str,Any]:
         variant = {}
@@ -228,22 +231,29 @@ class _ivfr:
             yield self._parse_variant_row(variant_row)
 
     def get_variant(self, chrom:str, pos:int, ref:str, alt:int) -> Optional[Dict[str,Any]]:
+        print("file utils get variant called")
         x = self.get_region(chrom, pos, pos+1)
+        print("returning this:")
+        print(x)
         for variant in x:
             if variant['pos'] != pos:
                 # print('WARNING: while looking for variant {}-{}-{}-{}, saw {!r}'.format(chrom, pos, ref, alt, variant))
                 continue
             if variant['ref'] == ref and variant['alt'] == alt and variant:
+
                 return variant
         return None
 
-#TODO: subclass that is for stratifications
 class MatrixReader:
     def __init__(self, matrix_filepath:Optional[str] = None):
         self._filepath = get_generated_path('matrix.tsv.gz') if matrix_filepath is None else matrix_filepath
+        print("INIT SELF FILEPATH")
+        print(self._filepath)
 
         phenos:List[Dict[str,Any]] = get_phenolist()
         phenocodes:List[str] = [pheno['phenocode'] for pheno in phenos]
+        
+        print(f"MATRIX PHENOS {phenos}")
         
         if conf.stratified():
             phenocodes:List[str] = [get_phenocode_with_stratifications(pheno) for pheno in phenos]
@@ -280,6 +290,8 @@ class MatrixReader:
     @contextmanager
     def context(self):
         with pysam.TabixFile(str(self._filepath), parser=None) as tabix_file:
+            print("FILEPATH TABIXFILE", self._filepath)
+            print(str(self._filepath))
             yield _mr(tabix_file, self._colidxs, self._colidxs_for_pheno, self._info_for_pheno)
 
 

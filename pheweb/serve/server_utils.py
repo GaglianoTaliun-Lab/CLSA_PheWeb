@@ -1,7 +1,8 @@
 
 from flask import url_for, Response, redirect
 
-from ..file_utils import MatrixReader, IndexedVariantFileReader, get_filepath
+from ..file_utils import MatrixReader, IndexedVariantFileReader, get_filepath, get_pheno_filepath
+from .. import conf
 
 import random
 import re
@@ -54,7 +55,6 @@ class _ParseVariant:
     chrom_pos_regex = re.compile(chrom_regex.pattern + r'[-_:/ ]([0-9]+)')
     chrom_pos_ref_alt_regex = re.compile(chrom_pos_regex.pattern + r'[-_:/ ]([-AaTtCcGg\.]+)[-_:/ ]([-AaTtCcGg\.]+)')
     def parse_variant(self, query, default_chrom_pos=True):
-        print(f"query : {query}")
         match = self.chrom_pos_ref_alt_regex.match(query) or self.chrom_pos_regex.match(query) or self.chrom_regex.match(query)
         g = match.groups() if match else ()
 
@@ -66,16 +66,24 @@ class _ParseVariant:
 parse_variant = _ParseVariant().parse_variant
 
 class _GetVariant:
-    def get_variant(self, query:str) -> Optional[Dict[str,Any]]:
+    def get_variant(self, query:str, stratifications: Optional[str] = None) -> Optional[Dict[str,Any]]:
         chrom, pos, ref, alt = parse_variant(query)
         assert None not in [chrom, pos, ref, alt]
-        if not hasattr(self, '_matrix_reader'):
-            self._matrix_reader = MatrixReader()
+        
+        filepath = None
+        if conf.stratified() and stratifications is not None:
+            filepath = get_pheno_filepath('matrix-stratified', stratifications)
+            
+        # if not hasattr(self, '_matrix_reader'):
+            # send through filepath
+        self._matrix_reader = MatrixReader(filepath)
 
         with self._matrix_reader.context() as mr:
             v = mr.get_variant(chrom, pos, ref, alt)
 
+        
         if v is None: return None
+        #print(v)
         v['phenos'] = list(v['phenos'].values())
         v['variant_name'] = '{} : {:,} {} / {}'.format(chrom, pos, ref, alt)
         return v

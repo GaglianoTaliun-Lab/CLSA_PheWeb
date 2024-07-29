@@ -3,7 +3,9 @@
 
 {% block in_head %}
 <script type="text/javascript">
-  window.variant = {{ variant|tojson(separators=(',',':'))|safe }};
+  window.variant = {{ variant| tojson | safe }};
+  window.variant_list = {{ variant_list|tojson|safe }};
+  window.stratified = {{ stratified|tojson  }};
   window.model.tooltip_lztemplate = {{ tooltip_lztemplate|tojson }};
 </script>
 <script src="{{ url_for('.static', filename='vendor/stream_table-1.1.1.min.js') }}" type="text/javascript"></script>

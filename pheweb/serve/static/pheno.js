@@ -170,8 +170,6 @@ function create_gwas_plot(variant_bins, unbinned_variants, container = '#manhatt
         var y_scale = y_axis_config.scale;
 
         // TODO: draw a small y-axis-break at 20 if `y_axis_config.draw_break_at_20`
-
-
         var y_axis = d3.axisLeft(y_scale)
             .tickFormat(d3.format("d"))
             .tickValues(y_axis_config.ticks)
@@ -557,6 +555,7 @@ function create_miami_plot(variant_bins1, variant_unbinned1, variant_bins2, vari
         if (includes_pval0) { max_plot_qval *= 1.1 }
         var scale = d3.scaleLinear().clamp(true);
 
+        // TODO: fix the chromosomes numbers to actually go in the middle.
         if (direction === "upper"){
             if (max_plot_qval <= 40) {
                 scale = scale
@@ -564,8 +563,8 @@ function create_miami_plot(variant_bins1, variant_unbinned1, variant_bins2, vari
                     .range([0, plot_height/2]); // divide by 2 for miami
             } else {
                 scale = scale
-                    .domain([max_plot_qval, 20, 0])
-                    .range([0, plot_height/4, plot_height/2]); // divide by x2 for miami
+                    .domain([max_plot_qval, max_plot_qval / 7, 0])
+                    .range([0, plot_height/4, plot_height/2 ]); // divide by x2 for miami
             }
         } else if (direction === "lower"){
             if (max_plot_qval <= 40) {
@@ -574,8 +573,8 @@ function create_miami_plot(variant_bins1, variant_unbinned1, variant_bins2, vari
                     .range([plot_height, plot_height/2]); // divide by 2 for miami
             } else {
                 scale = scale
-                    .domain([max_plot_qval, 20, -1.5])
-                    .range([plot_height, plot_height/4, plot_height/2]); // divide by x2 for miami
+                    .domain([max_plot_qval, max_plot_qval / 7, 0])
+                    .range([plot_height, plot_height/4 * 3, plot_height/2 + 29]); // divide by x2 for miami
             }
         }
 
@@ -848,14 +847,14 @@ function create_miami_plot(variant_bins1, variant_unbinned1, variant_bins2, vari
 
         function get_link_to_LZ_data1(variant) {
             return fmt(window.model.urlprefix + '/region/{0}/{1}:{2}-{3}',
-                        label1,
+                        window.phenocode,
                         variant.chrom,
                         Math.max(0, variant.pos - 200*1000),
                         variant.pos + 200*1000);
         }
         function get_link_to_LZ_data2(variant) {
             return fmt(window.model.urlprefix + '/region/{0}/{1}:{2}-{3}',
-                        label2,
+                        window.phenocode,
                         variant.chrom,
                         Math.max(0, variant.pos - 200*1000),
                         variant.pos + 200*1000);
@@ -1475,7 +1474,7 @@ $(document).ready(function () {
             var sex_stratifications = []
             $('#cases-controls-samples').empty()
             processed_results.forEach((element, index) => {
-                sex_stratifications.push(pheno_list[index][phenocode_list[index]].stratification['sex'])
+                sex_stratifications.push(pheno_list[index][phenocode_list[index]].stratification['sex'].toLowerCase())
             });
 
             processed_results.forEach(function(result, i) {
@@ -1487,7 +1486,6 @@ $(document).ready(function () {
                 var pheno = pheno_list[i][phenocode_list[i]]
 
                 let sampleText = "";
-                console.log(pheno['num_samples'])
                 if ('num_controls' in pheno && pheno['num_controls'] != ""){
                     sampleText = pheno.num_cases +` cases, `+ pheno.num_controls +` controls`;
                 } else if ('num_samples' in pheno && pheno['num_samples'] != "") {
@@ -1497,7 +1495,7 @@ $(document).ready(function () {
                 // if sex male there, will go to first, if female there, will default to second.
                 // TODO: clean this up
                 if ('sex' in pheno_list[i][phenocode_list[i]].stratification && sex_stratifications.length > 1) {
-                    var sex = pheno_list[i][phenocode_list[i]].stratification['sex']
+                    var sex = pheno_list[i][phenocode_list[i]].stratification['sex'].toLowerCase()
                     if (sex_stratifications.includes("male") && sex_stratifications.includes("female")){
                         if (sex == "male") {
                             var radioButton1 = createRadioButton('data1', phenocode_list[i], data_label, sampleText, true);
@@ -1693,7 +1691,6 @@ $(document).ready(function () {
         });
 
         // TODO: This is extremely hacky.. there needs to be a better way
-        console.log(downloads)
 
         downloads.forEach(function(file) {
             var a = document.createElement('a');

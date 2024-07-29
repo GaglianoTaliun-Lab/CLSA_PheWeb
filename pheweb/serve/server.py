@@ -1,6 +1,6 @@
 
 from ..load.load_utils import get_maf
-from ..utils import get_phenolist, get_phenocode_with_stratifications, get_phenotype_summary, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
+from ..utils import get_phenolist, get_stratification_paths, get_phenocode_with_stratifications, get_phenotype_summary, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
 from .. import conf
 from .. import parse_utils
 from ..file_utils import get_filepath, get_pheno_filepath, VariantFileReader
@@ -46,6 +46,7 @@ if conf.get_custom_templates_dir():
     jinja_searchpath.insert(0, conf.get_custom_templates_dir())
 
 phenos = {pheno['phenocode']: pheno for pheno in get_phenolist()}
+phenos_with_stratifications = {get_phenocode_with_stratifications(pheno): pheno for pheno in get_phenolist()}
 all_phenos = get_phenolist()
 pheno_summary = {pheno['phenocode']: pheno for pheno in get_phenotype_summary()}
 
@@ -119,15 +120,34 @@ def api_variant(query:str):
 @check_auth
 def variant_page(query:str):
     try:
-        # TODO: improve get_variant to include information for combined, male, female if present.
-        variant = get_variant(query)
-        if variant is None:
-            die("Sorry, I couldn't find the variant {}".format(query))
-        return render_template('variant.html',
-                               variant=variant,
-                               sex_stratified=conf.stratified(),
-                               tooltip_lztemplate=parse_utils.tooltip_lztemplate,
-        )
+        variant_list = []
+        if conf.stratified():
+                for path in set(get_stratification_paths(phenos_with_stratifications)):
+                    variant = get_variant(query, path)
+                    if variant is None:
+                        die("Sorry, I couldn't find the variant {}".format(query))
+                    variant['stratification'] = path
+                    variant_list.append(variant)
+                print("VARIANT LIST:")
+                print(variant_list)
+                return render_template('variant.html',
+                                    variant=variant,
+                                    stratified=conf.stratified(),
+                                    variant_list=variant_list,
+                                    tooltip_lztemplate=parse_utils.tooltip_lztemplate,
+                )
+
+        else:
+            variant = get_variant(query)
+            if variant is None:
+                die("Sorry, I couldn't find the variant {}".format(query))
+            variant_list.append(variant)
+            return render_template('variant.html',
+                                variant=variant,
+                                stratified=conf.stratified(),
+                                variant_list=variant_list,
+                                tooltip_lztemplate=parse_utils.tooltip_lztemplate,
+            )
     except Exception as exc:
         die('Oh no, something went wrong', exc)
 
@@ -140,23 +160,28 @@ def api_pheno(phenocode:str):
 @check_auth
 def api_pheno_filtered(phenocode):
     # Parse parameters from URL
-    try: pheno = phenos[phenocode]
+    try: pheno = phenos_with_stratifications[phenocode]
     except KeyError: abort(404, description="That phenocode wasn't found for this dataset.")
     indel = request.args.get('indel', '')
+    
     if indel not in ['', 'true', 'false']: abort(404, description="Invalid value for GET parameter `indel=`.  Valid values are ['', 'true', 'false'].")
+    
     consequence_category = request.args.get('csq', '')
     if consequence_category not in ['', 'lof', 'nonsyn']: abort(404, description="Invalid value for GET parameter `csq=`.  Valid values are ['', 'lof', 'nonsyn'].")
     min_maf, max_maf = None, None
+    
     if request.args.get('min_maf'):
         try: min_maf = float(request.args['min_maf'])
         except Exception: abort(404, description="Failed to parse GET parameter `min_maf=`.")
     if request.args.get('max_maf'):
         try: max_maf = float(request.args['max_maf'])
         except Exception: abort(404, description="Failed to parse GET parameter `max_maf=`.")
+        
     # Get variants according to filter
     chosen_variants = []  # TODO: stream straight from VariantFileReader() -> Binner() without this intermediate list
     weakest_pval_seen = 0
     num_variants = 0
+        
     try: filepath = get_pheno_filepath('best_of_pheno', phenocode)
     except Exception: abort(404, description="Failed to find a best_of_pheno file.  Perhaps `pheweb best-of-pheno` wasn't run.")
     with VariantFileReader(filepath) as vfr:
@@ -181,7 +206,98 @@ def api_pheno_filtered(phenocode):
     manhattan_data = binner.get_result()
     manhattan_data['weakest_pval'] = weakest_pval_seen
     #print(f'indel={indel} maf={min_maf}-{max_maf} #chosen={len(chosen_variants)} #bins={len(manhattan_data["variant_bins"])} #unbinned={len(manhattan_data["unbinned_variants"])} weakest_pval={weakest_pval_seen}')
+        
     return jsonify(manhattan_data)
+
+@bp.route('/api/miami-filtered/pheno/<upper_phenocode>.json/<lower_phenocode>.json')
+@check_auth
+def api_pheno_miami_filtered(upper_phenocode, lower_phenocode):
+    # Parse parameters from URL
+    try: upper_pheno = phenos_with_stratifications[upper_phenocode]
+    except KeyError: abort(404, description="Upper phenocode wasn't found for this dataset.")
+    try: lower_pheno = phenos_with_stratifications[lower_phenocode]
+    except KeyError: abort(404, description="Upper phenocode wasn't found for this dataset.")
+    
+    indel = request.args.get('indel', '')
+    if indel not in ['', 'true', 'false']: abort(404, description="Invalid value for GET parameter `indel=`.  Valid values are ['', 'true', 'false'].")
+    
+    consequence_category = request.args.get('csq', '')
+    if consequence_category not in ['', 'lof', 'nonsyn']: abort(404, description="Invalid value for GET parameter `csq=`.  Valid values are ['', 'lof', 'nonsyn'].")
+    min_maf, max_maf = None, None
+    
+    if request.args.get('min_maf'):
+        try: min_maf = float(request.args['min_maf'])
+        except Exception: abort(404, description="Failed to parse GET parameter `min_maf=`.")
+    if request.args.get('max_maf'):
+        try: max_maf = float(request.args['max_maf'])
+        except Exception: abort(404, description="Failed to parse GET parameter `max_maf=`.")
+        
+    # Get variants according to filter
+    upper_chosen_variants = []  # TODO: stream straight from VariantFileReader() -> Binner() without this intermediate list
+    upper_weakest_pval_seen = 0
+    upper_num_variants = 0
+        
+    try: filepath_upper = get_pheno_filepath('best_of_pheno', upper_phenocode)
+    except Exception: abort(404, description="Failed to find a best_of_pheno file.  Perhaps `pheweb best-of-pheno` wasn't run.")
+    with VariantFileReader(filepath_upper) as vfr:
+        for v in vfr:
+            upper_num_variants += 1
+            if v['pval'] > upper_weakest_pval_seen: upper_weakest_pval_seen = v['pval']
+            if indel == 'true' and len(v['ref']) == 1 and len(v['alt']) == 1: continue
+            if indel == 'false' and (len(v['ref']) != 1 or len(v['alt']) != 1): continue
+            if min_maf is not None or max_maf is not None:
+                v_maf = get_maf(v, upper_pheno)
+                if min_maf is not None and v_maf < min_maf: continue
+                if max_maf is not None and v_maf > max_maf: continue
+            if consequence_category:
+                csq = vep_consqeuence_category.get(v.get('consequence',''), '')
+                if consequence_category == 'lof' and csq != 'lof': continue
+                if consequence_category == 'nonsyn' and not csq: continue
+            upper_chosen_variants.append(v)
+    from pheweb.load.manhattan import Binner
+    upper_binner = Binner()
+    for variant in upper_chosen_variants:
+        upper_binner.process_variant(variant)
+        
+    # Get variants according to filter
+    lower_chosen_variants = []  # TODO: stream straight from VariantFileReader() -> Binner() without this intermediate list
+    lower_weakest_pval_seen = 0
+    lower_num_variants = 0
+        
+    try: filepath_lower = get_pheno_filepath('best_of_pheno', lower_phenocode)
+    except Exception: abort(404, description="Failed to find a best_of_pheno file.  Perhaps `pheweb best-of-pheno` wasn't run.")
+    with VariantFileReader(filepath_lower) as vfr:
+        for v in vfr:
+            lower_num_variants += 1
+            if v['pval'] > lower_weakest_pval_seen: lower_weakest_pval_seen = v['pval']
+            if indel == 'true' and len(v['ref']) == 1 and len(v['alt']) == 1: continue
+            if indel == 'false' and (len(v['ref']) != 1 or len(v['alt']) != 1): continue
+            if min_maf is not None or max_maf is not None:
+                v_maf = get_maf(v, lower_pheno)
+                if min_maf is not None and v_maf < min_maf: continue
+                if max_maf is not None and v_maf > max_maf: continue
+            if consequence_category:
+                csq = vep_consqeuence_category.get(v.get('consequence',''), '')
+                if consequence_category == 'lof' and csq != 'lof': continue
+                if consequence_category == 'nonsyn' and not csq: continue
+            lower_chosen_variants.append(v)
+    from pheweb.load.manhattan import Binner
+    lower_binner = Binner()
+    for variant in lower_chosen_variants:
+        lower_binner.process_variant(variant)
+        
+    miami_data = []
+    upper_miami_data = upper_binner.get_result()
+    upper_miami_data['weakest_pval'] = upper_weakest_pval_seen
+    
+    lower_miami_data = lower_binner.get_result()
+    lower_miami_data['weakest_pval'] = lower_weakest_pval_seen
+    
+    miami_data.append(upper_miami_data)
+    miami_data.append(lower_miami_data)
+    #print(f'indel={indel} maf={min_maf}-{max_maf} #chosen={len(chosen_variants)} #bins={len(manhattan_data["variant_bins"])} #unbinned={len(manhattan_data["unbinned_variants"])} weakest_pval={weakest_pval_seen}')
+        
+    return jsonify(miami_data)
 
 @bp.route('/top_hits')
 @check_auth
@@ -265,10 +381,24 @@ def pheno_filter_page(phenocode):
     try:
         pheno = phenos[phenocode]
     except KeyError:
-        die("Sorry, I couldn't find the pheno code {!r}".format(phenocode))
+        die("Sorry, I couldn't find the pheno code in your pheno-list.json: {!r}".format(phenocode))
+    
+    #pass through a list that helps identify which phenos should be called (generated)
+    phenocode_list = []
+    pheno_list = []
+    if conf.stratified():
+        for pheno_dict in all_phenos:
+            if pheno_dict['phenocode'] == phenocode:
+                pheno_list.append({get_phenocode_with_stratifications(pheno_dict): pheno_dict})
+                phenocode_list.append(get_phenocode_with_stratifications(pheno_dict))
+                
     return render_template('pheno-filter.html',
                            phenocode=phenocode,
                            pheno=pheno,
+                           stratified=conf.stratified(),
+                           phenocode_list=phenocode_list,
+                           pheno_list=pheno_list,
+                           download_url= url_for('.download_pheno',phenocode='PHENOCODE_PLACEHOLDER').rstrip('/'),
                            tooltip_underscoretemplate=parse_utils.tooltip_underscoretemplate,
                            show_manhattan_filter_consequence=conf.should_show_manhattan_filter_consequence(),
     )
@@ -277,52 +407,43 @@ def pheno_filter_page(phenocode):
 @bp.route('/region/<phenocode>/<region>')
 @check_auth
 def region_page(phenocode:str, region:str):
-
     try:
         pheno = phenos[phenocode]
     except KeyError:
         die("Sorry, I couldn't find the phewas code {!r}".format(phenocode))
-
-    try:
-        pheno_summary_single = pheno_summary[phenocode]
-    except KeyError:
-        die("Sorry, I couldn't find the phenocode in phenotype summary (generated-by-pheweb/phenotypes.json) : {!r}".format(phenocode))
-
-    pheno['phenocode'] = phenocode
-    
+        
+    #pass through a list that helps identify which phenos should be called (generated)
+    phenocode_list = []
+    pheno_list = []
+    if conf.stratified():
+        for pheno_dict in all_phenos:
+            if pheno_dict['phenocode'] == phenocode:
+                pheno_list.append({get_phenocode_with_stratifications(pheno_dict): pheno_dict})
+                phenocode_list.append(get_phenocode_with_stratifications(pheno_dict))
+                
+    print(f"TEMPLATE : {parse_utils.tooltip_lztemplate}")
+                
     return render_template('region.html',
                            pheno=pheno,
                            region=region,
-                           pheno_summary=pheno_summary_single,
-                           sex_stratified=conf.stratified(),
+                           stratified=conf.stratified(),
+                           phenocode_list=phenocode_list,
+                           pheno_list=pheno_list,
                            tooltip_lztemplate=parse_utils.tooltip_lztemplate,
     )
 
-@bp.route('/api/region/<phenocode>/lz-results/') # This API is easier on the LZ side.
+@bp.route('/api/region/<phenocode>/lz-results/')  # This API is easier on the LZ side.
 @check_auth
-def api_region(phenocode:str):
+def api_region(phenocode: str):
     filter_param = request.args.get('filter')
-    if not isinstance(filter_param, str): abort(404)
+    if not isinstance(filter_param, str):
+        abort(404)
     m = re.match(r".*chromosome in +'(.+?)' and position ge ([0-9]+) and position le ([0-9]+)", filter_param)
     if not m:
         abort(404)
     else:
         chrom, pos_start, pos_end = m.group(1), int(m.group(2)), int(m.group(3))
         return jsonify(get_pheno_region(phenocode, chrom, pos_start, pos_end))
-
-@bp.route('/api/region/<phenocode>/lz-female-results/') # This API is easier on the LZ side.
-@check_auth
-def api_region_female(phenocode:str):
-
-    filter_param = request.args.get('filter')
-    if not isinstance(filter_param, str): abort(404)
-    m = re.match(r".*chromosome in +'(.+?)' and position ge ([0-9]+) and position le ([0-9]+)", filter_param)
-    if not m:
-        abort(404)
-    else:
-        chrom, pos_start, pos_end = m.group(1), int(m.group(2)), int(m.group(3))
-        #get pheno region of female stratification
-        return jsonify(get_pheno_region(phenocode, chrom, pos_start, pos_end, "female"))
 
 
 @bp.route('/api/pheno/<phenocode>/correlations/')

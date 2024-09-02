@@ -132,8 +132,6 @@ def variant_page(query:str):
 @bp.route('/api/manhattan/pheno/<phenocode>.json')
 @check_auth
 def api_pheno(phenocode:str):
-    print(f"sending from phenocode: {phenocode}")
-    print(f"get_filepath : {get_filepath('manhattan')}")
     return send_from_directory(get_filepath('manhattan'), '{}.json'.format(phenocode))
 
 @bp.route('/api/manhattan-filtered/pheno/<phenocode>.json')

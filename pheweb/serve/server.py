@@ -132,6 +132,8 @@ def variant_page(query:str):
 @bp.route('/api/manhattan/pheno/<phenocode>.json')
 @check_auth
 def api_pheno(phenocode:str):
+    print(f"sending from phenocode: {phenocode}")
+    print(f"get_filepath : {get_filepath('manhattan')}")
     return send_from_directory(get_filepath('manhattan'), '{}.json'.format(phenocode))
 
 @bp.route('/api/manhattan-filtered/pheno/<phenocode>.json')
@@ -397,7 +399,7 @@ if conf.is_secret_download_pheno_sumstats():
         try:
             return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode),
                                        as_attachment=True,
-                                       attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
+                                       download_name='phenocode-{}.tsv.gz'.format(phenocode))
         except Exception as exc:
             die("Sorry, that file doesn't exist.", exception=exc)
 
@@ -423,7 +425,7 @@ else:
             die("Sorry, that phenocode doesn't exist")
         return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode),
                                    as_attachment=True,
-                                   attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
+                                   download_name='phenocode-{}.tsv.gz'.format(phenocode))
 
 
 @bp.route('/')

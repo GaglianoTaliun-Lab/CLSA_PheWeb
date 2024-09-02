@@ -81,7 +81,7 @@
         <div id="LiftOverGRCh38" class="tab-pane fade">
             <h3>LiftOver to GRCh38 Reference</h3>
             <hr></hr>
-            <p>We converted genotype array data from genome build GRCh37 to GRCh38, aligned to the "+" strand using LiftOver. The conversion included the following steps:</p>
+            <p>We converted genotype array data for assessed SNPs from genome build GRCh37 to GRCh38 aligned to the "+" strand using LiftOver. The conversion included the following steps:</p>
             <ol>
                 <li>We lifted genetic positions from GRCh37 to GRCh38 using the UCSC LiftOver tool and the corresponding chain files.</li>
                 <li>We excluded variants that did not map to GRCh38, mapped to alternate contigs in GRCh38, or located on the mitochondrial chromosome.</li>
@@ -214,41 +214,41 @@
             <p>The CLSA team used the TOPMed reference panel version r2, containing 97,256 reference samples with 308,107,085 genetic markers. EAGLE2 and Minimac where used to pre-phase and impute the genotyping data. </p>
         </div>
 
-<!-- Phenotype Association -->
+<!-- Single variant genome-wide association analyses across the phenome -->
         <div id="PhenotypeAssociation" class="tab-pane fade">
             <h2 class="text-center">Phenotype Association</h2>
             <hr></hr>
-            <p>In this version of the CLSA PheWeb, we restricted our genome-wide association analyses (GWAS) to individuals of European genetic ancestry. We used Regenie to run GWAS. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
+            <p>In this version of the CLSA PheWeb, we restricted our genome-wide association analyses (GWAS) to individuals of European genetic ancestry for traits assessed at baseline. We used <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a> v3.2.1 to run GWAS. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
         </div>
         <!-- Ancestry Check and European Subset  -->
         <div id="AncestryEuro" class="tab-pane fade">
             <h2 class="text-center">Subsetting the European sub-population</h2>
             <hr></hr>
             <p>We ran our own ancestry check and filtering using a custom pipeline implementing methods seen <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9900804/" target="_blank">here</a>. The pipeline can be found <a href="https://github.com/CERC-Genomic-Medicine/HGDP_1KG_ancestry_inference" target="_blank">here</a></p>
-            <p>We subset individuals of predicted european ancestry. For ancestry prediction we followed the following steps:</p>
+            <p>We subset individuals of predicted European genetic ancestry. For ancestry prediction we followed the following steps:</p>
             <ol>
-                <li>We used <a href="https://csg.sph.umich.edu/chaolong/LASER/TRACE_Manual.pdf" target = "_blank">TRACE</a> to project principal components onto HGDP and 1KG combined references (Figure 1). We removed individuals that had a Z score of <span>&#177;</span>5.</li>
+                <li>We used <a href="https://csg.sph.umich.edu/chaolong/LASER/TRACE_Manual.pdf" target = "_blank">TRACE</a> to project principal components onto Human Genome Diversity Project (HGDP) and 1000 Genomes Project (1KG) combined references (Figure 1). We removed individuals that had a Z score of <span>&#177;</span>5.</li>
                 <li>Using the projection results, we used a RandomForestModel to calculate probabilities of ancestry group.</li>
-                <li>We used 0.78 probability as our threshold to include in European subset.</li>
+                <li>We used 0.78 probability as the inclusion threshold for the European subset.</li>
             </ol>
-            <p>In the end, this resulted in 24505 individuals being included in the proceeding analysis.</p>
+            <p>These steps resulted in 24,505 individuals in the European subset for analysis.</p>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
                         <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/pca.png?raw=true" alt="PCA plot"  width="100%" height="100%">
                 </div>
-                <div class="panel-footer"><b>Figure 1. </b>CLSA sample's with inferred European ancestry projected onto the HGDP and 1KG's PCA space.</div>
+                <div class="panel-footer"><b>Figure 1. </b>CLSA samples with inferred European genetic ancestry projected onto the PCA space of HGDP and 1KG.</div>
             </div>
         </div>
         <div id="BinaryPhenotype" class="tab-pane fade">
             <h3>Selecting Binary Phenotypes</h3>
             <hr></hr>
-            <p>Binary phenotypes were selected with the following criteria (Figure 2):</p>
+            <p>Binary phenotypes (assessed at baseline) were selected with the following criteria (Figure 2):</p>
             <ol>
                 <li>The variable is binary (2 choices)</li>
                 <li>The variable has more than 1000 cases</li>
                 <li>The variable has GWAS relevance</li>
             </ol>
-            <p>The final number of continuous phenotypes was 350.</p>
+            <p>The final number of binary phenotypes was 350.</p>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
                         <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/binary_diagram.png?raw=true" alt="binary flow chart"  width="100%" height="100%">
@@ -259,7 +259,7 @@
         <div id="ContinuousPhenotype" class="tab-pane fade">
             <h3>Selecting Continuous Phenotypes</h3>
             <hr></hr>
-            <p>Continous phenotypes were selected with the following criteria (Figure 3):</p>
+            <p>Continous phenotypes (assessed at baseline) were selected with the following criteria (Figure 3):</p>
             <ol>
                 <li>Removed outliers <span>&#177;</span>5 standard deviations from the mean</li>
                 <li>The variable has more than 20 uniques numeric values, as to remove semi-quantitative variables that are not modeled correctly in linear regression.</li>
@@ -267,7 +267,7 @@
                 <li>The variable has does not have one value which accounts for more than 10% of all values</li>
                 <li>The variable has GWAS relevance</li>
             </ol>
-            <p>The final number of continuous phenotypes was 197.</p>
+            <p>The final number of continuous phenotypes was 228.</p>
             <div class="panel panel-default" style="display: inline-block">
                 <div class="panel-body text-center">
                         <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/continuous_diagram.png?raw=true" alt="continuous flow chart"  width="100%" height="100%">
@@ -281,7 +281,7 @@
             <hr></hr>
             <p>Association testing was performed using <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a> v3.2.1, which handles unbalanced case-control ratios and accounts for population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow" target = "_blank" >here</a>.</p>
             <div>
-                <p>After filtering european sub-population, we proceeded to further filter common non-imputed variants for step 1 of Regenie.</p>
+                <p>After filtering to the predicted European genetic ancestry subset, we proceeded to further filter common non-imputed variants for step 1 of Regenie.</p>
                 <p>We performed the following:</p>
                 <ol>
                     <li>Removed variants with sample missingness of > 0.1</li>
@@ -408,8 +408,10 @@
             <h2 class="text-center">Acknowledgements</h2>
             <hr></hr>
             <ul>
-                <li>Authors : Mike Kazemi, Justin Bellavance, Daniel Taliun, Sarah Gagliano Taliun</li>
-                <li>All computational analyses were performed using the compute resources of Digital Research Alliance of Canada, and the Digital Research Alliance of Canada hosts this site.</li>
+                <li>Core Development Team : Mike Kazemi, Justin Bellavance, Daniel Taliun, Sarah Gagliano Taliun</li>
+                <li>This work has been carried out under approved CLSA Methods Application 23ME002 and funded by the Canadian Institutes of Health Research (CIHR): 2 Canada Graduate Scholarships – Master's (MK & JB) & a Catalyst Grant: Analysis of CLSA Data (DT & SGT).</li>
+                <li>We thank Parminder Raina and the CLSA Executive Team for their support with this research. We also thank Alexandra Mayhew for discussion of the Dexa Scan variables as well as Isabel Fortier and Rita Wissa for assistance with trait categorization.</li> 
+                <li>All computational analyses were performed using the compute resources of Digital Research Alliance of Canada, and SecureData4Health hosts this site.</li>
                 <li>We thank all CLSA participants who volunteered their time and information for research.</li>
             </ul>
         </div>

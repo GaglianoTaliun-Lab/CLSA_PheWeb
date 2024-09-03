@@ -32,18 +32,22 @@
 
 <!-- OVERVIEW SECTION-->
         <div id="Overview" class="tab-pane fade in active">
-            <h2 class="text-center"> About CLSA PheWeb</h2>
-            <hr></hr>
+            <div>
+                <h2 class="text-center"> About CLSA PheWeb</h2> 
+            </div>
+            <hr>
             <p> This platform presents multiple analyses conducted using CLSA data to the scientific community as well as the public at large. The <a href="https://www.clsa-elcv.ca/", target = "_blank">CLSA</a> cohort is specific to Canada. </p>
             <p> This platform displays genome-wide association (GWAS) and phenome-wide association (PheWAS) results from the CLSA cohort (i.e. statistical associations between individuals' trait information and genomic variations across the available traits in the cohort).  </p>
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
-            <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/CLSA_logo_RGB_Vert.jpg?raw=true" alt="CLSA Logo" width="60%" height="60%" class="center-block">
+            <!--
+                <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/CLSA_logo_RGB_Vert.jpg?raw=true" alt="CLSA Logo" width="60%" height="60%" class="center-block">
+            -->
             <p style='margin-right:0cm;margin-left:0cm;font-size:16px;font-family:"Calibri",sans-serif;margin:0cm;text-align:center;'><span style='font-family:"Times New Roman",serif;'>&nbsp;</span></p>
         </div>
 <!-- DATA DESCRIPTION -->
         <div id="GenotypeData" class="tab-pane fade">
             <h2 class="text-center">Genotype Data</h2>
-            <hr></hr>
+            <hr>
             <p>Original non-imputed CLSA genotype data (v3) has 794,409 variants for 26,622 participants.</p>
             <p>Participants were genotyped using the Affrymetrix UK Biobank Axiom array.</p>
             <p>Originally, all genomic positions were reported in reference to human genome build GRCh37.</p>
@@ -53,13 +57,13 @@
 <!-- LiftOver and CLSA filtering Overview-->
         <div id="LiftOver" class="tab-pane fade">
             <h2 class="text-center">LiftOver</h2>
-            <hr></hr>
+            <hr>
             <p>We performed liftOver to convert genomic positions from GRCh37 to GRCh38, as described in the following sections.</p>
             <p>Scripts and in-depth description of usage available on <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb_Docs/tree/main/GRCh37_to_GRCh38" target="_blank">Github</a></p>
         </div>
         <div id="PreLiftOver" class="tab-pane fade">
             <h3>Pre-LiftOver Filtering</h3>
-            <hr></hr>
+            <hr>
             <p>Before liftOver, we applied the CLSA's quality checks for marker and sample quality control.</p>
             <p>Speficially, the CLSA filtered out variants with:</p>
             <ol>
@@ -80,7 +84,7 @@
         </div>
         <div id="LiftOverGRCh38" class="tab-pane fade">
             <h3>LiftOver to GRCh38 Reference</h3>
-            <hr></hr>
+            <hr>
             <p>We converted genotype array data for assessed SNPs from genome build GRCh37 to GRCh38 aligned to the "+" strand using LiftOver. The conversion included the following steps:</p>
             <ol>
                 <li>We lifted genetic positions from GRCh37 to GRCh38 using the UCSC LiftOver tool and the corresponding chain files.</li>
@@ -193,7 +197,7 @@
         </div>
         <div id="HweRuth" class="tab-pane fade">
             <h3>Ancestry-Aware Hardy-Weinberg Check with RUTH</h3>
-            <hr></hr>
+            <hr>
             <p>Using Robust Unified Hardy-Weinberg Equilibrium Test (<a href="https://github.com/statgen/ruth" target = "_blank" >RUTH</a>), we confirmed the CLSA's hardy-weinberg equilibrium exclusion criteria.</p>
             <p>We ran RUTH on the results from step 2.2 using the 20 first PCs using the likelihood-ratio test with max lambda parameter of 0, using the GT field. We used seed 101.</p>
             <p>No additional variants were excluded using this test.</p>
@@ -202,7 +206,7 @@
 <!-- TOPMed Imputation -->
         <div id="TOPMedImputation" class="tab-pane fade">
             <h2 class="text-center">TOPMed Imputation</h2>
-            <hr></hr>
+            <hr>
             <p>Genotype imputation is a computational method to infer genotypes at genetic variants that are not directly capture by the genotype array, but are present in reference whole-genome sequences.</p>
             <p>Genotype imputation was carried out by the CLSA, and <a href="https://www.nhlbi.nih.gov/science/trans-omics-precision-medicine-topmed-program" target="_blank"></a>TOPMed was used as a reference panel.</p>
             <p>As input to the imputation process, the CLSA team used all 26,622 participants and 716,347 genetic variants that:</p>
@@ -217,13 +221,13 @@
 <!-- Single variant genome-wide association analyses across the phenome -->
         <div id="PhenotypeAssociation" class="tab-pane fade">
             <h2 class="text-center">Phenotype Association</h2>
-            <hr></hr>
+            <hr>
             <p>In this version of the CLSA PheWeb, we restricted our genome-wide association analyses (GWAS) to individuals of European genetic ancestry for traits assessed at baseline. We used <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a> v3.2.1 to run GWAS. The following sections describe the selection of individuals, phenotypes, and the corresponding Regenie arguments.</p>
         </div>
         <!-- Ancestry Check and European Subset  -->
         <div id="AncestryEuro" class="tab-pane fade">
             <h2 class="text-center">Subsetting the European sub-population</h2>
-            <hr></hr>
+            <hr>
             <p>We ran our own ancestry check and filtering using a custom pipeline implementing methods seen <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9900804/" target="_blank">here</a>. The pipeline can be found <a href="https://github.com/CERC-Genomic-Medicine/HGDP_1KG_ancestry_inference" target="_blank">here</a></p>
             <p>We subset individuals of predicted European genetic ancestry. For ancestry prediction we followed the following steps:</p>
             <ol>
@@ -241,7 +245,7 @@
         </div>
         <div id="BinaryPhenotype" class="tab-pane fade">
             <h3>Selecting Binary Phenotypes</h3>
-            <hr></hr>
+            <hr>
             <p>Binary phenotypes (assessed at baseline) were selected with the following criteria (Figure 2):</p>
             <ol>
                 <li>The variable is binary (2 choices)</li>
@@ -258,7 +262,7 @@
         </div>
         <div id="ContinuousPhenotype" class="tab-pane fade">
             <h3>Selecting Continuous Phenotypes</h3>
-            <hr></hr>
+            <hr>
             <p>Continous phenotypes (assessed at baseline) were selected with the following criteria (Figure 3):</p>
             <ol>
                 <li>Removed outliers <span>&#177;</span>5 standard deviations from the mean</li>
@@ -278,7 +282,7 @@
 
         <div id="Regenie" class="tab-pane fade">
             <h3>Regenie</h3>
-            <hr></hr>
+            <hr>
             <p>Association testing was performed using <a href="https://rgcgithub.github.io/regenie/" target="_blank">Regenie</a> v3.2.1, which handles unbalanced case-control ratios and accounts for population structure and relatedness. Our automated Nextflow pipeline for executing Regenie in a highly parallel way is available <a href="https://github.com/CERC-Genomic-Medicine/Regenie_nextflow" target = "_blank" >here</a>.</p>
             <div>
                 <p>After filtering to the predicted European genetic ancestry subset, we proceeded to further filter common non-imputed variants for step 1 of Regenie.</p>
@@ -399,14 +403,14 @@
         <!-- PheWeb  -->
         <div id="PheWeb" class="tab-pane fade">
             <h2 class="text-center">PheWeb</h2>
-            <hr></hr>
+            <hr>
             <p>The CLSA PheWeb uses the open-source <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7754083/" target="_blank">PheWeb framework</a>. The customized source code for this instance is available <a href="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb" target = "_blank">here</a>.</p>
         </div>
 
         <!-- Acknowledgements  -->
         <div id="Acknowledgements" class="tab-pane fade">
             <h2 class="text-center">Acknowledgements</h2>
-            <hr></hr>
+            <hr>
             <ul>
                 <li>Core Development Team : Mike Kazemi, Justin Bellavance, Daniel Taliun, Sarah Gagliano Taliun</li>
                 <li>This work has been carried out under approved CLSA Methods Application 23ME002 and funded by the Canadian Institutes of Health Research (CIHR): 2 Canada Graduate Scholarships – Master's (MK & JB) & a Catalyst Grant: Analysis of CLSA Data (DT & SGT).</li>

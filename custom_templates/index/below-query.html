@@ -1,26 +1,34 @@
 
 <style>
-    .image-container {
-        display: flex;
-        justify-content : space-between;
-        align-items: center;
+
+    .affiliations-bar {
+        padding: 10px;
+        text-align: center;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
     }
-    .image-container img {
-        width: 20%;
-        height: 20%; 
-        object-fit: cover; 
+    
+    .affiliations-bar img {
+        object-fit: contain;
+        height: 50px;
+        width: auto; 
+        margin: 0 10px; 
     }
+
 </style>
+
 <div class="alert alert-info" role="alert">
-<strong>Important!</strong> 
-This tool aims to provide the research community with an overview of GWAS/PheWAS results derived from the <a href="https://www.clsa-elcv.ca/">CLSA comprehensive cohort</a>. The association results presented here have not been carefully curated and are constantly being improved. Please exercise caution when interpreting these results and using them for downstream analyses. See the <a href="about">About page</a> for details on the QC and analytical pipeline. If you have suggestions or see something that should be improved, please let us know!
+    <strong>Important!</strong> 
+    This tool aims to provide the research community with an overview of GWAS/PheWAS results derived from the <a href="https://www.clsa-elcv.ca/">CLSA comprehensive cohort</a>. The association results presented here have not been carefully curated and are constantly being improved. Please exercise caution when interpreting these results and using them for downstream analyses. See the <a href="about">About page</a> for details on the QC and analytical pipeline. If you have suggestions or see something that should be improved, please let us know!
 </div>
 
-<div class="image-container">
+
+<footer class="affiliations-bar">
     <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/200px-Universite_de_Montreal_logo.png?raw=true" alt="">
     <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/mcgill_sig_red_logo.png?raw=true" alt="">
     <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/leaf-cihr-colour-en.jpg?raw=true" alt="">
     <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/alliance_logo.svg?raw=true" alt="">
     <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/Artboard-1-8-200x81.png?raw=true" alt="">
-</div>
-
+</footer>

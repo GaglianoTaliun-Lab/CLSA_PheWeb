@@ -3,18 +3,57 @@
 
     .affiliations-bar {
         padding: 10px;
-        text-align: center;
+        align-items: center;
         width: 100%;
         position: fixed;
         bottom: 0;
         left: 0;
+	right: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+    }
+
+    .affiliations-bar img {
+	margin: 0 10px;
+	object-fit: contain;
+	max-height: 110px
+	width: auto;
+    
+    }
+
+    @media screen and (max-width: 768px){
+	.affiliation-bar img {
+		max-height: 70px;
+		margin: 5px 5px;
+	}
+    }
+
+    @media screen and (max-width: 480px){
+	.affiliations-bar img {
+		max-height: 30px;
+		margin: 3px 3px;
+	}
     }
     
-    .affiliations-bar img {
-        object-fit: contain;
-        height: 50px;
-        width: auto; 
-        margin: 0 10px; 
+    .udem {
+	height: 75px;
+    }
+
+    .mcgill {
+	height: 60px;
+    }
+
+    .cihr {
+	height: 100px;
+    }
+
+    .alliance {
+	height: 40px;
+    }
+
+    .sd4h {
+	height: 75px;
     }
 
 </style>
@@ -26,9 +65,9 @@
 
 
 <footer class="affiliations-bar">
-    <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/200px-Universite_de_Montreal_logo.png?raw=true" alt="">
-    <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/mcgill_sig_red_logo.png?raw=true" alt="">
-    <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/leaf-cihr-colour-en.jpg?raw=true" alt="">
-    <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/alliance_logo.svg?raw=true" alt="">
-    <img src="https://github.com/GaglianoTaliun-Lab/CLSA_PheWeb/blob/master/pheweb/serve/static/images/Artboard-1-8-200x81.png?raw=true" alt="">
+<img class="udem" src="./static/images/200px-Universite_de_Montreal_logo.png" alt="">
+    <img class="affiliation-img mcgill" src="./static/images/mcgill_sig_red_logo.png" alt="">
+    <img class="affilation-img cihr" src="./static/images/leaf-cihr-colour-en.jpg" alt="">
+    <img class="affiliation-img alliance" src="./static/images/alliance_logo.svg" alt="">
+    <img class="affilation-img sd4h" src="./static/images/Artboard-1-8-200x81.png" alt="">
 </footer>

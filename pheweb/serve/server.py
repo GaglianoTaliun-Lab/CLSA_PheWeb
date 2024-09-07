@@ -110,11 +110,27 @@ def go():
 @bp.route('/api/variant/<query>')
 @check_auth
 def api_variant(query:str):
-    variant = get_variant(query)
-    resp = jsonify(variant)
-    if conf.should_allow_variant_json_cors():
-        resp.headers.add('Access-Control-Allow-Origin', '*')
-    return resp
+    print(f"query for variant = {query}")
+    if conf.stratified():
+        variant_list = []
+        for path in set(get_stratification_paths(phenos_with_stratifications)):
+            variant = get_variant(query, path)
+            if variant is None:
+                die("Sorry, I couldn't find the variant {}".format(query))
+            variant['stratification'] = path
+            variant_list.append(variant)
+        resp = jsonify(variant_list)
+        print(resp)
+        if conf.should_allow_variant_json_cors():
+            resp.headers.add('Access-Control-Allow-Origin', '*')
+        return resp
+        
+    else:
+        variant = get_variant(query)
+        resp = jsonify(variant)
+        if conf.should_allow_variant_json_cors():
+            resp.headers.add('Access-Control-Allow-Origin', '*')
+        return resp
 
 @bp.route('/variant/<query>')
 @check_auth
@@ -128,8 +144,6 @@ def variant_page(query:str):
                         die("Sorry, I couldn't find the variant {}".format(query))
                     variant['stratification'] = path
                     variant_list.append(variant)
-                print("VARIANT LIST:")
-                print(variant_list)
                 return render_template('variant.html',
                                     variant=variant,
                                     stratified=conf.stratified(),
@@ -420,9 +434,7 @@ def region_page(phenocode:str, region:str):
             if pheno_dict['phenocode'] == phenocode:
                 pheno_list.append({get_phenocode_with_stratifications(pheno_dict): pheno_dict})
                 phenocode_list.append(get_phenocode_with_stratifications(pheno_dict))
-                
-    print(f"TEMPLATE : {parse_utils.tooltip_lztemplate}")
-                
+                                
     return render_template('region.html',
                            pheno=pheno,
                            region=region,
@@ -443,6 +455,7 @@ def api_region(phenocode: str):
         abort(404)
     else:
         chrom, pos_start, pos_end = m.group(1), int(m.group(2)), int(m.group(3))
+        print(jsonify(get_pheno_region(phenocode, chrom, pos_start, pos_end)))
         return jsonify(get_pheno_region(phenocode, chrom, pos_start, pos_end))
 
 
@@ -563,7 +576,7 @@ if conf.is_secret_download_pheno_sumstats():
         try:
             return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode),
                                        as_attachment=True,
-                                       attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
+                                       download_name='phenocode-{}.tsv.gz'.format(phenocode))
         except Exception as exc:
             die("Sorry, that file doesn't exist.", exception=exc)
 
@@ -589,7 +602,7 @@ else:
         #     die("Sorry, that phenocode doesn't exist")
         return send_from_directory(get_filepath('pheno_gz'), '{}.gz'.format(phenocode),
                                    as_attachment=True,
-                                   attachment_filename='phenocode-{}.tsv.gz'.format(phenocode))
+                                   download_name='phenocode-{}.tsv.gz'.format(phenocode))
         
 @bp.route('/')
 def homepage():

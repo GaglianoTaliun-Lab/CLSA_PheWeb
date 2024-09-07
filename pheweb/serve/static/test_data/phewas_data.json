@@ -1,0 +1,30 @@
+{
+    "data": [
+      {
+        "id": 45,
+        "trait_group": "Metabolic disease",
+        "trait_label": "Type 2 diabetes",
+        "log_pvalue": 107.032,
+        "variant": "10:114758349_C/T",
+        "chromosome": "10",
+        "position": 114758349,
+        "build": "GRCh37",
+        "beta": null,
+        "ref_allele": "C",
+        "ref_allele_freq": null,
+        "score_test_stat": null,
+        "se": null,
+        "study": "DIAGRAM",
+        "description": "DIAGRAM 1000G T2D meta-analysis",
+        "tech": null,
+        "pmid": "28566273",
+        "trait": "T2D"
+      }
+    ],
+    "lastPage": null,
+    "meta": {
+      "build": [
+        "GRCh37"
+      ]
+    }
+  }

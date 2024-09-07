@@ -83,7 +83,6 @@ class _GetVariant:
 
         
         if v is None: return None
-        #print(v)
         v['phenos'] = list(v['phenos'].values())
         v['variant_name'] = '{} : {:,} {} / {}'.format(chrom, pos, ref, alt)
         return v

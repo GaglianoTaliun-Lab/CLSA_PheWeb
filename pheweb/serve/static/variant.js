@@ -51,118 +51,119 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
 });
 
 (function() {
-    // sort phenotypes
-    console.log(window.variant_list)
-    if (window.variant_list != null) {
-        console.log("calling window.variant_list != null")
-        // window.variant_list.forEach(function(variant) {
-        //     if (_.any(variant.phenos.map(function(d) { return d.phenocode; }).map(parseFloat).map(isNaN))) {
-        //         variant.phenos = _.sortBy(variant.phenos, function(d) { return d.phenocode; });
-        //     } else {
-        //         variant.phenos = _.sortBy(variant.phenos, function(d) { return parseFloat(d.phenocode); });
-        //     }
-        
-        //     window.first_of_each_category = (function() {
-        //         var categories_seen = {};
-        //         return variant.phenos.filter(function(pheno) {
-        //             if (categories_seen.hasOwnProperty(pheno.category)) {
-        //                 return false;
-        //             } else {
-        //                 categories_seen[pheno.category] = 1;
-        //                 return true;
-        //             }
-        //         });
-        //     })();
-        //     var category_order = (function() {
-        //         var rv = {};
-        //         first_of_each_category.forEach(function(pheno, i) {
-        //             rv[pheno.category] = i;
-        //         });
-        //         return rv;
-        //     })();
-        //     // _.sortBy is a stable sort, so we just sort by category_order and we're good.
-        //     variant.phenos = _.sortBy(variant.phenos, function(d) {
-        //         return category_order[d.category];
-        //     });
-        //     window.unique_categories = d3.set(variant.phenos.map(_.property('category'))).values();
-        //     const category20 = d3.schemeCategory10.concat(d3.schemeCategory10);  /* d3 removed category20, so I make this terrible version */
-        //     window.color_by_category = d3.scaleOrdinal((unique_categories.length > 10) ? category20 : d3.schemeCategory10)
-        //         .domain(unique_categories);
-        
-        //     variant.phenos.forEach(function(d, i) {
-        //         d.phewas_code = d.phenocode;
-        //         d.phewas_string = (d.phenostring || d.phenocode);
-        //         d.category_name = d.category;
-        //         d.color = color_by_category(d.category);
-        //         d.idx = i;
-        //     });
-        // });
-    } else {
-        if (_.any(window.variant.phenos.map(function(d) { return d.phenocode; }).map(parseFloat).map(isNaN))) {
-            window.variant.phenos = _.sortBy(window.variant.phenos, function(d) { return d.phenocode; });
+
+
+    window.variant_list.forEach(variant => {
+        // sort phenotypes
+        if (_.any(variant.phenos.map(function(d) { return d.phenocode; }).map(parseFloat).map(isNaN))) {
+            variant.phenos = _.sortBy(variant.phenos, function(d) { return d.phenocode; });
         } else {
-            window.variant.phenos = _.sortBy(window.variant.phenos, function(d) { return parseFloat(d.phenocode); });
+            variant.phenos = _.sortBy(variant.phenos, function(d) { return parseFloat(d.phenocode); });
         }
-    
-        window.first_of_each_category = (function() {
-            var categories_seen = {};
-            return window.variant.phenos.filter(function(pheno) {
-                if (categories_seen.hasOwnProperty(pheno.category)) {
-                    return false;
-                } else {
-                    categories_seen[pheno.category] = 1;
-                    return true;
-                }
-            });
-        })();
-        var category_order = (function() {
+    })
+
+    window.first_of_each_category_list = []
+
+    window.variant_list.forEach(variant => {
+      first_of_each_category_list.push(
+        (function() {
+          var categories_seen = {};
+          return variant.phenos.filter(function(pheno) {
+              if (categories_seen.hasOwnProperty(pheno.category)) {
+                  return false;
+              } else {
+                  categories_seen[pheno.category] = 1;
+                  return true;
+              }
+          });
+      })()
+      )
+    })
+
+    var category_order_list = []
+
+    window.variant_list.forEach((variant, j) => {      
+      category_order_list.push(
+        (function() {
             var rv = {};
-            first_of_each_category.forEach(function(pheno, i) {
+            first_of_each_category_list[j].forEach(function(pheno, i) {
                 rv[pheno.category] = i;
             });
             return rv;
-        })();
-        // _.sortBy is a stable sort, so we just sort by category_order and we're good.
-        window.variant.phenos = _.sortBy(window.variant.phenos, function(d) {
-            return category_order[d.category];
-        });
-        window.unique_categories = d3.set(window.variant.phenos.map(_.property('category'))).values();
-        const category20 = d3.schemeCategory10.concat(d3.schemeCategory10);  /* d3 removed category20, so I make this terrible version */
-        window.color_by_category = d3.scaleOrdinal((unique_categories.length > 10) ? category20 : d3.schemeCategory10)
-            .domain(unique_categories);
-    
-        window.variant.phenos.forEach(function(d, i) {
-            d.phewas_code = d.phenocode;
-            d.phewas_string = (d.phenostring || d.phenocode);
-            d.category_name = d.category;
-            d.color = color_by_category(d.category);
-            d.idx = i;
-        });
-    }
+        })()
+      )
+    })
+
+    // _.sortBy is a stable sort, so we just sort by category_order and we're good.
+    window.variant_list.forEach((variant, i) => {
+        variant.phenos = _.sortBy(variant.phenos, function(d) {
+          return category_order_list[i][d.category];
+      });
+    })
+
+    window.unique_categories_list = []
+
+    window.variant_list.forEach((variant, i) => {
+      unique_categories_list.push(
+        d3.set(variant.phenos.map(_.property('category'))).values()
+      )
+    })
+    const category20 = d3.schemeCategory10.concat(d3.schemeCategory10);  /* d3 removed category20, so I make this terrible version */
+
+    var largest_number_of_categories = unique_categories_list.reduce((a, b) => (b.length > a.length ? b : a));
+    window.color_by_category_all = d3.scaleOrdinal((largest_number_of_categories.length > 10) ? category20 : d3.schemeCategory10).domain(largest_number_of_categories)
+
+    window.variant_list.forEach((variant, j) => {
+      variant.phenos.forEach(function(d, i) {
+          d.phewas_code = d.phenocode;
+          d.phewas_string = (d.phenostring || d.phenocode);
+          d.category_name = d.category;
+          d.color = color_by_category_all(d.category);
+          d.idx = i;
+      });
+    })
+
 })();
 
 
 (function() { // Create PheWAS plot.
 
-    var panels_list = []
-
-    console.log(window.variant_list)
-
+    var best_neglog10_pval = 0;
+    
+    window.variant_list.forEach(variant => {
+        var value = d3.max(variant.phenos.map(function(x) { return LocusZoom.TransformationFunctions.get('neglog10')(x.pval); }));
+        if (value > best_neglog10_pval){
+            best_neglog10_pval = value
+        }
+    })
+    
     var neglog10_handle0 = function(x) {
         if (x === 0) return best_neglog10_pval * 1.1;
         return -Math.log(x) / Math.LN10;
     };
-
     LocusZoom.TransformationFunctions.add("neglog10_handle0", neglog10_handle0);
+
+    var global_panels = [];
 
     // Define data sources object
     // TODO: Can this be replaced with StaticSource + deepcopy?
     LocusZoom.Adapters.extend('PheWASLZ', 'PheWebSource', {
-        getData: function(state, fields, outnames, trans, variant) {
+        getData: function(state, fields, outnames, trans) {
+
+            var list = Object.keys(state);
+
+            var panels = list.slice(0, list.indexOf("variant"))
+
+            if (global_panels.length == 0){
+              global_panels = global_panels.concat(panels)
+            } 
+            var panel = global_panels.shift();
+
             // Override all parsing, namespacing, and field extraction mechanisms, and load data embedded within the page
             trans = trans || [];
 
-            var data = deepcopy(variant.phenos); //otherwise LZ adds attributes I don't want to the original data.
+            var panel_int = +panel;
+            var data = deepcopy(window.variant_list[panel_int].phenos); //otherwise LZ adds attributes I don't want to the original data.
             data.forEach(function(d, i) {
                 data[i].x = i;
                 data[i].id = i.toString();
@@ -175,70 +176,32 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
             return function(chain) {
                 return {header: chain.header || {}, body: data};
             }.bind(this);
+
         }
     });
 
+    var neglog10_significance_threshold_list = []
+
+    window.variant_list.forEach(variant => {
+        neglog10_significance_threshold_list.push(-Math.log10(0.05 / variant.phenos.length))
+    })
+
+    var panel_list = []
+
     var data_sources = new LocusZoom.DataSources()
-        .add("phewas", ["PheWebSource", {url: '/this/is/not/used'}]);
+    .add("phewas", ["PheWebSource", {url: '/this/is/not/used'}])
 
-    window.variant_list.forEach(function(variant, i) {
-
-            
-        var best_neglog10_pval = d3.max(window.variant.phenos.map(function(x) { return LocusZoom.TransformationFunctions.get('neglog10')(x.pval); }));
-
-        var neglog10_significance_threshold = -Math.log10(0.05 / window.variant.phenos.length);
-
-
-        if (_.any(variant.phenos.map(function(d) { return d.phenocode; }).map(parseFloat).map(isNaN))) {
-            variant.phenos = _.sortBy(variant.phenos, function(d) { return d.phenocode; });
-        } else {
-            variant.phenos = _.sortBy(variant.phenos, function(d) { return parseFloat(d.phenocode); });
-        }
-    
-        window.first_of_each_category = (function() {
-            var categories_seen = {};
-            return variant.phenos.filter(function(pheno) {
-                if (categories_seen.hasOwnProperty(pheno.category)) {
-                    return false;
-                } else {
-                    categories_seen[pheno.category] = 1;
-                    return true;
-                }
-            });
-        })();
-        var category_order = (function() {
-            var rv = {};
-            first_of_each_category.forEach(function(pheno, i) {
-                rv[pheno.category] = i;
-            });
-            return rv;
-        })();
-        // _.sortBy is a stable sort, so we just sort by category_order and we're good.
-        variant.phenos = _.sortBy(variant.phenos, function(d) {
-            return category_order[d.category];
-        });
-        window.unique_categories = d3.set(variant.phenos.map(_.property('category'))).values();
-        const category20 = d3.schemeCategory10.concat(d3.schemeCategory10);  /* d3 removed category20, so I make this terrible version */
-        window.color_by_category = d3.scaleOrdinal((unique_categories.length > 10) ? category20 : d3.schemeCategory10)
-            .domain(unique_categories);
-    
-        window.variant.phenos.forEach(function(d, j) {
-            d.phewas_code = d.phenocode;
-            d.phewas_string = (d.phenostring || d.phenocode);
-            d.category_name = d.category;
-            d.color = color_by_category(d.category);
-            d.idx = j;
-        });
-        
-        panels_list.push(custom_LocusZoom_Layouts_get('panel', 'phewas', {
-                title : {text : variant.stratification.replace(/^\./, '').replace(/\./g, ', ')},
+    window.variant_list.forEach((variant,i) => {
+        panel_list.push(
+            custom_LocusZoom_Layouts_get('panel', 'phewas', {
+                id: i.toString(),
+                title: { text: window.variant_list[i].stratification.split('.').slice(1).join(', ') },
                 min_width: 640, // feels reasonable to me
                 margin: { top: 20, right: 40, bottom: 120, left: 50 },
-                id: fmt("phewas_{0}", i),
                 data_layers: [
                     LocusZoom.Layouts.get('data_layer', 'significance', {
                         unnamespaced: true,
-                        offset: neglog10_significance_threshold,
+                        offset: neglog10_significance_threshold_list[i],
                     }),
                     custom_LocusZoom_Layouts_get('data_layer', 'phewas_pvalues', {
                         unnamespaced: true,
@@ -248,8 +211,8 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
                             field: "category_name",
                             scale_function: "categorical_bin",
                             parameters: {
-                                categories: window.unique_categories,
-                                values: window.unique_categories.map(function(cat) { return window.color_by_category(cat); }),
+                                categories: window.unique_categories_list[i],
+                                values: window.unique_categories_list[i].map(function(cat) { return window.color_by_category_all(cat); }),
                             },
                         },
                         point_shape: [
@@ -264,37 +227,35 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
                         ],
                         "y_axis.field": 'pval|neglog10_handle0',  // handles pval=0 a little better
                         "y_axis.upper_buffer": 0.1,
-                        "y_axis.min_extent": [0, neglog10_significance_threshold*1.05], // always show sig line
 
-                        "x_axis.min_extent": [-1, variant.phenos.length], // a little x-padding so that no points intersect the edge
+                        "y_axis.min_extent": [0, best_neglog10_pval*1.05], // always show sig line
+
+                        "x_axis.min_extent": [-1, window.variant_list[i].phenos.length], // a little x-padding so that no points intersect the edge
 
                         "tooltip.closable": false,
                         "tooltip.html": ("<div><strong>{{phewas_string}}</strong></div>\n" +
-                                        "<div><strong style='color:{{color}}'>{{category_name}}</strong></div>\n\n" +
-                                        window.model.tooltip_lztemplate),
-
+                                         "<div><strong style='color:{{color}}'>{{category_name}}</strong></div>\n\n" +
+                                         window.model.tooltip_lztemplate),
+    
                         // Show labels that are: in the top 10, and (by neglog10) >=75% of sig threshold, and >=25% of best
                         "label.text": "{{phewas_string}}",
                         "label.filters": (function() {
                             var ret = [
-                                {field:"pval|neglog10_handle0", operator:">", value:neglog10_significance_threshold * 3/4},
+                                {field:"pval|neglog10_handle0", operator:">", value:neglog10_significance_threshold_list[i] * 3/4},
                                 {field:"pval|neglog10_handle0", operator:">", value:best_neglog10_pval / 4}
                             ];
-                            if (variant.phenos.length > 10) {
-                                ret.push({field:"pval", operator:"<", value:_.sortBy(variant.phenos.map(_.property('pval')))[10]});
+                            if (window.variant_list[1].phenos.length > 10) {
+                                ret.push({field:"pval", operator:"<", value:_.sortBy(window.variant_list[i].phenos.map(_.property('pval')))[10]});
                             }
                             return ret;
                         })(),
-
+    
                         "behaviors.onclick": [{action:"link", href:window.model.urlprefix+"/pheno/{{phewas_code}}"}],
                     }),
                 ],
-
+    
                 // Use categories as x ticks.
-                //TODO : x value wrong here?
-                "axes.x.ticks": window.first_of_each_category.map(function(pheno) {
-                    console.log("PHENO")
-                    console.log(pheno)
+                "axes.x.ticks": window.first_of_each_category_list[i].map(function(pheno) {
                     return {
                         style: {fill: pheno.color, "font-size":"11px", "font-weight":"bold", "text-anchor":"start"},
                         transform: "translate(15, 0) rotate(50)",
@@ -302,16 +263,16 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
                         x: pheno.idx
                     };
                 }),
-
+    
                 "axes.y1.label": "-log\u2081\u2080(p-value)",
-            })
-        );
+            }),
+        )
     });
 
     var layout = {
-        // state: {
-        //     variant: ['chrom', 'pos', 'ref', 'alt'].map(function(d) { return window.variant[d];}).join("-"),
-        // },
+        state: {
+            variant: ['chrom', 'pos', 'ref', 'alt'].map(function(d) { return window.variant[d];}).join("-"),
+        },
         dashboard: {
             components: [
                 {type: "download", position: "right"},
@@ -321,12 +282,10 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
         min_height: 400,
         responsive_resize: true,
         mouse_guide: false,
-        panels: panels_list,
+        panels: panel_list,
     };
 
     $(function() {
-        console.log(data_sources)
-        console.log(layout)
         window.debug.plot = LocusZoom.populate("#phewas_plot_container", data_sources, layout);
     });
 })();
@@ -338,36 +297,53 @@ LocusZoom.ScaleFunctions.add("effect_direction", function(parameters, input){
 $(function() {
     function isnum(d) { return typeof d === "number"; }
     function minor(frac) { return Math.min(frac, 1-frac); }
-    var afs = window.variant.phenos.map(function(v) {
-        if (isnum(v.af)) { return v.af; }
-        else if (isnum(v.ac) && isnum(v.num_samples)) { return v.ac / (2*v.num_samples); }
-        else { return undefined; }
-    }).filter(isnum);
-    if (afs.length == window.variant.phenos.length) {
-        // Every pheno has AF
-        let af_range = d3.extent(afs).map(two_digit_format);
-        if (af_range[0] === af_range[1]) { $('#maf-range').html(fmt('AF: {0}', af_range[0])); }
-        else { $('#maf-range').html(fmt('AF ranges from {0} to {1}', af_range[0], af_range[1])); }
-        return;
-    }
-    var mafs = window.variant.phenos.map(function(v) {
-        if (isnum(v.maf))  { return v.maf; }
-        else if (isnum(v.af)) { return minor(v.af); }
-        else if (isnum(v.mac) && isnum(v.num_samples)) { return v.mac / (2*v.num_samples) }
-        else if (isnum(v.ac) && isnum(v.num_samples)) { return minor(v.ac / (2*v.num_samples)); }
-        else { return undefined; }
-    }).filter(isnum);
-    if (mafs.length === window.variant.phenos.length) {
-        // Every pheno has a MAF
-        let maf_range = d3.extent(mafs).map(two_digit_format);
-        if (maf_range[0] === maf_range[1]) { $('#maf-range').html(fmt('MAF: {0}', maf_range[0])); }
-        else { $('#maf-range').html(fmt('MAF ranges from {0} to {1}', maf_range[0], maf_range[1])); }
-    } else if (mafs.length) {
-        // Show the range of MAFs for the phenotypes that have a MAF
-        var maf_range = d3.extent(mafs).map(two_digit_format);
-        if (maf_range[0] === maf_range[1]) { $('#maf-range').html(fmt('MAF: {0} for phenotypes where it is defined', maf_range[0])); }
-        else { $('#maf-range').html(fmt('MAF ranges from {0} to {1} for phenotypes where it is defined', maf_range[0], maf_range[1])); }
-    }
+
+    var afs_list = []
+    window.variant_list.forEach(variant => {
+        var afs = variant.phenos.map(function(v) {
+            if (isnum(v.af)) { return v.af; }
+            else if (isnum(v.ac) && isnum(v.num_samples)) { return v.ac / (2*v.num_samples); }
+            else { return undefined; }
+        }).filter(isnum);
+        afs_list.push(afs)
+    })
+
+    afs_list.forEach((afs,i) => {
+        if (afs.length == window.variant_list[i].phenos.length) {
+            // Every pheno has AF
+            let af_range = d3.extent(afs).map(two_digit_format);
+            if (af_range[0] === af_range[1]) { $('#maf-range').html(fmt('AF: {0}', af_range[0])); }
+            else { $('#maf-range').html(fmt('AF ranges from {0} to {1}', af_range[0], af_range[1])); }
+            return;
+        }
+    })
+
+    var mafs_list = []
+    window.variant_list.forEach(variant => {
+        var mafs = variant.phenos.map(function(v) {
+            if (isnum(v.maf))  { return v.maf; }
+            else if (isnum(v.af)) { return minor(v.af); }
+            else if (isnum(v.mac) && isnum(v.num_samples)) { return v.mac / (2*v.num_samples) }
+            else if (isnum(v.ac) && isnum(v.num_samples)) { return minor(v.ac / (2*v.num_samples)); }
+            else { return undefined; }
+        }).filter(isnum);
+
+        mafs_list.push(mafs)
+    })
+    mafs_list.forEach((mafs,i) => {
+        if (mafs.length === window.variant_list[i].phenos.length) {
+            // Every pheno has a MAF
+            let maf_range = d3.extent(mafs).map(two_digit_format);
+            if (maf_range[0] === maf_range[1]) { $('#maf-range').html(fmt('MAF: {0}', maf_range[0])); }
+            else { $('#maf-range').html(fmt('MAF ranges from {0} to {1}', maf_range[0], maf_range[1])); }
+        } else if (mafs.length) {
+            // Show the range of MAFs for the phenotypes that have a MAF
+            var maf_range = d3.extent(mafs).map(two_digit_format);
+            if (maf_range[0] === maf_range[1]) { $('#maf-range').html(fmt('MAF: {0} for phenotypes where it is defined', maf_range[0])); }
+            else { $('#maf-range').html(fmt('MAF ranges from {0} to {1} for phenotypes where it is defined', maf_range[0], maf_range[1])); }
+        }
+    })
+
 });
 
 

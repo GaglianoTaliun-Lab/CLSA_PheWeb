@@ -7,6 +7,8 @@
   window.variant_list = {{ variant_list|tojson|safe }};
   window.stratified = {{ stratified|tojson  }};
   window.model.tooltip_lztemplate = {{ tooltip_lztemplate|tojson }};
+
+  console.log(window.model.tooltip_lztemplate )
 </script>
 <script src="{{ url_for('.static', filename='vendor/stream_table-1.1.1.min.js') }}" type="text/javascript"></script>
 

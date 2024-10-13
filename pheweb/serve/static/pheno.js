@@ -244,6 +244,7 @@ function create_gwas_plot(variant_bins, unbinned_variants, container = '#manhatt
             .on('mouseover', significance_threshold_tooltip.show)
             .on('mouseout', significance_threshold_tooltip.hide);
 
+
         // Points & labels
         var tooltip_template = _.template(
             window.model.tooltip_underscoretemplate +
@@ -409,6 +410,10 @@ function create_gwas_plot(variant_bins, unbinned_variants, container = '#manhatt
 
 function create_miami_plot(variant_bins1, variant_unbinned1, variant_bins2, variant_unbinned2, label1 = "Data 1", label2 = "Data 2", container = '#manhattan_plot_container'){
     $(container).empty();
+
+    console.log(window.model.tooltip_underscoretemplate)
+    console.log(window.model.urlprefix)
+    console.log(window.phenocode)
 
     // Order from weakest to strongest pvalue, so that the strongest variant will be on top (z-order) and easily hoverable
     // In the DOM, later siblings are displayed over top of (and occluding) earlier siblings.

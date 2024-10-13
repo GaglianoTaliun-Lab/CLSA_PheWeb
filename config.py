@@ -2,11 +2,17 @@ hg_build_number=38
 
 stratified=True
 
-field_aliases = {'CHROM': 'chrom',
-                'GENPOS': 'pos',
-                "ALLELE0" : "ref",
-                "ALLELE1": "alt",
-                "BETA": "beta",
-                "SE": "sebeta",
-                "P": "pval",
-                "N": "num_samples"}
+pval_is_neglog10 = True
+
+show_manhattan_filter_button=True
+
+field_aliases = {
+        "CHROM" : "chrom",
+        "GENPOS" : "pos",
+        "ALLELE0" : "ref",
+        "ALLELE1" : "alt",
+        "A1FREQ" : "af",
+        "BETA" : "beta",
+        "SE" : "sebeta",
+        "LOG10P" : "pval"
+}

@@ -1,6 +1,6 @@
 
 from ..load.load_utils import get_maf
-from ..utils import get_phenolist, get_stratification_paths, get_phenocode_with_stratifications, get_phenotype_summary, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
+from ..utils import get_phenolist, get_stratification_paths_server, get_phenocode_with_stratifications, get_phenotype_summary, get_gene_tuples, pad_gene, PheWebError, vep_consqeuence_category
 from .. import conf
 from .. import parse_utils
 from ..file_utils import get_filepath, get_pheno_filepath, VariantFileReader
@@ -113,7 +113,7 @@ def api_variant(query:str):
     print(f"query for variant = {query}")
     if conf.stratified():
         variant_list = []
-        for path in set(get_stratification_paths(phenos_with_stratifications)):
+        for path in set(get_stratification_paths_server(phenos_with_stratifications)):
             variant = get_variant(query, path)
             if variant is None:
                 die("Sorry, I couldn't find the variant {}".format(query))
@@ -138,7 +138,7 @@ def variant_page(query:str):
     try:
         variant_list = []
         if conf.stratified():
-                for path in set(get_stratification_paths(phenos_with_stratifications)):
+                for path in set(get_stratification_paths_server(phenos_with_stratifications)):
                     variant = get_variant(query, path)
                     if variant is None:
                         die("Sorry, I couldn't find the variant {}".format(query))
